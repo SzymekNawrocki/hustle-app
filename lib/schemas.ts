@@ -6,6 +6,12 @@ export const loginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+export const registerSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  full_name: z.string().min(2, "Full name is required"),
+});
+
 export const milestoneSchema = z.object({
   title: z.string().min(1, "Title is required"),
   is_completed: z.boolean().default(false),

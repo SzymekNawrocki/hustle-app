@@ -3,16 +3,16 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "@/lib/schemas";
+import { registerSchema } from "@/lib/schemas";
 import { z } from "zod";
 import { api, getApiError } from "@/lib/api";
 import { setToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { LogIn, Mail, Lock, Loader2, AlertCircle } from "lucide-react";
+import { UserPlus, Mail, Lock, User, Loader2, AlertCircle, ArrowLeft } from "lucide-react";
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,27 +21,30 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // OAuth2 expects form data
-      const formData = new URLSearchParams();
-      formData.append("username", data.username);
-      formData.append("password", data.password);
+      // 1. Register the user
+      await api.post("/auth/register", data);
 
-      const response = await api.post("/auth/login", formData, {
+      // 2. Automatically login after registration
+      const loginData = new URLSearchParams();
+      loginData.append("username", data.email);
+      loginData.append("password", data.password);
+
+      const loginResponse = await api.post("/auth/login", loginData, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       });
 
-      setToken(response.data.access_token);
+      setToken(loginResponse.data.access_token);
       router.push("/dashboard");
     } catch (err) {
       setError(getApiError(err));
@@ -58,12 +61,18 @@ export default function LoginPage() {
         <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
         
         <div className="relative bg-[#111114] border border-white/10 rounded-2xl p-8 shadow-2xl overflow-hidden">
-          <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">HustleOS</h1>
-            <p className="text-gray-400">Przejmij kontrolę nad swoją produktywnością</p>
+          <div className="mb-8 text-center relative">
+            <a 
+              href="/login" 
+              className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </a>
+            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Dołącz do HustleOS</h1>
+            <p className="text-gray-400">Zacznij budować swoją przyszłość już dziś</p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             {error && (
               <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
@@ -71,31 +80,43 @@ export default function LoginPage() {
               </div>
             )}
 
-            <div className="space-y-2">
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-gray-300 ml-1">Imię i nazwisko</label>
+              <div className="relative group/input">
+                <div className="absolute inset-y-0 left-4 flex items-center text-gray-500 group-focus-within/input:text-blue-500 transition-colors">
+                  <User className="w-5 h-5" />
+                </div>
+                <input
+                  {...register("full_name")}
+                  placeholder="Jan Kowalski"
+                  className="w-full bg-[#1c1c21] border border-white/5 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
+                />
+              </div>
+              {errors.full_name && (
+                <p className="text-red-500 text-xs ml-1">{errors.full_name.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-1">
               <label className="text-sm font-medium text-gray-300 ml-1">Email</label>
               <div className="relative group/input">
                 <div className="absolute inset-y-0 left-4 flex items-center text-gray-500 group-focus-within/input:text-blue-500 transition-colors">
                   <Mail className="w-5 h-5" />
                 </div>
                 <input
-                  {...register("username")}
+                  {...register("email")}
                   type="email"
                   placeholder="twoj@email.com"
                   className="w-full bg-[#1c1c21] border border-white/5 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
                 />
               </div>
-              {errors.username && (
-                <p className="text-red-500 text-xs ml-1">{errors.username.message}</p>
+              {errors.email && (
+                <p className="text-red-500 text-xs ml-1">{errors.email.message}</p>
               )}
             </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between items-center ml-1">
-                <label className="text-sm font-medium text-gray-300">Hasło</label>
-                <a href="/forgot-password" className="text-xs text-blue-500 hover:text-blue-400 transition-colors">
-                  Zapomniałeś hasła?
-                </a>
-              </div>
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-gray-300 ml-1">Hasło</label>
               <div className="relative group/input">
                 <div className="absolute inset-y-0 left-4 flex items-center text-gray-500 group-focus-within/input:text-blue-500 transition-colors">
                   <Lock className="w-5 h-5" />
@@ -115,23 +136,23 @@ export default function LoginPage() {
             <button
               disabled={isLoading}
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-blue-900/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-blue-900/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
             >
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
-                  <LogIn className="w-5 h-5" />
-                  Zaloguj się
+                  <UserPlus className="w-5 h-5" />
+                  Utwórz konto
                 </>
               )}
             </button>
           </form>
 
           <p className="mt-8 text-center text-sm text-gray-500">
-            Nie masz konta?{" "}
-            <a href="/register" className="text-blue-500 hover:text-blue-400 transition-colors font-medium">
-              Zarejestruj się
+            Masz już konto?{" "}
+            <a href="/login" className="text-blue-500 hover:text-blue-400 transition-colors font-medium">
+              Zaloguj się
             </a>
           </p>
         </div>
