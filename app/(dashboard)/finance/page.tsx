@@ -9,7 +9,8 @@ import {
   TrendingUp, 
   PieChart as PieChartIcon,
   ArrowUpRight,
-  DollarSign
+  DollarSign,
+  Briefcase
 } from "lucide-react";
 import { 
   PieChart, 
@@ -34,7 +35,7 @@ export default function FinancePage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+        <span className="loading loading-ring loading-lg text-primary"></span>
       </div>
     );
   }
@@ -51,121 +52,133 @@ export default function FinancePage() {
     return acc;
   }, []) || [];
 
+  // Placeholder for assetData, assuming it's derived from portfolio or a similar structure
+  // For the purpose of this edit, we'll use a simplified version or map from chartData if applicable.
+  // The provided code edit uses hardcoded data for assetData, so we'll use that for consistency with the edit.
+  const assetData = [
+    { name: 'Stocks', value: 400 },
+    { name: 'Bonds', value: 300 },
+    { name: 'Real Estate', value: 300 },
+    { name: 'Cash', value: 200 },
+  ];
+
   return (
-    <div className="space-y-8 animate-in fade-in duration-700">
-      <div className="flex items-center justify-between">
+    <div className="space-y-10 animate-in fade-in duration-700">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Finanse</h1>
-          <p className="text-gray-400 mt-2">Zarządzaj swoim portfelem i śledź aktywa.</p>
+          <h1 className="text-4xl font-bold text-base-content tracking-tight">Finanse</h1>
+          <p className="text-base-content/60 mt-2 font-medium">Planuj, oszczędzaj i śledź swój wzrost majątku.</p>
         </div>
-        <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl px-6 py-4 flex items-center gap-4">
-          <div className="p-2 bg-blue-500 rounded-lg shadow-lg shadow-blue-500/20">
-            <Wallet className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Suma zainwestowana</p>
-            <p className="text-xl font-bold text-white">{totalValue.toLocaleString()} zł</p>
-          </div>
+        <div className="flex items-center gap-2">
+           <button className="btn btn-primary btn-sm px-6 font-bold shadow-lg">Dodaj transakcję</button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-        {/* Asset Table */}
-        <div className="xl:col-span-2 space-y-4">
-          <div className="bg-[#111114] border border-white/5 rounded-2xl overflow-hidden shadow-xl">
-            <div className="p-6 border-b border-white/5 flex items-center gap-3">
-              <TrendingUp className="w-5 h-5 text-blue-500" />
-              <h2 className="text-lg font-bold text-white">Moje Aktywa</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-10 text-left">
+          <div className="stat bg-base-200 border border-base-300 rounded-3xl p-6 shadow-xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform duration-500">
+               <TrendingUp className="w-16 h-16" />
             </div>
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-white/5 bg-white/[0.01]">
-                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Aktywo</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Ilość</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Cena śr.</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Zainwestowano</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5 text-sm">
-                {portfolio?.map((asset) => (
-                  <tr key={asset.id} className="hover:bg-white/[0.02] transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col">
-                        <span className="text-white font-medium">{asset.ticker}</span>
-                        <span className="text-[10px] text-gray-500 uppercase">{asset.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-right text-gray-300 font-mono">
-                      {asset.total_quantity.toFixed(4)}
-                    </td>
-                    <td className="px-6 py-4 text-right text-gray-300 font-mono">
-                      {asset.average_buy_price.toLocaleString()} zł
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <span className="text-blue-400 font-bold">{asset.total_invested.toLocaleString()} zł</span>
-                    </td>
+            <div className="stat-title font-bold text-xs opacity-60">Suma zainwestowana</div>
+            <div className="stat-value text-3xl font-bold mt-2 text-primary">124,500 zł</div>
+            <div className="stat-desc mt-2 font-semibold text-success flex items-center gap-1">
+              <TrendingUp className="w-3 h-3" /> +12.5% od zeszłego m-ca
+            </div>
+          </div>
+          {/* ... other stats could go here ... */}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-left">
+        <div className="lg:col-span-2 card bg-base-200 border border-base-300 shadow-xl overflow-hidden">
+          <div className="card-body p-0">
+            <div className="p-6 border-b border-base-300 bg-base-200/30 flex items-center justify-between">
+                <h2 className="card-title text-xl font-bold text-base-content">Moje Aktywa</h2>
+                <div className="badge badge-primary font-bold px-4 py-3">Wszystkie</div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="table table-zebra">
+                <thead>
+                  <tr className="bg-base-300/30 text-base-content/70 tracking-wide text-xs">
+                    <td className="font-bold py-6 pl-8">Aktywo</td>
+                    <td className="font-bold py-6">Wartość</td>
+                    <td className="font-bold py-6">Zmiana %</td>
+                    <td className="font-bold py-6 pr-8 text-right">Wykres</td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            {portfolio?.length === 0 && (
-              <div className="py-12 text-center text-gray-500">Portfel jest pusty.</div>
-            )}
+                </thead>
+                <tbody>
+                  {[
+                    { name: 'Bitcoin', ticker: 'BTC', value: '64,200 zł', change: '+5.2', color: 'text-warning' },
+                    { name: 'S&P 500 ETF', ticker: 'VUSA', value: '42,100 zł', change: '+1.4', color: 'text-primary' },
+                    { name: 'Gold', ticker: 'GOLD', value: '18,200 zł', change: '-0.8', color: 'text-secondary' },
+                  ].map((asset, i) => (
+                    <tr key={i} className="hover:bg-base-100/50 transition-colors group">
+                      <td className="py-6 pl-8">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-xl bg-base-300 flex items-center justify-center p-2`}>
+                            <Briefcase className={`w-5 h-5 ${asset.color}`} />
+                          </div>
+                          <div>
+                            <div className="font-bold text-base-content">{asset.ticker}</div>
+                            <span className="text-[10px] opacity-60 font-bold">{asset.name}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-6 font-bold">{asset.value}</td>
+                      <td className={`py-6 font-bold ${asset.change.startsWith('+') ? 'text-success' : 'text-error'}`}>
+                        {asset.change}%
+                      </td>
+                      <td className="py-6 pr-8 text-right">
+                         <div className="w-16 h-8 ml-auto bg-base-300/20 rounded-lg animate-pulse" />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        {/* Distribution Chart */}
-        <div className="bg-[#111114] border border-white/5 rounded-2xl p-6 shadow-xl flex flex-col">
-          <div className="flex items-center gap-3 mb-8">
-            <PieChartIcon className="w-5 h-5 text-cyan-400" />
-            <h2 className="text-lg font-bold text-white">Podział portfela</h2>
-          </div>
-          
-          <div className="flex-1 min-h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={chartData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="none" />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: "#1c1c21", 
-                    borderColor: "rgba(255,255,255,0.05)",
-                    borderRadius: "12px",
-                    color: "#fff"
-                  }}
-                  itemStyle={{ color: "#fff" }}
-                />
-                <Legend 
-                  wrapperStyle={{ paddingTop: "20px" }}
-                  formatter={(value) => <span className="text-xs text-gray-400 ml-1">{value}</span>}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="mt-6 pt-6 border-t border-white/5 space-y-4">
-            {chartData.map((item, index) => (
-              <div key={item.name} className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                  <span className="text-gray-400">{item.name}</span>
+        <div className="card bg-base-200 border border-base-300 shadow-xl overflow-hidden">
+          <div className="card-body p-6">
+              <h2 className="card-title text-xl font-bold text-base-content mb-6">Podział portfela</h2>
+              <div className="h-[250px] w-full relative">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={assetData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {assetData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                        contentStyle={{backgroundColor: '#141414', border: '1px solid #333', borderRadius: '12px'}}
+                        itemStyle={{fontSize: '10px', color: '#fff'}}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span className="text-[10px] font-bold opacity-40">Razem</span>
+                    <span className="text-xl font-bold">124.5k</span>
                 </div>
-                <span className="text-white font-semibold">
-                  {((item.value / totalValue) * 100).toFixed(1)}%
-                </span>
               </div>
-            ))}
+              <div className="mt-6 space-y-3">
+                {assetData.map((item, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 hover:bg-base-100 rounded-xl transition-colors">
+                    <div className="flex items-center gap-2">
+                       <div className="w-2 h-2 rounded-full" style={{backgroundColor: COLORS[i % COLORS.length]}} />
+                       <span className="text-xs font-bold opacity-70">{item.name}</span>
+                    </div>
+                    <span className="text-xs font-bold">{item.value}%</span>
+                  </div>
+                ))}
+              </div>
           </div>
         </div>
       </div>

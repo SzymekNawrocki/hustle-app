@@ -8,7 +8,7 @@ import { z } from "zod";
 import { api, getApiError } from "@/lib/api";
 import { setToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { LogIn, Mail, Lock, Loader2, AlertCircle } from "lucide-react";
+import { LogIn, Mail, Lock, Loader2, AlertCircle, ArrowRight } from "lucide-react";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -51,89 +51,116 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0b] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent)] pointer-events-none" />
+    <div className="min-h-screen bg-base-100 flex items-center justify-center p-4 selection:bg-primary selection:text-primary-content">
+      {/* Background decorations */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/10 blur-[120px] rounded-full animate-pulse delay-700" />
+      </div>
       
-      <div className="w-full max-w-md relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
-        
-        <div className="relative bg-[#111114] border border-white/10 rounded-2xl p-8 shadow-2xl overflow-hidden">
-          <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">HustleOS</h1>
-            <p className="text-gray-400">Przejmij kontrolę nad swoją produktywnością</p>
+      <div className="w-full max-w-md relative animate-in fade-in zoom-in duration-500">
+        <div className="card bg-base-200 border border-base-300 shadow-2xl overflow-hidden">
+          <div className="h-1.5 bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] animate-shimmer" />
+
+          <div className="card-body p-8 lg:p-10 space-y-8">
+            <div className="text-center space-y-4">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="p-2 bg-primary rounded-lg shadow-lg">
+                  <LogIn className="w-6 h-6 text-primary-content" />
+                </div>
+                <h1 className="text-3xl font-bold text-primary">HustleOS</h1>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-base-content">Witaj ponownie</h2>
+                <p className="text-base-content/60 font-medium text-xs mt-2 leading-relaxed">System sukcesu czeka na Ciebie</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              {error && (
+                <div className="alert alert-error shadow-lg rounded-xl border-none text-xs font-bold py-3">
+                  <AlertCircle className="w-5 h-5 shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text-alt font-semibold opacity-40">Adres Email</span>
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-4 flex items-center text-primary/40 group-focus-within:text-primary transition-colors">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                  <input
+                    {...register("username")}
+                    type="email"
+                    placeholder="twoj@email.com"
+                    className="input input-bordered w-full bg-base-100 pl-12 focus:input-primary transition-all font-medium"
+                  />
+                </div>
+                {errors.username && (
+                  <label className="label">
+                    <span className="label-text-alt text-error font-medium">{errors.username.message}</span>
+                  </label>
+                )}
+              </div>
+
+              <div className="form-control">
+                <div className="flex justify-between items-end mb-1">
+                  <label className="label p-0">
+                    <span className="label-text-alt font-semibold opacity-40">Hasło</span>
+                  </label>
+                  <a href="/forgot-password" className="text-[10px] font-semibold text-primary hover:opacity-70 transition-opacity">
+                    Zapomniałeś?
+                  </a>
+                </div>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-4 flex items-center text-primary/40 group-focus-within:text-primary transition-colors">
+                    <Lock className="w-5 h-5" />
+                  </div>
+                  <input
+                    {...register("password")}
+                    type="password"
+                    placeholder="••••••••"
+                    className="input input-bordered w-full bg-base-100 pl-12 focus:input-primary transition-all font-medium"
+                  />
+                </div>
+                {errors.password && (
+                  <label className="label">
+                    <span className="label-text-alt text-error font-medium">{errors.password.message}</span>
+                  </label>
+                )}
+              </div>
+
+              <button
+                disabled={isLoading}
+                type="submit"
+                className="btn btn-primary btn-block btn-lg shadow-xl shadow-primary/20 gap-3 font-bold normal-case h-14 mt-4"
+              >
+                {isLoading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  <>
+                    ZALOGUJ SIĘ <ArrowRight className="w-5 h-5" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            <div className="space-y-6">
+              <div className="divider opacity-10 font-semibold text-[10px]">LUB</div>
+              
+              <div className="text-center">
+                <p className="text-sm font-medium opacity-60">
+                  Nie masz jeszcze konta?{" "}
+                  <a href="/register" className="text-primary font-bold text-xs hover:opacity-70 transition-opacity">
+                    Zarejestruj się
+                  </a>
+                </p>
+              </div>
+            </div>
           </div>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {error && (
-              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                {error}
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300 ml-1">Email</label>
-              <div className="relative group/input">
-                <div className="absolute inset-y-0 left-4 flex items-center text-gray-500 group-focus-within/input:text-blue-500 transition-colors">
-                  <Mail className="w-5 h-5" />
-                </div>
-                <input
-                  {...register("username")}
-                  type="email"
-                  placeholder="twoj@email.com"
-                  className="w-full bg-[#1c1c21] border border-white/5 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
-                />
-              </div>
-              {errors.username && (
-                <p className="text-red-500 text-xs ml-1">{errors.username.message}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-center ml-1">
-                <label className="text-sm font-medium text-gray-300">Hasło</label>
-                <a href="/forgot-password" className="text-xs text-blue-500 hover:text-blue-400 transition-colors">
-                  Zapomniałeś hasła?
-                </a>
-              </div>
-              <div className="relative group/input">
-                <div className="absolute inset-y-0 left-4 flex items-center text-gray-500 group-focus-within/input:text-blue-500 transition-colors">
-                  <Lock className="w-5 h-5" />
-                </div>
-                <input
-                  {...register("password")}
-                  type="password"
-                  placeholder="••••••••"
-                  className="w-full bg-[#1c1c21] border border-white/5 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
-                />
-              </div>
-              {errors.password && (
-                <p className="text-red-500 text-xs ml-1">{errors.password.message}</p>
-              )}
-            </div>
-
-            <button
-              disabled={isLoading}
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-blue-900/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
-            >
-              {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <>
-                  <LogIn className="w-5 h-5" />
-                  Zaloguj się
-                </>
-              )}
-            </button>
-          </form>
-
-          <p className="mt-8 text-center text-sm text-gray-500">
-            Nie masz konta?{" "}
-            <a href="/register" className="text-blue-500 hover:text-blue-400 transition-colors font-medium">
-              Zarejestruj się
-            </a>
-          </p>
         </div>
       </div>
     </div>

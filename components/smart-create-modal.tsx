@@ -29,50 +29,54 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
       <div 
-        className="relative w-full max-w-lg bg-[#111114] border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in duration-300"
+        className="card w-full max-w-lg bg-base-200 border border-base-300 shadow-2xl overflow-hidden animate-in zoom-in duration-300"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_auto] animate-shimmer" />
+        <div className="h-1.5 bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] animate-shimmer" />
         
-        <div className="p-6">
+        <div className="card-body p-6">
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-cyan-400" />
-              <h2 className="text-xl font-bold text-white">Smart Create</h2>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Sparkles className="w-5 h-5 text-primary" />
+              </div>
+              <h2 className="card-title text-2xl font-bold text-base-content">Smart Create</h2>
             </div>
             <button 
               onClick={onClose}
-              className="p-1 text-gray-500 hover:text-white transition-colors"
+              className="btn btn-ghost btn-sm btn-square"
             >
               <X className="w-6 h-6" />
             </button>
           </div>
 
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-400 ml-1">Opisz swój cel</label>
+          <div className="space-y-6 text-left">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-bold opacity-40 text-xs">Opisz swój cel</span>
+              </label>
               <textarea
                 value={idea}
                 onChange={(e) => setIdea(e.target.value)}
                 placeholder="Np. Chciałbym nauczyć się Next.js w miesiąc i zbudować portfolio"
-                className="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all min-h-[120px] resize-none"
+                className="textarea textarea-bordered h-36 bg-base-100 focus:textarea-primary transition-all resize-none text-base"
               />
             </div>
 
-            <p className="text-xs text-gray-500 px-1">
+            <p className="text-xs opacity-60 text-center">
               AI przeanalizuje Twój pomysł i wygeneruje konkretny cel wraz z listą kroków milowych.
             </p>
 
             <button
               onClick={() => mutate(idea)}
               disabled={isPending || !idea.trim()}
-              className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold py-3 rounded-xl shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
+              className="btn btn-primary btn-block shadow-lg gap-2 text-lg h-14"
             >
               {isPending ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span className="loading loading-spinner"></span>
                   AI generuje cele...
                 </>
               ) : (

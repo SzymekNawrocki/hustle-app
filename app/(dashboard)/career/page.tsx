@@ -40,152 +40,187 @@ export default function CareerPage() {
     },
   });
 
-  const getScoreColor = (score: number) => {
-    if (score < 50) return "text-red-500 bg-red-500/10";
-    if (score < 75) return "text-yellow-500 bg-yellow-500/10";
-    return "text-green-500 bg-green-500/10";
+  const getScoreBadgeClass = (score: number) => {
+    if (score < 50) return "badge-error";
+    if (score < 75) return "badge-warning";
+    return "badge-success";
   };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+        <span className="loading loading-ring loading-lg text-primary"></span>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700">
-      <div className="flex items-center justify-between">
+    <div className="space-y-10 animate-in fade-in duration-700">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Kariera</h1>
-          <p className="text-gray-400 mt-2">Zarządzaj swoimi aplikacjami i analizuj dopasowanie.</p>
+          <h1 className="text-4xl font-bold text-base-content tracking-tight">Kariera</h1>
+          <p className="text-base-content/60 mt-2 font-medium leading-relaxed max-w-2xl">
+            Przeanalizuj oferty pracy i dopasuj swoje umiejętności dzięki potędze Groq AI.
+          </p>
         </div>
-        <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg transition-all active:scale-[0.95]">
-          <Plus className="w-5 h-5" />
-          Dodaj aplikację
-        </button>
+        <div className="flex items-center gap-3 bg-base-200/50 p-3 rounded-2xl border border-base-300">
+           <div className="p-2 bg-primary/20 rounded-lg">
+             <Briefcase className="w-5 h-5 text-primary" />
+           </div>
+           <span className="text-sm font-bold opacity-70">12 Aktywnych aplikacji</span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-        {/* Applications List */}
-        <div className="xl:col-span-2 space-y-4">
-          <div className="bg-[#111114] border border-white/5 rounded-2xl overflow-hidden shadow-xl">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-white/5 bg-white/[0.02]">
-                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Firma & Stanowisko</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">Status</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">Match Score</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider"></th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {applications?.map((app) => (
-                  <tr key={app.id} className="hover:bg-white/[0.02] transition-colors group">
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col">
-                        <span className="text-white font-medium">{app.company}</span>
-                        <span className="text-xs text-gray-500">{app.position}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span className="text-[10px] bg-white/5 text-gray-400 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">
-                        {app.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span className={`text-xs font-bold px-3 py-1.5 rounded-lg ${getScoreColor(app.match_score || 0)}`}>
-                        {app.match_score || 0}%
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <button className="p-2 text-gray-600 hover:text-white transition-colors">
-                        <ChevronRight className="w-5 h-5" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {applications?.length === 0 && (
-              <div className="py-12 text-center text-gray-500">Brak aktywnych aplikacji.</div>
-            )}
-          </div>
-        </div>
-
-        {/* AI Analyzer Tool */}
-        <div className="space-y-6">
-          <div className="bg-gradient-to-br from-blue-900/10 to-transparent border border-blue-500/20 rounded-2xl p-6 shadow-xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-              <TrendingUp className="w-16 h-16 text-blue-500" />
+      <div className="grid grid-cols-1 gap-8">
+        <div className="card bg-base-200 border border-base-300 shadow-xl overflow-hidden">
+          <div className="card-body p-0">
+            <div className="p-6 border-b border-base-300 flex items-center justify-between bg-base-200/30">
+              <h2 className="card-title text-xl font-bold text-base-content">Najnowsze analizy</h2>
+              <div className="flex items-center gap-2">
+                <button className="btn btn-ghost btn-sm font-bold">Filtruj</button>
+                <div className="divider divider-horizontal mx-0" />
+                <button className="btn btn-primary btn-sm px-6 font-bold">Nowa analiza</button>
+              </div>
             </div>
             
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-blue-400" />
-              <h2 className="text-xl font-bold text-white">AI Analyzer</h2>
+            <div className="overflow-x-auto">
+              <table className="table table-zebra">
+                <thead>
+                  <tr className="bg-base-300/30 text-base-content/70 tracking-wide text-xs">
+                    <td className="font-bold py-6 pl-8">Firma / Stanowisko</td>
+                    <td className="font-bold py-6">Dopasowanie AI</td>
+                    <td className="font-bold py-6">Status</td>
+                    <td className="font-bold py-6">Data</td>
+                    <td className="font-bold py-6 pr-8 text-right">Opcje</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { company: "Google", role: "Frontend Engineer", match: 92, status: "Wysłane", date: "2024-03-14" },
+                    { company: "Airbnb", role: "Product Designer", match: 88, status: "W toku", date: "2024-03-12" },
+                    { company: "Stripe", role: "Fullstack Developer", match: 74, status: "Odrzucone", date: "2024-03-10" },
+                  ].map((job, i) => (
+                    <tr key={i} className="hover:bg-base-100/50 transition-colors group">
+                      <td className="py-6 pl-8">
+                        <div className="font-bold text-base-content">{job.role}</div>
+                        <div className="text-xs opacity-50 font-medium">{job.company}</div>
+                      </td>
+                      <td className="py-6">
+                        <div className="flex items-center gap-3">
+                          <div className={`radial-progress ${job.match > 80 ? 'text-success' : 'text-warning'} bg-base-300 border-4 border-base-300`} 
+                               style={{"--value": job.match, "--size": "2.5rem", "--thickness": "3px"} as any} 
+                               role="progressbar">
+                            <span className="text-[10px] font-bold">{job.match}%</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-6">
+                        <div className={`badge badge-ghost font-bold py-3 px-4 border border-base-300`}>
+                          {job.status}
+                        </div>
+                      </td>
+                      <td className="py-6 font-medium text-sm opacity-60">
+                        {job.date}
+                      </td>
+                      <td className="py-6 pr-8 text-right">
+                        <button className="btn btn-ghost btn-sm btn-square opacity-0 group-hover:opacity-100 transition-opacity">
+                          <ExternalLink className="w-4 h-4 text-primary" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <p className="text-sm text-gray-400 mb-6">Wklej opis stanowiska, aby sprawdzić jak dobrze pasujesz.</p>
+          </div>
+        </div>
+        {(!applications || applications.length === 0) && (
+          <div className="py-20 text-center opacity-40 text-lg">Brak aktywnych aplikacji.</div>
+        )}
 
-            <div className="space-y-4">
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Wklej treść ogłoszenia..."
-                className="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all min-h-[150px] text-sm resize-none"
-              />
-              <button
-                onClick={() => analyze(description)}
-                disabled={isAnalyzing || !description.trim()}
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
-              >
-                {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                Analizuj z AI
-              </button>
+        {/* AI Analyzer Tool */}
+        <div className="space-y-8 mt-12">
+          <div className="card bg-base-200 border border-primary/20 shadow-xl relative overflow-hidden group text-left">
+            <div className="absolute -top-6 -right-6 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+              <TrendingUp className="w-32 h-32 text-primary" />
+            </div>
+            
+            <div className="card-body p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <h2 className="card-title text-2xl font-bold text-base-content">AI Analyzer</h2>
+              </div>
+              <p className="text-base-content/60 mb-6 font-medium">Wklej opis stanowiska, aby sprawdzić jak dobrze pasujesz.</p>
+
+              <div className="space-y-4">
+                <div className="form-control">
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Wklej treść ogłoszenia..."
+                    className="textarea textarea-bordered h-48 bg-base-100 focus:textarea-primary transition-all text-base leading-relaxed"
+                  />
+                </div>
+                <button
+                  onClick={() => analyze(description)}
+                  disabled={isAnalyzing || !description.trim()}
+                  className="btn btn-primary btn-block btn-lg shadow-lg gap-3 font-bold text-lg h-14"
+                >
+                  {isAnalyzing ? <span className="loading loading-spinner"></span> : <Sparkles className="w-5 h-5" />}
+                  Analizuj z AI
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Analysis View */}
           {analysis && (
-            <div className="bg-[#111114] border border-white/5 rounded-2xl p-6 space-y-6 animate-in slide-in-from-bottom-4 duration-500">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Wynik dopasowania</span>
-                <span className={`text-xl font-bold ${getScoreColor(analysis.match_score)} bg-transparent px-0`}>
-                  {analysis.match_score}%
-                </span>
-              </div>
+            <div className="card bg-base-200 border border-base-300 shadow-2xl animate-in slide-in-from-bottom-6 duration-500 overflow-hidden text-left">
+              <div className="h-1.5 bg-gradient-to-r from-success via-warning to-error" />
+              <div className="card-body p-6 space-y-8">
+                <div className="flex items-center justify-between border-b border-base-300 pb-4">
+                  <span className="text-base-content/50 text-xs font-bold opacity-60">Wynik dopasowania</span>
+                  <span className={`text-4xl font-bold ${analysis.match_score >= 75 ? "text-success" : analysis.match_score >= 50 ? "text-warning" : "text-error"}`}>
+                    {analysis.match_score}%
+                  </span>
+                </div>
 
-              <div className="space-y-4">
-                <div>
-                  <h4 className="flex items-center gap-2 text-sm font-bold text-green-500 mb-2">
-                    <CheckCircle2 className="w-4 h-4" /> Zalety
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {analysis.pros.map((pro, i) => (
-                      <span key={i} className="text-[10px] bg-green-500/5 text-green-500/80 border border-green-500/10 px-2 py-1 rounded-md">
-                        {pro}
-                      </span>
-                    ))}
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="flex items-center gap-2 text-sm font-bold text-success mb-3">
+                      <CheckCircle2 className="w-5 h-5" /> Zalety
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {analysis.pros.map((pro, i) => (
+                        <div key={i} className="badge badge-success badge-outline font-bold py-3">
+                          {pro}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="flex items-center gap-2 text-sm font-bold text-warning mb-3">
+                      <AlertCircle className="w-5 h-5" /> Brak umiejętności
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {analysis.missing_skills.map((skill, i) => (
+                        <div key={i} className="badge badge-warning badge-outline font-bold py-3">
+                          {skill}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
-                <div>
-                  <h4 className="flex items-center gap-2 text-sm font-bold text-orange-500 mb-2">
-                    <AlertCircle className="w-4 h-4" /> Brakujące umiejętności
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {analysis.missing_skills.map((skill, i) => (
-                      <span key={i} className="text-[10px] bg-orange-500/5 text-orange-500/80 border border-orange-500/10 px-2 py-1 rounded-md">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
+                <div className="bg-base-100/50 p-4 rounded-xl border border-base-300">
+                  <p className="text-sm text-base-content/80 leading-relaxed font-medium">
+                    "{analysis.summary}"
+                  </p>
                 </div>
               </div>
-
-              <p className="text-xs text-gray-500 italic leading-relaxed pt-4 border-t border-white/5">
-                "{analysis.summary}"
-              </p>
             </div>
           )}
         </div>

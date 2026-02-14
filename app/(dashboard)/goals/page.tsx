@@ -21,78 +21,85 @@ export default function GoalsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+        <span className="loading loading-ring loading-lg text-primary"></span>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700">
-      <div className="flex items-center justify-between">
+    <div className="space-y-10 animate-in fade-in duration-700">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Twoje Cele</h1>
-          <p className="text-gray-400 mt-2">Zdefiniuj i monitoruj swoje postępy.</p>
+          <h1 className="text-4xl font-bold text-base-content tracking-tight">Twoje Cele</h1>
+          <p className="text-base-content/60 mt-2 font-medium">Zdefiniuj i monitoruj swoje postępy.</p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-blue-900/20 transition-all active:scale-[0.95]"
+          className="btn btn-primary btn-lg shadow-xl gap-2 font-bold"
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-6 h-6" />
           Dodaj cel
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
         {/* Smart Create Promotion Card */}
         <div 
           onClick={() => setIsModalOpen(true)}
-          className="group relative bg-gradient-to-br from-blue-900/20 to-cyan-900/10 border border-blue-500/20 rounded-2xl p-6 cursor-pointer hover:border-blue-500/40 transition-all flex flex-col justify-center items-center text-center space-y-4"
+          className="card bg-base-200 border border-primary/30 shadow-xl cursor-pointer hover:border-primary/60 transition-all group overflow-hidden"
         >
-          <div className="p-4 bg-blue-500/10 rounded-full group-hover:scale-110 transition-transform">
-            <Sparkles className="w-8 h-8 text-cyan-400" />
-          </div>
-          <div>
-            <h3 className="text-white font-semibold">Smart Create z AI</h3>
-            <p className="text-sm text-gray-500 mt-1">Pozwól AI przygotować Twój plan działania.</p>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+          <div className="card-body items-center text-center p-8 space-y-4">
+            <div className="p-5 bg-primary/10 rounded-full group-hover:scale-110 transition-transform shadow-inner border border-primary/20">
+              <Sparkles className="w-10 h-10 text-primary" />
+            </div>
+            <div>
+              <h3 className="card-title text-2xl font-bold text-base-content justify-center tracking-tight">Smart Create</h3>
+              <p className="text-base-content/60 mt-2 font-medium">Pozwól AI przygotować Twój plan działania.</p>
+            </div>
+            <div className="card-actions mt-2">
+              <div className="badge badge-primary font-bold px-4 py-3">Polecane</div>
+            </div>
           </div>
         </div>
 
         {goals?.map((goal) => (
           <div 
             key={goal.id} 
-            className="bg-[#111114] border border-white/5 rounded-2xl p-6 hover:border-white/10 transition-all space-y-6 flex flex-col"
+            className="card bg-base-200 border border-base-300 shadow-xl hover:border-primary/30 transition-all group"
           >
-            <div className="flex items-start justify-between">
-              <div className="p-2 bg-white/5 rounded-lg">
-                <Target className="w-5 h-5 text-gray-400" />
+            <div className="card-body p-6 space-y-6 flex flex-col">
+              <div className="flex items-start justify-between">
+                <div className="p-3 bg-base-300/50 rounded-xl group-hover:bg-primary/10 transition-colors">
+                  <Target className="w-6 h-6 text-base-content/40 group-hover:text-primary transition-colors" />
+                </div>
+                <span className={`badge font-bold py-3 px-3 shadow-sm ${
+                  goal.status === "COMPLETED" ? "badge-success" : "badge-info"
+                }`}>
+                  {goal.status === "COMPLETED" ? "Ukończono" : "W toku"}
+                </span>
               </div>
-              <span className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-widest ${
-                goal.status === "COMPLETED" ? "bg-green-500/10 text-green-500" : "bg-blue-500/10 text-blue-500"
-              }`}>
-                {goal.status}
-              </span>
-            </div>
 
-            <div className="flex-1">
-              <h3 className="text-lg font-bold text-white line-clamp-1">{goal.title}</h3>
-              <p className="text-sm text-gray-500 mt-2 line-clamp-2">{goal.description}</p>
-            </div>
+              <div className="flex-1">
+                <h3 className="card-title text-xl font-bold text-base-content line-clamp-1">{goal.title}</h3>
+                <p className="text-sm opacity-60 mt-3 line-clamp-2 font-medium leading-relaxed">{goal.description}</p>
+              </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center justify-between text-xs text-gray-400">
-                <span>Postęp</span>
-                <span className="text-white font-medium">{goal.progress_percentage}%</span>
-              </div>
-              <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-blue-500 rounded-full transition-all duration-1000"
-                  style={{ width: `${goal.progress_percentage}%` }}
-                />
-              </div>
-              
-              <div className="flex items-center gap-2 text-xs text-gray-500 pt-2 border-t border-white/5">
-                <Calendar className="w-3.5 h-3.5" />
-                <span>{goal.target_date || "Brak terminu"}</span>
+              <div className="space-y-4 pt-4 border-t border-base-300">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold opacity-40">Postęp</span>
+                  <span className="text-sm font-bold text-primary">{goal.progress_percentage}%</span>
+                </div>
+                <progress 
+                  className={`progress w-full h-3 shadow-inner ${goal.status === "COMPLETED" ? "progress-success" : "progress-primary"}`} 
+                  value={goal.progress_percentage} 
+                  max="100"
+                ></progress>
+                
+                <div className="flex items-center gap-2 text-[10px] font-bold opacity-40 pt-2">
+                  <Calendar className="w-4 h-4" />
+                  <span>{goal.target_date || "Brak terminu"}</span>
+                </div>
               </div>
             </div>
           </div>

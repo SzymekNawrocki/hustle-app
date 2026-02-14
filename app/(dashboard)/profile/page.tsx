@@ -54,83 +54,91 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+        <span className="loading loading-ring loading-lg text-primary"></span>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in duration-700">
+    <div className="max-w-3xl mx-auto space-y-10 animate-in fade-in duration-700 text-left">
       <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Twój Profil</h1>
-        <p className="text-gray-400 mt-2">Dostosuj swoje dane dla lepszej analizy AI.</p>
+        <h1 className="text-4xl font-bold text-base-content tracking-tight">Twój Profil</h1>
+        <p className="text-base-content/60 mt-2 font-medium">Dostosuj swoje dane dla lepszej analizy AI.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-[#111114] border border-white/5 rounded-2xl p-6 shadow-xl space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-400">Imię i Nazwisko</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-4 flex items-center text-gray-500">
-                  <User className="w-5 h-5" />
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="card bg-base-200 border border-base-300 shadow-xl overflow-hidden">
+          <div className="card-body p-8 space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text-alt font-bold opacity-40">Imię i Nazwisko</span>
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-4 flex items-center text-primary/50">
+                    <User className="w-5 h-5" />
+                  </div>
+                  <input
+                    name="full_name"
+                    defaultValue={profile?.full_name || ""}
+                    className="input input-bordered w-full bg-base-100 pl-12 focus:input-primary transition-all font-bold"
+                    placeholder="Jan Kowalski"
+                  />
                 </div>
-                <input
-                  name="full_name"
-                  defaultValue={profile?.full_name || ""}
-                  className="w-full bg-[#1c1c21] border border-white/5 rounded-xl py-3 pl-12 pr-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium"
-                  placeholder="Jan Kowalski"
-                />
               </div>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-400">Aktualne Stanowisko</label>
-              <div className="relative">
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text-alt font-bold opacity-40">Aktualne Stanowisko</span>
+                </label>
                 <input
                   name="job_title"
                   defaultValue={profile?.job_title || ""}
-                  className="w-full bg-[#1c1c21] border border-white/5 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium"
+                  className="input input-bordered w-full bg-base-100 focus:input-primary transition-all font-bold"
                   placeholder="Software Engineer"
                 />
               </div>
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-400 flex items-center gap-2">
-              <FileText className="w-4 h-4" /> Twoje CV (Tekst)
-            </label>
-            <textarea
-              name="cv_text"
-              defaultValue={profile?.cv_text || ""}
-              className="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all min-h-[300px] text-sm leading-relaxed resize-none"
-              placeholder="Wklej tutaj tekst swojego CV..."
-            />
-            <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold px-1">
-              AI użyje tego tekstu do porównywania Twoich umiejętności z ofertami pracy.
-            </p>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text-alt font-bold opacity-40 flex items-center gap-2">
+                  <FileText className="w-4 h-4" /> Twoje CV (Tekst)
+                </span>
+              </label>
+              <textarea
+                name="cv_text"
+                defaultValue={profile?.cv_text || ""}
+                className="textarea textarea-bordered bg-base-100 focus:textarea-primary transition-all min-h-[350px] text-base leading-relaxed resize-none shadow-inner"
+                placeholder="Wklej tutaj tekst swojego CV..."
+              />
+              <label className="label">
+                <span className="label-text-alt text-[10px] opacity-40 font-bold mt-2 px-1">
+                  AI użyje tego tekstu do porównywania Twoich umiejętności z ofertami pracy.
+                </span>
+              </label>
+            </div>
           </div>
         </div>
 
         {error && (
-          <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-3">
-            <AlertCircle className="w-5 h-5" />
-            {error}
+          <div className="alert alert-error shadow-xl rounded-2xl border-none">
+            <AlertCircle className="w-6 h-6" />
+            <span className="font-bold">{error}</span>
           </div>
         )}
 
-        <div className="flex items-center justify-between">
-          <div className={`flex items-center gap-2 text-green-500 text-sm font-medium transition-opacity duration-500 ${success ? "opacity-100" : "opacity-0"}`}>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className={`flex items-center gap-3 text-success font-bold transition-all duration-500 bg-success/10 px-4 py-3 rounded-xl border border-success/20 ${success ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
             <CheckCircle className="w-4 h-4" />
-            Zmiany zostały zapisane!
+            Zmiany zapisane!
           </div>
           
           <button
             type="submit"
             disabled={isPending}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition-all active:scale-[0.98] disabled:opacity-50"
+            className="btn btn-primary btn-lg px-12 shadow-xl gap-3 font-bold h-16 w-full sm:w-auto"
           >
-            {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+            {isPending ? <span className="loading loading-spinner"></span> : <Save className="w-6 h-6" />}
             Zapisz profil
           </button>
         </div>

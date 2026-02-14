@@ -1,26 +1,48 @@
 @import "tailwindcss";
+@plugin "daisyui" {
+  themes: luxury --default, light;
+}
+
+@theme {
+  --font-sans: var(--font-montserrat), "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  font-family: var(--font-sans);
+  font-feature-settings: "kern", "liga", "clig", "calt";
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  font-family: var(--font-sans) !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  font-family: var(--font-sans) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[data-theme="luxury"] {
+  --color-primary: #efbf04;
+  --color-primary-content: #000000;
+  --color-base-100: #000000;
+  --color-base-200: #0a0a0a;
+  --color-base-300: #141414;
+  --color-base-content: #ffffff;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+}
+
+* {
+  font-family: var(--font-montserrat), "Montserrat", sans-serif !important;
+}
+
+html, body {
+  font-family: var(--font-montserrat), "Montserrat", sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
