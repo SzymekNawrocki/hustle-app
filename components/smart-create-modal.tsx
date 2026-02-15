@@ -16,14 +16,20 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (idea: string) => {
+      console.log("SMART_CREATE: Sending idea:", idea);
       const response = await api.post("/goals/smart-create", { idea });
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("SMART_CREATE: Success!", data);
       queryClient.invalidateQueries({ queryKey: ["goals"] });
       onClose();
       setIdea("");
     },
+    onError: (error: any) => {
+      console.error("SMART_CREATE: Error occurred:", error);
+      alert("Wystąpił błąd podczas generowania celu. Spróbuj ponownie.");
+    }
   });
 
   if (!isOpen) return null;

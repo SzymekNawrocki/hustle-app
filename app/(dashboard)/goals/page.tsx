@@ -4,19 +4,38 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Goal } from "@/types/api";
-import { Plus, Target, Sparkles, Loader2, Calendar } from "lucide-react";
+import { Plus, Target, Sparkles, Loader2, Calendar, CheckCircle2, Circle, ChevronRight } from "lucide-react";
 import { SmartCreateModal } from "@/components/smart-create-modal";
 
 export default function GoalsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [expandedGoal, setExpandedGoal] = useState<number | null>(null);
 
-  const { data: goals, isLoading } = useQuery<Goal[]>({
+  const { data: goals, isLoading, refetch } = useQuery<Goal[]>({
     queryKey: ["goals"],
     queryFn: async () => {
       const response = await api.get("/goals/");
       return response.data;
     },
   });
+
+  const toggleTask = async (taskId: number) => {
+     try {
+       await api.post(`/goals/tasks/${taskId}/toggle`);
+       refetch();
+     } catch (err) {
+       console.error("Failed to toggle task:", err);
+     }
+  };
+
+  const toggleMilestone = async (milestoneId: number) => {
+    try {
+      await api.post(`/goals/milestones/${milestoneId}/toggle`);
+      refetch();
+    } catch (err) {
+      console.error("Failed to toggle milestone:", err);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -31,74 +50,138 @@ export default function GoalsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <h1 className="text-4xl font-bold text-base-content tracking-tight">Twoje Cele</h1>
-          <p className="text-base-content/60 mt-2 font-medium">Zdefiniuj i monitoruj swoje postępy.</p>
+          <p className="text-base-content/60 mt-2 font-medium">Zdefiniuj i monitoruj swoje postępy z AI.</p>
         </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="btn btn-primary btn-lg shadow-xl gap-2 font-bold"
-        >
-          <Plus className="w-6 h-6" />
-          Dodaj cel
-        </button>
+        <div className="flex gap-3">
+           <button
+            onClick={() => setIsModalOpen(true)}
+            className="btn btn-outline btn-lg gap-2 font-bold"
+          >
+            <Sparkles className="w-6 h-6 text-primary" />
+            Smart Create
+          </button>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="btn btn-primary btn-lg shadow-xl gap-2 font-bold"
+          >
+            <Plus className="w-6 h-6" />
+            Nowy cel
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
-        {/* Smart Create Promotion Card */}
-        <div 
-          onClick={() => setIsModalOpen(true)}
-          className="card bg-base-200 border border-primary/30 shadow-xl cursor-pointer hover:border-primary/60 transition-all group overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-          <div className="card-body items-center text-center p-8 space-y-4">
-            <div className="p-5 bg-primary/10 rounded-full group-hover:scale-110 transition-transform shadow-inner border border-primary/20">
-              <Sparkles className="w-10 h-10 text-primary" />
-            </div>
-            <div>
-              <h3 className="card-title text-2xl font-bold text-base-content justify-center tracking-tight">Smart Create</h3>
-              <p className="text-base-content/60 mt-2 font-medium">Pozwól AI przygotować Twój plan działania.</p>
-            </div>
-            <div className="card-actions mt-2">
-              <div className="badge badge-primary font-bold px-4 py-3">Polecane</div>
-            </div>
+      <div className="grid grid-cols-1 gap-8">
+        {goals?.length === 0 && (
+          <div className="card bg-base-200 border-2 border-dashed border-base-300 p-20 text-center">
+             <div className="flex flex-col items-center gap-4 opacity-40">
+                <Target className="w-16 h-16" />
+                <p className="text-xl font-bold">Brak aktywnych celów. Zacznij od Smart Create!</p>
+             </div>
           </div>
-        </div>
+        )}
 
         {goals?.map((goal) => (
           <div 
             key={goal.id} 
-            className="card bg-base-200 border border-base-300 shadow-xl hover:border-primary/30 transition-all group"
+            className="card bg-base-200 border border-base-300 shadow-xl overflow-hidden group"
           >
-            <div className="card-body p-6 space-y-6 flex flex-col">
-              <div className="flex items-start justify-between">
-                <div className="p-3 bg-base-300/50 rounded-xl group-hover:bg-primary/10 transition-colors">
-                  <Target className="w-6 h-6 text-base-content/40 group-hover:text-primary transition-colors" />
-                </div>
-                <span className={`badge font-bold py-3 px-3 shadow-sm ${
-                  goal.status === "COMPLETED" ? "badge-success" : "badge-info"
-                }`}>
-                  {goal.status === "COMPLETED" ? "Ukończono" : "W toku"}
-                </span>
-              </div>
+            <div className="h-1 bg-gradient-to-r from-primary/50 to-secondary/50" />
+            <div className="card-body p-0">
+              <div className="p-8 flex flex-col lg:flex-row gap-8">
+                {/* Goal Info */}
+                <div className="lg:w-1/3 space-y-6">
+                  <div className="flex items-start justify-between">
+                    <div className="p-4 bg-primary/10 rounded-2xl">
+                      <Target className="w-8 h-8 text-primary" />
+                    </div>
+                    <div className={`badge font-bold py-4 px-4 ${
+                      goal.status === "COMPLETED" ? "badge-success" : "badge-info"
+                    }`}>
+                      {goal.status === "COMPLETED" ? "Ukończono" : "W toku"}
+                    </div>
+                  </div>
 
-              <div className="flex-1">
-                <h3 className="card-title text-xl font-bold text-base-content line-clamp-1">{goal.title}</h3>
-                <p className="text-sm opacity-60 mt-3 line-clamp-2 font-medium leading-relaxed">{goal.description}</p>
-              </div>
+                  <div>
+                    <h2 className="text-3xl font-bold text-base-content leading-tight">{goal.title}</h2>
+                    <p className="text-base-content/60 mt-4 font-medium leading-relaxed">{goal.description}</p>
+                  </div>
 
-              <div className="space-y-4 pt-4 border-t border-base-300">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold opacity-40">Postęp</span>
-                  <span className="text-sm font-bold text-primary">{goal.progress_percentage}%</span>
+                  <div className="space-y-4 pt-4">
+                    <div className="flex items-center justify-between text-sm font-bold">
+                      <span className="opacity-40 uppercase tracking-wider text-[10px]">Twój postęp</span>
+                      <span className="text-primary">{goal.progress_percentage}%</span>
+                    </div>
+                    <progress 
+                      className={`progress w-full h-4 shadow-inner ${goal.status === "COMPLETED" ? "progress-success" : "progress-primary"}`} 
+                      value={goal.progress_percentage} 
+                      max="100"
+                    ></progress>
+                    
+                    <div className="flex items-center gap-3 text-xs font-bold opacity-40">
+                      <Calendar className="w-4 h-4" />
+                      <span>Termin: {goal.target_date || "Brak"}</span>
+                    </div>
+                  </div>
                 </div>
-                <progress 
-                  className={`progress w-full h-3 shadow-inner ${goal.status === "COMPLETED" ? "progress-success" : "progress-primary"}`} 
-                  value={goal.progress_percentage} 
-                  max="100"
-                ></progress>
-                
-                <div className="flex items-center gap-2 text-[10px] font-bold opacity-40 pt-2">
-                  <Calendar className="w-4 h-4" />
-                  <span>{goal.target_date || "Brak terminu"}</span>
+
+                {/* Subtasks / Milestones */}
+                <div className="lg:w-2/3 space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Milestones */}
+                    <div className="space-y-4">
+                       <h3 className="text-xs font-bold uppercase tracking-widest opacity-30 flex items-center gap-2">
+                         <ChevronRight className="w-4 h-4" /> Etapy (Milestones)
+                       </h3>
+                       <div className="space-y-3">
+                         {goal.milestones?.map((m) => (
+                           <button 
+                            key={m.id} 
+                            onClick={() => toggleMilestone(m.id)}
+                            className="flex items-center gap-3 p-4 bg-base-100/50 rounded-xl border border-base-300/50 w-full hover:bg-base-100 transition-all text-left"
+                           >
+                             {m.is_completed ? (
+                               <CheckCircle2 className="w-5 h-5 text-success" />
+                             ) : (
+                               <Circle className="w-5 h-5 text-base-content/20" />
+                             )}
+                             <span className={`text-sm font-bold ${m.is_completed ? "opacity-40 line-through" : ""}`}>
+                               {m.title}
+                             </span>
+                           </button>
+                         ))}
+                       </div>
+                    </div>
+
+                    {/* Tasks */}
+                    <div className="space-y-4">
+                       <h3 className="text-xs font-bold uppercase tracking-widest opacity-30 flex items-center gap-2">
+                         <ChevronRight className="w-4 h-4" /> Lista zadań (Daily Actions)
+                       </h3>
+                       <div className="space-y-3">
+                         {goal.tasks?.map((t) => (
+                           <button 
+                            key={t.id} 
+                            onClick={() => toggleTask(t.id)}
+                            className="flex items-center gap-3 p-4 bg-base-300/30 rounded-xl border border-base-300/50 w-full hover:bg-base-300 transition-all text-left group/task"
+                           >
+                             {t.is_completed ? (
+                               <CheckCircle2 className="w-5 h-5 text-success" />
+                             ) : (
+                               <div className="p-0.5 rounded-full border-2 border-primary/40 group-hover/task:border-primary transition-colors">
+                                 <Circle className="w-4 h-4 text-transparent" />
+                               </div>
+                             )}
+                             <span className={`text-sm font-semibold flex-1 ${t.is_completed ? "opacity-40 line-through font-medium" : ""}`}>
+                               {t.title}
+                             </span>
+                           </button>
+                         ))}
+                         <button className="btn btn-ghost btn-block btn-sm border-dashed border-base-300 mt-2 opacity-50 hover:opacity-100">
+                            + Dodaj zadanie
+                         </button>
+                       </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

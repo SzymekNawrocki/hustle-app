@@ -101,6 +101,7 @@ export interface Goal {
   status: GoalStatus;
   user_id: number;
   milestones: Milestone[];
+  tasks: Task[];
   progress_percentage?: number;
 }
 
