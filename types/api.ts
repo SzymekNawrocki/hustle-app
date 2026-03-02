@@ -137,6 +137,7 @@ export interface JobApplication {
   listing_url: string | null;
   description_raw: string | null;
   match_score: number | null;
+  created_at: string;
   user_id: number;
   interviews: Interview[];
 }
@@ -206,6 +207,17 @@ export interface MealLogCreate {
   protein?: number;
   carbs?: number;
   fat?: number;
+}
+
+export type OfferStatus = "wysłano" | "1 etap" | "2 etap" | "3 etap" | "umowa";
+
+export interface JobOffer {
+  id: number;
+  title: string;
+  company?: string | null;
+  status: OfferStatus;
+  url: string;
+  user_id: number;
 }
 
 export interface UserProfile {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { AssetPortfolioResponse, AssetType } from "@/types/api";
 import { 
@@ -10,7 +10,8 @@ import {
   PieChart as PieChartIcon,
   ArrowUpRight,
   DollarSign,
-  Briefcase
+  Briefcase,
+  Trash2
 } from "lucide-react";
 import { 
   PieChart, 
@@ -20,15 +21,31 @@ import {
   Tooltip,
   Legend
 } from "recharts";
+import AddTransactionModal from "@/components/finance/AddTransactionModal";
+import { useState } from "react";
 
 const COLORS = ["#3b82f6", "#06b6d4", "#10b981", "#f59e0b", "#ef4444"];
 
 export default function FinancePage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const queryClient = useQueryClient();
   const { data: portfolio, isLoading } = useQuery<AssetPortfolioResponse[]>({
     queryKey: ["portfolio"],
     queryFn: async () => {
       const response = await api.get("/finance/portfolio");
       return response.data;
+    },
+  });
+
+  const deleteAssetMutation = useMutation({
+    mutationFn: async (assetId: number) => {
+      await api.delete(`/finance/assets/${assetId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["portfolio"] });
+    },
+    onError: (err) => {
+      console.error("Failed to delete asset:", err);
     },
   });
 
@@ -52,15 +69,8 @@ export default function FinancePage() {
     return acc;
   }, []) || [];
 
-  // Placeholder for assetData, assuming it's derived from portfolio or a similar structure
-  // For the purpose of this edit, we'll use a simplified version or map from chartData if applicable.
-  // The provided code edit uses hardcoded data for assetData, so we'll use that for consistency with the edit.
-  const assetData = [
-    { name: 'Stocks', value: 400 },
-    { name: 'Bonds', value: 300 },
-    { name: 'Real Estate', value: 300 },
-    { name: 'Cash', value: 200 },
-  ];
+  // No longer using hardcoded assetData
+
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
@@ -70,7 +80,12 @@ export default function FinancePage() {
           <p className="text-base-content/60 mt-2 font-medium">Planuj, oszczędzaj i śledź swój wzrost majątku.</p>
         </div>
         <div className="flex items-center gap-2">
-           <button className="btn btn-primary btn-sm px-6 font-bold shadow-lg">Dodaj transakcję</button>
+           <button 
+             onClick={() => setIsModalOpen(true)}
+             className="btn btn-primary btn-sm px-6 font-bold shadow-lg"
+           >
+             Dodaj transakcję
+           </button>
         </div>
       </div>
 
@@ -80,9 +95,9 @@ export default function FinancePage() {
                <TrendingUp className="w-16 h-16" />
             </div>
             <div className="stat-title font-bold text-xs opacity-60">Suma zainwestowana</div>
-            <div className="stat-value text-3xl font-bold mt-2 text-primary">124,500 zł</div>
+            <div className="stat-value text-3xl font-bold mt-2 text-primary">{totalValue.toLocaleString()} zł</div>
             <div className="stat-desc mt-2 font-semibold text-success flex items-center gap-1">
-              <TrendingUp className="w-3 h-3" /> +12.5% od zeszłego m-ca
+              <TrendingUp className="w-3 h-3" /> {/* Percentage change not available in raw response, using placeholder */}
             </div>
           </div>
           {/* ... other stats could go here ... */}
@@ -103,19 +118,16 @@ export default function FinancePage() {
                     <td className="font-bold py-6">Wartość</td>
                     <td className="font-bold py-6">Zmiana %</td>
                     <td className="font-bold py-6 pr-8 text-right">Wykres</td>
+                    <td className="font-bold py-6 pr-8 text-right">Usuń</td>
                   </tr>
                 </thead>
                 <tbody>
-                  {[
-                    { name: 'Bitcoin', ticker: 'BTC', value: '64,200 zł', change: '+5.2', color: 'text-warning' },
-                    { name: 'S&P 500 ETF', ticker: 'VUSA', value: '42,100 zł', change: '+1.4', color: 'text-primary' },
-                    { name: 'Gold', ticker: 'GOLD', value: '18,200 zł', change: '-0.8', color: 'text-secondary' },
-                  ].map((asset, i) => (
+                   {(portfolio || []).map((asset, i) => (
                     <tr key={i} className="hover:bg-base-100/50 transition-colors group">
                       <td className="py-6 pl-8">
                         <div className="flex items-center gap-3">
                           <div className={`w-10 h-10 rounded-xl bg-base-300 flex items-center justify-center p-2`}>
-                            <Briefcase className={`w-5 h-5 ${asset.color}`} />
+                            <Briefcase className={`w-5 h-5 text-primary`} />
                           </div>
                           <div>
                             <div className="font-bold text-base-content">{asset.ticker}</div>
@@ -123,12 +135,26 @@ export default function FinancePage() {
                           </div>
                         </div>
                       </td>
-                      <td className="py-6 font-bold">{asset.value}</td>
-                      <td className={`py-6 font-bold ${asset.change.startsWith('+') ? 'text-success' : 'text-error'}`}>
-                        {asset.change}%
+                      <td className="py-6 font-bold">{asset.total_invested.toLocaleString()} zł</td>
+                      <td className={`py-6 font-bold text-success`}>
+                        {/* Change % not available in raw portfolio response */}
+                        -
                       </td>
                       <td className="py-6 pr-8 text-right">
                          <div className="w-16 h-8 ml-auto bg-base-300/20 rounded-lg animate-pulse" />
+                      </td>
+                      <td className="py-6 pr-8 text-right">
+                        <button
+                          onClick={() => deleteAssetMutation.mutate(asset.id)}
+                          className="btn btn-ghost btn-sm text-error hover:bg-error/10"
+                          disabled={deleteAssetMutation.isPending}
+                        >
+                          {deleteAssetMutation.isPending ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-4 h-4" />
+                          )}
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -144,8 +170,8 @@ export default function FinancePage() {
               <div className="h-[250px] w-full relative">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <Pie
-                      data={assetData}
+                     <Pie
+                      data={chartData}
                       cx="50%"
                       cy="50%"
                       innerRadius={60}
@@ -153,7 +179,7 @@ export default function FinancePage() {
                       paddingAngle={5}
                       dataKey="value"
                     >
-                      {assetData.map((entry, index) => (
+                      {chartData.map((entry: any, index: number) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -165,23 +191,29 @@ export default function FinancePage() {
                 </ResponsiveContainer>
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                     <span className="text-[10px] font-bold opacity-40">Razem</span>
-                    <span className="text-xl font-bold">124.5k</span>
+                    <span className="text-xl font-bold">{totalValue > 1000 ? `${(totalValue/1000).toFixed(1)}k` : totalValue}</span>
                 </div>
               </div>
               <div className="mt-6 space-y-3">
-                {assetData.map((item, i) => (
+                {chartData.map((item: any, i: number) => (
                   <div key={i} className="flex items-center justify-between p-2 hover:bg-base-100 rounded-xl transition-colors">
                     <div className="flex items-center gap-2">
                        <div className="w-2 h-2 rounded-full" style={{backgroundColor: COLORS[i % COLORS.length]}} />
                        <span className="text-xs font-bold opacity-70">{item.name}</span>
                     </div>
-                    <span className="text-xs font-bold">{item.value}%</span>
+                    <span className="text-xs font-bold">{((item.value / totalValue) * 100).toFixed(1)}%</span>
                   </div>
                 ))}
               </div>
           </div>
         </div>
       </div>
+      
+      <AddTransactionModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        existingAssets={portfolio || []}
+      />
     </div>
   );
 }

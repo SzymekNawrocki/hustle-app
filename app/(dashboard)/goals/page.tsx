@@ -1,23 +1,44 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Goal } from "@/types/api";
-import { Plus, Target, Sparkles, Loader2, Calendar, CheckCircle2, Circle, ChevronRight } from "lucide-react";
+import { Plus, Target, Sparkles, Loader2, Calendar, CheckCircle2, Circle, ChevronRight, Trash2 } from "lucide-react";
 import { SmartCreateModal } from "@/components/smart-create-modal";
 
 export default function GoalsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [expandedGoal, setExpandedGoal] = useState<number | null>(null);
+  const queryClient = useQueryClient();
 
-  const { data: goals, isLoading, refetch } = useQuery<Goal[]>({
+  const { data: goals, isLoading, error, refetch } = useQuery<Goal[]>({
     queryKey: ["goals"],
     queryFn: async () => {
-      const response = await api.get("/goals/");
-      return response.data;
+      console.log("DEBUG: Fetching goals...");
+      try {
+        const response = await api.get("/goals/");
+        console.log("DEBUG: Goals data received:", response.data);
+        return response.data;
+      } catch (err: any) {
+        console.error("DEBUG: Failed to fetch goals:", err.response?.data || err.message);
+        throw err;
+      }
     },
   });
+
+  const deleteGoalMutation = useMutation({
+    mutationFn: async (goalId: number) => {
+      await api.delete(`/goals/${goalId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["goals"] });
+    },
+    onError: (err) => {
+      console.error("Failed to delete goal:", err);
+    },
+  });
+
 
   const toggleTask = async (taskId: number) => {
      try {
@@ -44,6 +65,21 @@ export default function GoalsPage() {
       </div>
     );
   }
+
+  if (error) {
+    return (
+      <div className="alert alert-error shadow-lg">
+        <div>
+          <h3 className="font-bold">Błąd podczas ładowania celów!</h3>
+          <div className="text-xs">{(error as any)?.response?.data?.detail || (error as any).message}</div>
+        </div>
+        <div className="flex-none">
+          <button className="btn btn-sm" onClick={() => refetch()}>Spróbuj ponownie</button>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
@@ -94,10 +130,23 @@ export default function GoalsPage() {
                     <div className="p-4 bg-primary/10 rounded-2xl">
                       <Target className="w-8 h-8 text-primary" />
                     </div>
-                    <div className={`badge font-bold py-4 px-4 ${
-                      goal.status === "COMPLETED" ? "badge-success" : "badge-info"
-                    }`}>
-                      {goal.status === "COMPLETED" ? "Ukończono" : "W toku"}
+                    <div className="flex items-center gap-2">
+                      <div className={`badge font-bold py-4 px-4 ${
+                        goal.status === "COMPLETED" ? "badge-success" : "badge-info"
+                      }`}>
+                        {goal.status === "COMPLETED" ? "Ukończono" : "W toku"}
+                      </div>
+                      <button
+                        onClick={() => deleteGoalMutation.mutate(goal.id)}
+                        className="btn btn-ghost btn-sm text-error hover:bg-error/10"
+                        disabled={deleteGoalMutation.isPending}
+                      >
+                        {deleteGoalMutation.isPending ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-4 h-4" />
+                        )}
+                      </button>
                     </div>
                   </div>
 

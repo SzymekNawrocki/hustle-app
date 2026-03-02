@@ -19,10 +19,9 @@ import { useState } from "react";
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Cele", href: "/goals", icon: Target },
-  { name: "Kariera", href: "/career", icon: Briefcase },
   { name: "Finanse", href: "/finance", icon: Wallet },
   { name: "Zdrowie", href: "/health", icon: HeartPulse },
-  { name: "Profil", href: "/profile", icon: User },
+  { name: "Kariera", href: "/career", icon: Briefcase },
 ];
 
 export function Sidebar() {

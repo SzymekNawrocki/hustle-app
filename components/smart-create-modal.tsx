@@ -23,13 +23,18 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
     onSuccess: (data) => {
       console.log("SMART_CREATE: Success!", data);
       queryClient.invalidateQueries({ queryKey: ["goals"] });
+      // Force an immediate refetch to be sure
+      queryClient.refetchQueries({ queryKey: ["goals"] });
       onClose();
       setIdea("");
     },
     onError: (error: any) => {
-      console.error("SMART_CREATE: Error occurred:", error);
-      alert("Wystąpił błąd podczas generowania celu. Spróbuj ponownie.");
+      console.error("SMART_CREATE: Error occurred:", error.response?.data || error.message);
+      const detail = error.response?.data?.detail;
+      const errorMsg = typeof detail === 'string' ? detail : JSON.stringify(detail);
+      alert(`Wystąpił błąd podczas generowania celu: ${errorMsg || error.message}`);
     }
+
   });
 
   if (!isOpen) return null;

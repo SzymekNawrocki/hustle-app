@@ -14,7 +14,8 @@ import {
   Flame,
   AlertCircle,
   Clock,
-  CheckCircle2
+  CheckCircle2,
+  Trash2
 } from "lucide-react";
 
 export default function HealthPage() {
@@ -27,6 +28,19 @@ export default function HealthPage() {
     queryFn: async () => {
       const response = await api.get("/health/meals");
       return response.data;
+    },
+  });
+
+  const deleteMealMutation = useMutation({
+    mutationFn: async (mealId: number) => {
+      await api.delete(`/health/meals/${mealId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["meals"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-today"] });
+    },
+    onError: (err) => {
+      console.error("Failed to delete meal:", err);
     },
   });
 
@@ -165,9 +179,17 @@ export default function HealthPage() {
                         <span className="text-[10px] font-medium opacity-30 group-hover:opacity-60 transition-opacity">
                           {new Date(meal.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
-                        <div className="p-2 bg-base-200 rounded-lg border border-base-300 opacity-0 group-hover:opacity-100 transition-all cursor-pointer hover:bg-primary/10 hover:border-primary/30">
-                          <CheckCircle2 className="w-4 h-4 text-success" />
-                        </div>
+                        <button
+                          onClick={() => deleteMealMutation.mutate(meal.id)}
+                          className="btn btn-ghost btn-sm text-error hover:bg-error/10"
+                          disabled={deleteMealMutation.isPending}
+                        >
+                          {deleteMealMutation.isPending ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-4 h-4" />
+                          )}
+                        </button>
                       </div>
                     </div>
                   </div>
