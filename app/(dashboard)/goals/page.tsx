@@ -89,13 +89,6 @@ export default function GoalsPage() {
           <p className="text-base-content/60 mt-2 font-medium">Zdefiniuj i monitoruj swoje postępy z AI.</p>
         </div>
         <div className="flex gap-3">
-           <button
-            onClick={() => setIsModalOpen(true)}
-            className="btn btn-outline btn-lg gap-2 font-bold"
-          >
-            <Sparkles className="w-6 h-6 text-primary" />
-            Smart Create
-          </button>
           <button
             onClick={() => setIsModalOpen(true)}
             className="btn btn-primary btn-lg shadow-xl gap-2 font-bold"

@@ -52,20 +52,17 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-base-100 flex items-center justify-center p-4 selection:bg-primary selection:text-primary-content">
-      {/* Background decorations */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/10 blur-[120px] rounded-full animate-pulse delay-700" />
-      </div>
+      {/* Background decorations removed */}
+
       
       <div className="w-full max-w-md relative animate-in fade-in zoom-in duration-500">
-        <div className="card bg-base-200 border border-base-300 shadow-2xl overflow-hidden">
-          <div className="h-1.5 bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] animate-shimmer" />
+        <div className="card bg-base-200 border border-base-300 overflow-hidden">
+          <div className="h-1.5 bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto]" />
 
           <div className="card-body p-8 lg:p-10 space-y-8">
             <div className="text-center space-y-4">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <div className="p-2 bg-primary rounded-lg shadow-lg">
+                <div className="p-2 bg-primary rounded-lg">
                   <LogIn className="w-6 h-6 text-primary-content" />
                 </div>
                 <h1 className="text-3xl font-bold text-primary">HustleOS</h1>
@@ -78,7 +75,7 @@ export default function LoginPage() {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {error && (
-                <div className="alert alert-error shadow-lg rounded-xl border-none text-xs font-bold py-3">
+                <div className="alert alert-error rounded-xl border-none text-xs font-bold py-3">
                   <AlertCircle className="w-5 h-5 shrink-0" />
                   <span>{error}</span>
                 </div>
@@ -136,7 +133,7 @@ export default function LoginPage() {
               <button
                 disabled={isLoading}
                 type="submit"
-                className="btn btn-primary btn-block btn-lg shadow-xl shadow-primary/20 gap-3 font-bold normal-case h-14 mt-4"
+                className="btn btn-primary btn-block btn-lg gap-3 font-bold normal-case h-14 mt-4"
               >
                 {isLoading ? (
                   <span className="loading loading-spinner"></span>
