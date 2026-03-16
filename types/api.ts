@@ -217,6 +217,7 @@ export interface JobOffer {
   company?: string | null;
   status: OfferStatus;
   url: string;
+  notes?: string | null;
   user_id: number;
 }
 

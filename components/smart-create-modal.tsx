@@ -40,59 +40,62 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-2xl animate-in fade-in duration-500 font-sans">
       <div 
-        className="card w-full max-w-lg bg-base-200 border border-base-300 shadow-2xl overflow-hidden animate-in zoom-in duration-300"
+        className="card w-full max-w-lg bg-base-200/50 backdrop-blur-xl border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden animate-in zoom-in duration-500 rounded-[2.5rem]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="h-1.5 bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] animate-shimmer" />
+        <div className="h-2 bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] animate-gradient" />
         
-        <div className="card-body p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Sparkles className="w-5 h-5 text-primary" />
+        <div className="card-body p-10">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-primary/20 rounded-2xl shadow-inner border border-white/5">
+                <Sparkles className="w-8 h-8 text-primary" />
               </div>
-              <h2 className="card-title text-2xl font-bold text-base-content">Smart Create</h2>
+              <div>
+                <h2 className="text-2xl font-display text-base-content tracking-tight">Smart Create</h2>
+                <p className="text-[10px] font-display opacity-40 mt-1 tracking-wider leading-relaxed">Opisz swój cel, a AI zaplanuje Twoją drogę do sukcesu.</p>
+              </div>
             </div>
             <button 
               onClick={onClose}
-              className="btn btn-ghost btn-sm btn-square"
+              className="btn btn-ghost btn-md btn-square rounded-2xl opacity-40 hover:opacity-100 transition-all"
             >
               <X className="w-6 h-6" />
             </button>
           </div>
 
-          <div className="space-y-6 text-left">
+          <div className="space-y-8 text-left">
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-bold opacity-40 text-xs">Opisz swój cel</span>
+                <span className="label-text-alt font-display opacity-40 tracking-wider">Twój Cel</span>
               </label>
               <textarea
                 value={idea}
                 onChange={(e) => setIdea(e.target.value)}
                 placeholder="Np. Chciałbym nauczyć się Next.js w miesiąc i zbudować portfolio"
-                className="textarea textarea-bordered h-36 bg-base-100 focus:textarea-primary transition-all resize-none text-base"
+                className="textarea textarea-bordered h-44 bg-base-100/50 border-white/5 focus:textarea-primary transition-all resize-none text-base p-6 rounded-2xl leading-relaxed"
               />
             </div>
 
-            <p className="text-xs opacity-60 text-center">
+            <p className="text-[9px] font-display opacity-30 text-center tracking-wide px-8 leading-relaxed">
               AI przeanalizuje Twój pomysł i wygeneruje konkretny cel wraz z listą kroków milowych.
             </p>
 
             <button
               onClick={() => mutate(idea)}
               disabled={isPending || !idea.trim()}
-              className="btn btn-primary btn-block shadow-lg gap-2 text-lg h-14"
+              className="btn btn-primary btn-block btn-lg gap-4 font-display text-lg tracking-wide shadow-[0_0_20px_rgba(123,46,255,0.2)] transition-all hover:scale-[1.01] h-14"
             >
               {isPending ? (
                 <>
                   <span className="loading loading-spinner"></span>
-                  AI generuje cele...
+                  AI generuje...
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-5 h-5" />
+                  <Sparkles className="w-6 h-6" />
                   Generuj cel z AI
                 </>
               )}

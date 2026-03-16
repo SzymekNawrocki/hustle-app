@@ -42,7 +42,7 @@ export async function getOffers() {
   return (await res.json()) as JobOffer[];
 }
 
-export async function createOffer(input: { title: string; company?: string; status: OfferStatus; url: string }) {
+export async function createOffer(input: { title: string; company?: string; status: OfferStatus; url: string; notes?: string }) {
   const res = await fetch(`${getApiBase()}/offers`, {
     method: "POST",
     headers: {
@@ -88,6 +88,29 @@ export async function updateOfferStatus(offerId: number, formData: FormData) {
   if (!res.ok) {
     const text = await res.text();
     throw new Error(text || `Failed to update offer (${res.status})`);
+  }
+
+  revalidatePath("/career");
+}
+
+export async function updateOfferNotes(offerId: number, notes: string) {
+  const res = await fetch(`${getApiBase()}/offers/${offerId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(await getAuthHeader()),
+    },
+    body: JSON.stringify({ notes }),
+  });
+
+  if (res.status === 401) {
+    (await cookies()).delete("token");
+    redirect("/login");
+  }
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || `Failed to update notes (${res.status})`);
   }
 
   revalidatePath("/career");

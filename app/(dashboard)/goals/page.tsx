@@ -82,29 +82,29 @@ export default function GoalsPage() {
 
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700">
+    <div className="space-y-10 animate-in fade-in duration-700 font-sans">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-bold text-base-content tracking-tight">Twoje Cele</h1>
-          <p className="text-base-content/60 mt-2 font-medium">Zdefiniuj i monitoruj swoje postępy z AI.</p>
+          <h1 className="text-3xl lg:text-5xl font-display text-base-content tracking-tight border-l-4 border-primary pl-4">Twoje cele</h1>
+          <p className="text-base-content/60 mt-2 font-display tracking-wide text-[9px]">Zdefiniuj i monitoruj swoje postępy z AI.</p>
         </div>
         <div className="flex gap-3">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="btn btn-primary btn-lg shadow-xl gap-2 font-bold"
+            className="btn btn-primary btn-md shadow-[0_0_20px_rgba(123,46,255,0.2)] gap-3 font-display text-lg px-8 transition-all hover:scale-[1.02]"
           >
-            <Plus className="w-6 h-6" />
+            <Plus className="w-5 h-5" />
             Nowy cel
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-8">
+      <div className="grid grid-cols-1 gap-10">
         {goals?.length === 0 && (
-          <div className="card bg-base-200 border-2 border-dashed border-base-300 p-20 text-center">
-             <div className="flex flex-col items-center gap-4 opacity-40">
-                <Target className="w-16 h-16" />
-                <p className="text-xl font-bold">Brak aktywnych celów. Zacznij od Smart Create!</p>
+          <div className="card bg-base-200/50 backdrop-blur-md border border-white/5 p-24 text-center rounded-[3rem] shadow-2xl">
+             <div className="flex flex-col items-center gap-6 opacity-40">
+                <Target className="w-24 h-24" />
+                <p className="text-xl font-display tracking-wide">Brak aktywnych celów. Zacznij od Smart Create!</p>
              </div>
           </div>
         )}
@@ -112,54 +112,54 @@ export default function GoalsPage() {
         {goals?.map((goal) => (
           <div 
             key={goal.id} 
-            className="card bg-base-200 border border-base-300 shadow-xl overflow-hidden group"
+            className="card bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden group rounded-[2.5rem]"
           >
-            <div className="h-1 bg-gradient-to-r from-primary/50 to-secondary/50" />
+            <div className="h-2 bg-gradient-to-r from-primary via-secondary to-primary animate-gradient bg-[length:200%_auto]" />
             <div className="card-body p-0">
-              <div className="p-8 flex flex-col lg:flex-row gap-8">
+              <div className="p-10 flex flex-col lg:flex-row gap-12">
                 {/* Goal Info */}
-                <div className="lg:w-1/3 space-y-6">
+                <div className="lg:w-1/3 space-y-8">
                   <div className="flex items-start justify-between">
-                    <div className="p-4 bg-primary/10 rounded-2xl">
-                      <Target className="w-8 h-8 text-primary" />
+                    <div className="p-5 bg-primary/20 rounded-2xl shadow-inner border border-white/5">
+                      <Target className="w-10 h-10 text-primary" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className={`badge font-bold py-4 px-4 ${
-                        goal.status === "COMPLETED" ? "badge-success" : "badge-info"
+                    <div className="flex items-center gap-3">
+                      <div className={`badge font-display py-3 px-4 tracking-tight ${
+                        goal.status === "COMPLETED" ? "badge-secondary" : "badge-primary"
                       }`}>
                         {goal.status === "COMPLETED" ? "Ukończono" : "W toku"}
                       </div>
                       <button
                         onClick={() => deleteGoalMutation.mutate(goal.id)}
-                        className="btn btn-ghost btn-sm text-error hover:bg-error/10"
+                        className="btn btn-ghost btn-md text-error/20 hover:text-error hover:bg-error/10 transition-all rounded-xl"
                         disabled={deleteGoalMutation.isPending}
                       >
                         {deleteGoalMutation.isPending ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-6 h-6" />
                         )}
                       </button>
                     </div>
                   </div>
 
                   <div>
-                    <h2 className="text-3xl font-bold text-base-content leading-tight">{goal.title}</h2>
-                    <p className="text-base-content/60 mt-4 font-medium leading-relaxed">{goal.description}</p>
+                    <h2 className="text-2xl lg:text-3xl font-display text-base-content leading-tight tracking-tight">{goal.title}</h2>
+                    <p className="text-base-content/60 mt-6 font-display tracking-wide text-[9px] leading-relaxed pr-6">{goal.description}</p>
                   </div>
 
-                  <div className="space-y-4 pt-4">
-                    <div className="flex items-center justify-between text-sm font-bold">
-                      <span className="opacity-40 uppercase tracking-wider text-[10px]">Twój postęp</span>
-                      <span className="text-primary">{goal.progress_percentage}%</span>
+                  <div className="space-y-6 pt-6">
+                    <div className="flex items-center justify-between font-display tracking-wider text-[9px]">
+                      <span className="opacity-40">Twój postęp</span>
+                      <span className="text-secondary">{goal.progress_percentage}%</span>
                     </div>
                     <progress 
-                      className={`progress w-full h-4 shadow-inner ${goal.status === "COMPLETED" ? "progress-success" : "progress-primary"}`} 
+                      className={`progress w-full h-4 shadow-inner border border-white/5 rounded-full ${goal.status === "COMPLETED" ? "progress-secondary" : "progress-primary"}`} 
                       value={goal.progress_percentage} 
                       max="100"
                     ></progress>
                     
-                    <div className="flex items-center gap-3 text-xs font-bold opacity-40">
+                    <div className="flex items-center gap-3 font-display tracking-wide text-[9px] opacity-30 bg-base-300/50 p-2.5 rounded-xl w-fit border border-white/5">
                       <Calendar className="w-4 h-4" />
                       <span>Termin: {goal.target_date || "Brak"}</span>
                     </div>
@@ -167,26 +167,26 @@ export default function GoalsPage() {
                 </div>
 
                 {/* Subtasks / Milestones */}
-                <div className="lg:w-2/3 space-y-8">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="lg:w-2/3 space-y-10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     {/* Milestones */}
-                    <div className="space-y-4">
-                       <h3 className="text-xs font-bold uppercase tracking-widest opacity-30 flex items-center gap-2">
-                         <ChevronRight className="w-4 h-4" /> Etapy (Milestones)
+                    <div className="space-y-6">
+                       <h3 className="text-[9px] font-display tracking-widest opacity-30 flex items-center gap-3">
+                         <ChevronRight className="w-3 h-3" /> Etapy (Milestones)
                        </h3>
-                       <div className="space-y-3">
+                       <div className="space-y-4">
                          {goal.milestones?.map((m) => (
                            <button 
                             key={m.id} 
                             onClick={() => toggleMilestone(m.id)}
-                            className="flex items-center gap-3 p-4 bg-base-100/50 rounded-xl border border-base-300/50 w-full hover:bg-base-100 transition-all text-left"
+                            className="flex items-center gap-4 p-5 bg-base-100/50 backdrop-blur-sm rounded-2xl border border-white/5 w-full hover:bg-primary/5 hover:border-primary/20 transition-all text-left shadow-lg group/ms"
                            >
                              {m.is_completed ? (
-                               <CheckCircle2 className="w-5 h-5 text-success" />
+                               <CheckCircle2 className="w-6 h-6 text-secondary" />
                              ) : (
-                               <Circle className="w-5 h-5 text-base-content/20" />
+                               <Circle className="w-6 h-6 text-base-content/10 group-hover/ms:text-primary/40" />
                              )}
-                             <span className={`text-sm font-bold ${m.is_completed ? "opacity-40 line-through" : ""}`}>
+                             <span className={`font-display text-base tracking-tight ${m.is_completed ? "opacity-30 line-through" : "text-base-content"}`}>
                                {m.title}
                              </span>
                            </button>
@@ -195,30 +195,30 @@ export default function GoalsPage() {
                     </div>
 
                     {/* Tasks */}
-                    <div className="space-y-4">
-                       <h3 className="text-xs font-bold uppercase tracking-widest opacity-30 flex items-center gap-2">
-                         <ChevronRight className="w-4 h-4" /> Lista zadań (Daily Actions)
+                    <div className="space-y-6">
+                       <h3 className="text-[9px] font-display tracking-widest opacity-30 flex items-center gap-3">
+                         <ChevronRight className="w-3 h-3" /> Zadania (Daily)
                        </h3>
-                       <div className="space-y-3">
+                       <div className="space-y-4">
                          {goal.tasks?.map((t) => (
                            <button 
                             key={t.id} 
                             onClick={() => toggleTask(t.id)}
-                            className="flex items-center gap-3 p-4 bg-base-300/30 rounded-xl border border-base-300/50 w-full hover:bg-base-300 transition-all text-left group/task"
+                            className="flex items-center gap-4 p-5 bg-base-300/30 rounded-2xl border border-white/5 w-full hover:bg-secondary/5 hover:border-secondary/20 transition-all text-left group/task shadow-lg"
                            >
                              {t.is_completed ? (
-                               <CheckCircle2 className="w-5 h-5 text-success" />
+                               <CheckCircle2 className="w-6 h-6 text-secondary" />
                              ) : (
-                               <div className="p-0.5 rounded-full border-2 border-primary/40 group-hover/task:border-primary transition-colors">
+                               <div className="p-0.5 rounded-full border-2 border-primary/20 group-hover/task:border-primary transition-colors">
                                  <Circle className="w-4 h-4 text-transparent" />
                                </div>
                              )}
-                             <span className={`text-sm font-semibold flex-1 ${t.is_completed ? "opacity-40 line-through font-medium" : ""}`}>
+                             <span className={`font-display text-base tracking-tight ${t.is_completed ? "opacity-30 line-through" : "text-base-content"}`}>
                                {t.title}
                              </span>
                            </button>
                          ))}
-                         <button className="btn btn-ghost btn-block btn-sm border-dashed border-base-300 mt-2 opacity-50 hover:opacity-100">
+                         <button className="btn btn-ghost btn-block btn-md border-2 border-dashed border-white/5 mt-4 opacity-40 hover:opacity-100 hover:text-primary hover:border-primary/40 font-display tracking-wider text-[10px] transition-all rounded-2xl">
                             + Dodaj zadanie
                          </button>
                        </div>

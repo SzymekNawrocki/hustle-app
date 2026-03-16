@@ -55,13 +55,11 @@ export default function AddTransactionModal({ isOpen, onClose, existingAssets }:
     mutationFn: async (data: FormData) => {
       let assetId: number;
       
-      // Check if asset exists
       const existing = existingAssets.find(a => a.ticker.toUpperCase() === data.ticker.toUpperCase());
       
       if (existing) {
         assetId = existing.id;
       } else {
-        // Create asset
         const assetRes = await api.post("/finance/assets", {
           ticker: data.ticker.toUpperCase(),
           name: data.name,
@@ -70,7 +68,6 @@ export default function AddTransactionModal({ isOpen, onClose, existingAssets }:
         assetId = assetRes.data.id;
       }
 
-      // Create transaction
       await api.post("/finance/transactions", {
         type: data.type,
         amount: data.amount,
@@ -94,34 +91,35 @@ export default function AddTransactionModal({ isOpen, onClose, existingAssets }:
   if (!isOpen) return null;
 
   return (
-    <div className="modal modal-open">
-      <div className="modal-box bg-base-200 border border-base-300 shadow-2xl p-0 overflow-hidden max-w-lg">
-        <div className="p-6 border-b border-base-300 flex items-center justify-between bg-base-300/20">
-          <h3 className="font-bold text-xl flex items-center gap-2">
-            <Plus className="w-5 h-5 text-primary" />
-            Dodaj transakcję
+    <div className="modal modal-open font-sans">
+      <div className="modal-box bg-base-200/50 backdrop-blur-xl border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.8)] p-0 overflow-hidden max-w-lg rounded-[2.5rem]">
+        <div className="h-2 bg-gradient-to-r from-primary via-secondary to-primary animate-gradient bg-[length:200%_auto]" />
+        <div className="p-8 border-b border-white/5 flex items-center justify-between bg-base-300/30">
+          <h3 className="text-xl font-display flex items-center gap-3">
+            <TrendingUp className="w-6 h-6 text-secondary" />
+            Dodaj operację
           </h3>
-          <button onClick={onClose} className="btn btn-ghost btn-sm btn-square">
-            <X className="w-5 h-5" />
+          <button onClick={onClose} className="btn btn-ghost btn-md btn-square rounded-2xl opacity-40 hover:opacity-100 transition-all">
+            <X className="w-8 h-8" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit((data) => addMutation.mutate(data))} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit((data) => addMutation.mutate(data))} className="p-8 space-y-6">
           {error && (
-            <div className="alert alert-error text-xs font-bold py-2 rounded-xl">
+            <div className="alert alert-error text-[9px] font-display py-3 rounded-xl border-none shadow-lg tracking-wider">
               {error}
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div className="form-control">
               <label className="label py-1">
-                <span className="label-text font-bold text-xs opacity-60">Ticker</span>
+                <span className="label-text font-display text-[9px] opacity-40 tracking-wider">Ticker</span>
               </label>
               <input
                 {...register("ticker")}
                 placeholder="np. BTC, AAPL"
-                className={`input input-bordered bg-base-100 focus:input-primary transition-all font-bold ${errors.ticker ? 'input-error' : ''}`}
+                className={`input input-bordered bg-base-100/50 border-white/5 focus:input-primary transition-all font-display text-lg py-5 rounded-2xl ${errors.ticker ? 'input-error' : ''}`}
                 onChange={(e) => {
                   const val = e.target.value.toUpperCase();
                   setValue("ticker", val);
@@ -132,131 +130,131 @@ export default function AddTransactionModal({ isOpen, onClose, existingAssets }:
                   }
                 }}
               />
-              {errors.ticker && <span className="text-[10px] text-error mt-1 font-bold">{errors.ticker.message}</span>}
+              {errors.ticker && <span className="text-[10px] text-error mt-2 font-display tracking-wider">{errors.ticker.message}</span>}
             </div>
 
             <div className="form-control">
               <label className="label py-1">
-                <span className="label-text font-bold text-xs opacity-60">Typ aktywa</span>
+                <span className="label-text font-display text-[9px] opacity-40 tracking-wider">Typ aktywa</span>
               </label>
               <select 
                 {...register("asset_type")}
-                className="select select-bordered bg-base-100 font-bold"
+                className="select select-bordered bg-base-100/50 border-white/5 font-display tracking-wide h-12 rounded-2xl"
               >
-                <option value={AssetType.STOCK}>Akcja (Stock)</option>
-                <option value={AssetType.CRYPTO}>Kryptowaluta</option>
-                <option value={AssetType.CASH}>Gotówka</option>
+                <option value={AssetType.STOCK} className="bg-base-200">Akcja</option>
+                <option value={AssetType.CRYPTO} className="bg-base-200">Krypto</option>
+                <option value={AssetType.CASH} className="bg-base-200">Gotówka</option>
               </select>
             </div>
           </div>
 
           <div className="form-control">
             <label className="label py-1">
-              <span className="label-text font-bold text-xs opacity-60">Nazwa pełna</span>
+              <span className="label-text font-display text-[9px] opacity-40 tracking-wider">Nazwa pełna</span>
             </label>
             <input
               {...register("name")}
               placeholder="np. Bitcoin, Apple Inc."
-              className={`input input-bordered bg-base-100 focus:input-primary transition-all font-medium ${errors.name ? 'input-error' : ''}`}
+              className={`input input-bordered bg-base-100/50 border-white/5 focus:input-primary transition-all font-display tracking-tight py-5 rounded-2xl ${errors.name ? 'input-error' : ''}`}
             />
-            {errors.name && <span className="text-[10px] text-error mt-1 font-bold">{errors.name.message}</span>}
+            {errors.name && <span className="text-[9px] text-error mt-2 font-display">{errors.name.message}</span>}
           </div>
 
-          <div className="divider opacity-10 my-0" />
+          <div className="divider opacity-5 my-2" />
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div className="form-control">
               <label className="label py-1">
-                <span className="label-text font-bold text-xs opacity-60">Ilość</span>
+                <span className="label-text font-display text-[9px] opacity-40 tracking-wider">Ilość</span>
               </label>
               <div className="relative">
                 <input
                   type="number"
                   step="any"
                   {...register("amount", { valueAsNumber: true })}
-                  className={`input input-bordered w-full bg-base-100 font-bold pr-12 ${errors.amount ? 'input-error' : ''}`}
+                  className={`input input-bordered w-full bg-base-100/50 border-white/5 font-display text-lg py-5 rounded-2xl ${errors.amount ? 'input-error' : ''}`}
                 />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none opacity-40 font-bold text-xs">
+                <div className="absolute inset-y-0 right-0 flex items-center pr-5 pointer-events-none opacity-40 font-display text-[9px] tracking-tight">
                   UNIT
                 </div>
               </div>
-              {errors.amount && <span className="text-[10px] text-error mt-1 font-bold">{errors.amount.message}</span>}
+              {errors.amount && <span className="text-[9px] text-error mt-2 font-display">{errors.amount.message}</span>}
             </div>
 
             <div className="form-control">
               <label className="label py-1">
-                <span className="label-text font-bold text-xs opacity-60">Cena / jedn.</span>
+                <span className="label-text font-display text-[9px] opacity-40 tracking-wider">Cena / jedn.</span>
               </label>
               <div className="relative">
                 <input
                   type="number"
                   step="any"
                   {...register("price_per_unit", { valueAsNumber: true })}
-                  className={`input input-bordered w-full bg-base-100 font-bold pr-8 ${errors.price_per_unit ? 'input-error' : ''}`}
+                  className={`input input-bordered w-full bg-base-100/50 border-white/5 font-display text-lg py-5 rounded-2xl ${errors.price_per_unit ? 'input-error' : ''}`}
                 />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none opacity-40">
-                  <DollarSign className="w-3 h-3" />
+                <div className="absolute inset-y-0 right-0 flex items-center pr-5 pointer-events-none text-secondary">
+                  <DollarSign className="w-4 h-4" />
                 </div>
               </div>
-              {errors.price_per_unit && <span className="text-[10px] text-error mt-1 font-bold">{errors.price_per_unit.message}</span>}
+              {errors.price_per_unit && <span className="text-[9px] text-error mt-2 font-display">{errors.price_per_unit.message}</span>}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div className="form-control">
               <label className="label py-1">
-                <span className="label-text font-bold text-xs opacity-60">Typ transakcji</span>
+                <span className="label-text font-display text-[9px] opacity-40 tracking-wider">Typ transakcji</span>
               </label>
-              <div className="flex gap-2 p-1 bg-base-300 rounded-xl">
+              <div className="flex gap-2 p-1 bg-base-300/50 rounded-2xl border border-white/5">
                  <button 
                    type="button"
                    onClick={() => setValue("type", TransactionType.BUY)}
-                   className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${watch("type") === TransactionType.BUY ? 'bg-success text-success-content' : 'opacity-40'}`}
+                   className={`flex-1 py-2 rounded-xl font-display text-[10px] transition-all ${watch("type") === TransactionType.BUY ? 'bg-primary text-white shadow-[0_0_15px_rgba(123,46,255,0.3)]' : 'opacity-20 hover:opacity-40'}`}
                  >
-                   ZAKUP
+                   Zakup
                  </button>
                  <button 
                    type="button"
                    onClick={() => setValue("type", TransactionType.SELL)}
-                   className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${watch("type") === TransactionType.SELL ? 'bg-error text-error-content' : 'opacity-40'}`}
+                   className={`flex-1 py-2 rounded-xl font-display text-[10px] transition-all ${watch("type") === TransactionType.SELL ? 'bg-secondary text-black shadow-[0_0_15px_rgba(0,212,255,0.3)]' : 'opacity-20 hover:opacity-40'}`}
                  >
-                   SPRZEDAŻ
+                   Sprzedaż
                  </button>
               </div>
             </div>
 
             <div className="form-control">
               <label className="label py-1">
-                <span className="label-text font-bold text-xs opacity-60">Prowizja</span>
+                <span className="label-text font-display text-[9px] opacity-40 tracking-wider">Prowizja</span>
               </label>
               <input
                 type="number"
                 step="any"
                 {...register("fee", { valueAsNumber: true })}
-                className="input input-bordered bg-base-100 font-bold"
+                className="input input-bordered bg-base-100/50 border-white/5 font-display text-lg py-5 rounded-2xl"
               />
             </div>
           </div>
 
-          <div className="pt-4 flex gap-3">
+          <div className="pt-6 flex gap-4">
              <button 
               type="button" 
               onClick={onClose} 
-              className="btn btn-ghost flex-1 font-bold"
+              className="btn btn-ghost flex-1 font-display text-[10px] opacity-40 hover:opacity-100 transition-all rounded-2xl h-12"
              >
                Anuluj
              </button>
              <button 
               type="submit" 
               disabled={addMutation.isPending}
-              className="btn btn-primary flex-[2] font-bold shadow-lg"
+              className="btn btn-primary flex-[2] font-display text-lg shadow-[0_0_30px_rgba(123,46,255,0.2)] rounded-2xl h-12 transition-all hover:scale-[1.01]"
              >
-               {addMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Zapisz transakcję"}
+               {addMutation.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Zapisz operację"}
              </button>
           </div>
         </form>
       </div>
-      <div className="modal-backdrop bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="modal-backdrop bg-black/80 backdrop-blur-md" onClick={onClose}></div>
     </div>
   );
 }

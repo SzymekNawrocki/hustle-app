@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Exo_2 } from "next/font/google";
 import "./globals.css";
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat",
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+const exo2 = Exo_2({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-exo2",
 });
 
 export const metadata: Metadata = {
@@ -21,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" data-theme="luxury" className={montserrat.variable}>
+    <html lang="pl" data-theme="luxury" className={`${exo2.variable}`}>
       <body
         className="font-sans antialiased"
       >

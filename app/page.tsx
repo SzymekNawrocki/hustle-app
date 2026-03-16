@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { 
   BarChart3, 
   Sparkles
@@ -14,17 +15,35 @@ export default function LandingPage() {
         <section className="relative overflow-hidden flex-1 flex flex-col justify-center py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative w-full">
             <div className="text-center max-w-4xl mx-auto space-y-8">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-base-200 border border-base-300 shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-[10px] font-semibold opacity-70">Wspierane przez Groq AI</span>
+              <div className="flex justify-center mb-12 animate-in fade-in zoom-in duration-1000 relative">
+                <div className="absolute inset-0 bg-primary/10 blur-[120px] rounded-full -z-10 scale-150" />
+                <Image 
+                  src="/hustle-app.png" 
+                  alt="Hustle App Interface" 
+                  width={200} 
+                  height={100} 
+                  className="rounded-3xl shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] border border-base-300 transform hover:scale-[1.01] transition-all duration-700"
+                  priority
+                />
               </div>
-              
-              <p className="text-xl lg:text-2xl text-base-content/60  max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
-                Zintegrowana platforma do zarządzania karierą, finansami i zdrowiem. Podnieś swoje życie na wyższy poziom z HustleOS.
-              </p>
+
+              <div className="space-y-4">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-base-200 border border-base-300 shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  <span className="text-[10px] font-semibold opacity-70">Wspierane przez Groq AI</span>
+                </div>
+                
+                <h1 className="text-4xl lg:text-6xl font-display tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
+                  Podnieś swoje życie na <span className="text-primary">wyższy poziom</span>
+                </h1>
+                
+                <p className="text-lg lg:text-xl text-base-content/60 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200 font-sans">
+                  Zintegrowana platforma do zarządzania karierą, finansami i zdrowiem z HustleOS.
+                </p>
+              </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-10 duration-700 delay-300">
-                <Link href="/login" className="btn btn-primary btn-lg px-12 gap-3 text-lg font-bold">
+                <Link href="/login" className="btn btn-primary btn-lg px-12 gap-3 text-lg">
                   Zaloguj się
                 </Link>
               </div>

@@ -4,8 +4,12 @@
 }
 
 @theme {
-  --font-sans: var(--font-montserrat), "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-exo2), "Exo 2", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-exo2), "Exo 2", sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
+  
+  --color-primary-hover: #9152ff;
+  --color-secondary-hover: #33dcff;
 }
 
 :root {
@@ -13,36 +17,71 @@
   font-feature-settings: "kern", "liga", "clig", "calt";
 }
 
-* {
-  font-family: var(--font-sans) !important;
-}
-
-html, body {
-  font-family: var(--font-sans) !important;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 [data-theme="luxury"] {
-  --color-primary: #efbf04;
-  --color-primary-content: #000000;
-  --color-base-100: #000000;
-  --color-base-200: #0a0a0a;
-  --color-base-300: #141414;
-  --color-base-content: #ffffff;
+  --color-primary: #7B2EFF;
+  --color-primary-content: #ffffff;
+  --color-secondary: #00D4FF;
+  --color-secondary-content: #0D0D0D;
+  --color-accent: #00D4FF;
+  --color-accent-content: #0D0D0D;
+  --color-base-100: #0D0D0D;
+  --color-base-200: #1A1A1A;
+  --color-base-300: #262626;
+  --color-base-content: #EDEDED;
+  
+  --rounded-box: 1rem;
+  --rounded-btn: 0.5rem;
+  --border-btn: 1px;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  letter-spacing: normal;
+  text-transform: none !important;
 }
 
 body {
   background-color: var(--color-base-100);
   color: var(--color-base-content);
-}
-
-* {
-  font-family: var(--font-montserrat), "Montserrat", sans-serif !important;
-}
-
-html, body {
-  font-family: var(--font-montserrat), "Montserrat", sans-serif !important;
+  font-family: var(--font-sans) !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  text-transform: none !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.btn {
+  font-family: var(--font-sans) !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  letter-spacing: normal;
+  text-transform: none !important;
+}
+
+.card {
+  background-color: var(--color-base-200);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btn-primary {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary-content) !important;
+  box-shadow: 0 0 20px rgba(123, 46, 255, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover) !important;
+  border-color: var(--color-primary-hover) !important;
+  box-shadow: 0 0 30px rgba(123, 46, 255, 0.4);
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: -0.01em;
 }

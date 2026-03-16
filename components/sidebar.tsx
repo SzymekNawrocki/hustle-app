@@ -37,7 +37,7 @@ export function Sidebar() {
   const NavContent = () => (
     <div className="flex flex-col h-full bg-base-100 border-r border-base-300 p-4">
       <div className="flex items-center justify-between mb-8 px-2">
-        <h2 className="text-2xl font-bold text-primary tracking-tight">HustleOS</h2>
+        <h1 className="text-xl font-display text-primary tracking-tight">HustleOS</h1>
         <button className="lg:hidden btn btn-ghost btn-sm btn-square" onClick={() => setIsOpen(false)}>
           <X className="w-6 h-6" />
         </button>
@@ -51,10 +51,10 @@ export function Sidebar() {
               key={item.name}
               href={item.href}
               onClick={() => setIsOpen(false)}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 btn justify-start normal-case ${
-                isActive 
-                  ? "btn-primary shadow-lg" 
-                  : "btn-ghost text-base-content/70 hover:text-base-content"
+              className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 font-display text-sm ${
+                isActive
+                  ? "bg-primary text-primary-content shadow-[0_0_20px_rgba(123,46,255,0.3)] ring-1 ring-white/20"
+                  : "text-base-content/60 hover:bg-white/5 hover:text-base-content"
               }`}
             >
               <item.icon className="w-5 h-5" />
@@ -67,9 +67,9 @@ export function Sidebar() {
       <div className="mt-auto pt-4 border-t border-base-300">
         <button
           onClick={handleLogout}
-          className="btn btn-ghost btn-error w-full flex justify-start gap-3 normal-case"
+          className="btn btn-ghost btn-block gap-4 font-display text-xs text-error hover:bg-error/10 rounded-2xl border border-white/5"
         >
-          <LogOut className="w-5 h-5" />
+          <LogOut className="w-5 h-5 shrink-0" />
           Wyloguj się
         </button>
       </div>
