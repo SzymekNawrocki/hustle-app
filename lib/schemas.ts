@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { GoalCategory, GoalStatus, JobStatus, InterviewType, AssetType, TransactionType } from "../types/api";
+import { GoalCategory, GoalStatus, JobStatus, InterviewType } from "../types/api";
 
 export const loginSchema = z.object({
   username: z.string().email("Invalid email address"),
@@ -38,21 +38,6 @@ export const jobApplicationSchema = z.object({
   status: z.nativeEnum(JobStatus).default(JobStatus.TO_APPLY),
   listing_url: z.string().url("Invalid URL").optional().or(z.literal("")),
   description_raw: z.string().optional(),
-});
-
-export const assetSchema = z.object({
-  ticker: z.string().min(1, "Ticker is required"),
-  name: z.string().min(1, "Name is required"),
-  asset_type: z.nativeEnum(AssetType).default(AssetType.CASH),
-});
-
-export const transactionSchema = z.object({
-  type: z.nativeEnum(TransactionType),
-  amount: z.number().positive("Amount must be positive"),
-  price_per_unit: z.number().nonnegative("Price cannot be negative"),
-  fee: z.number().nonnegative("Fee cannot be negative").default(0),
-  timestamp: z.string().optional(),
-  asset_id: z.number(),
 });
 
 export const mealLogSchema = z.object({

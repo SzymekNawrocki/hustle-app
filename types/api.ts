@@ -30,17 +30,6 @@ export enum InterviewType {
   FINAL = "FINAL",
 }
 
-export enum AssetType {
-  CRYPTO = "CRYPTO",
-  STOCK = "STOCK",
-  CASH = "CASH",
-}
-
-export enum TransactionType {
-  BUY = "BUY",
-  SELL = "SELL",
-}
-
 export interface Task {
   id: number;
   title: string;
@@ -62,6 +51,9 @@ export interface Habit {
 export interface DashboardToday {
   tasks: Task[];
   habits: Habit[];
+  finance_balance: number;
+  health_calories: number;
+  active_goals_count: number;
 }
 
 export interface SmartCreateInput {
@@ -150,46 +142,6 @@ export interface JobApplicationCreate {
   description_raw?: string;
 }
 
-export interface Asset {
-  id: number;
-  ticker: string;
-  name: string;
-  asset_type: AssetType;
-  user_id: number;
-}
-
-export interface AssetPortfolioResponse extends Asset {
-  transactions: Transaction[];
-  total_quantity: number;
-  total_invested: number;
-  average_buy_price: number;
-}
-
-export interface AssetCreate {
-  ticker: string;
-  name: string;
-  asset_type?: AssetType;
-}
-
-export interface Transaction {
-  id: number;
-  type: TransactionType;
-  amount: number;
-  price_per_unit: number;
-  fee: number;
-  timestamp: string;
-  asset_id: number;
-}
-
-export interface TransactionCreate {
-  type: TransactionType;
-  amount: number;
-  price_per_unit: number;
-  fee?: number;
-  timestamp?: string;
-  asset_id: number;
-}
-
 export interface MealLog {
   id: number;
   description: string;
@@ -245,4 +197,24 @@ export interface CareerAnalysisResponse {
   cons: string[];
   missing_skills: string[];
   summary: string;
+}
+
+export enum ExpenseCategory {
+  OPLATY = "OPLATY",
+  HUSTLE = "HUSTLE",
+  LIFESTYLE = "LIFESTYLE",
+  INCOME = "INCOME",
+}
+
+export interface Expense {
+  id: number;
+  amount: number;
+  category: ExpenseCategory;
+  description: string;
+  timestamp: string;
+  user_id: number;
+}
+
+export interface HustleInputRequest {
+  text: string;
 }

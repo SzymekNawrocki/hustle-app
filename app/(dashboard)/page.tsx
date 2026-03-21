@@ -13,6 +13,7 @@ import {
   Sparkles, 
   BarChart3 
 } from "lucide-react";
+import HustleInput from "@/components/finance/HustleInput";
 
 export default function DashboardPage() {
   const { data, isLoading } = useQuery<DashboardToday>({
@@ -125,6 +126,11 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
+            <HustleInput type="INCOME" />
+            <HustleInput type="EXPENSE" />
+          </div>
 
           <div className="card bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl">
              <div className="card-body p-6">
@@ -132,15 +138,17 @@ export default function DashboardPage() {
                 <div className="space-y-4">
                    <div className="flex items-center justify-between">
                       <p className="text-[10px] font-display tracking-wider opacity-60">Finanse</p>
-                      <p className="text-lg font-display text-secondary tracking-tighter">+2,400 zł</p>
+                      <p className={`text-lg font-display tracking-tighter ${data?.finance_balance && data.finance_balance >= 0 ? 'text-secondary' : 'text-error'}`}>
+                        {data?.finance_balance ? (data.finance_balance > 0 ? `+${data.finance_balance}` : data.finance_balance) : '0'} zł
+                      </p>
                    </div>
                    <div className="flex items-center justify-between">
                       <p className="text-[10px] font-display tracking-wider opacity-60">Zdrowie</p>
-                      <p className="text-lg font-display text-secondary tracking-tighter">1,850 kcal</p>
+                      <p className="text-lg font-display text-secondary tracking-tighter">{Math.round(data?.health_calories || 0)} kcal</p>
                    </div>
                    <div className="flex items-center justify-between">
                       <p className="text-[10px] font-display tracking-wider opacity-60">Cele</p>
-                      <p className="text-lg font-display text-secondary tracking-tighter">4 ukończone</p>
+                      <p className="text-lg font-display text-secondary tracking-tighter">{data?.active_goals_count || 0} aktywne</p>
                    </div>
                 </div>
              </div>

@@ -1,4 +1,27 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { DashboardToday } from "@/types/api";
+
 export default function DashboardPage() {
+  const { data, isLoading } = useQuery<DashboardToday>({
+    queryKey: ["dashboard-today"],
+    queryFn: async () => {
+      const response = await api.get("/goals/dashboard/today");
+      return response.data;
+    },
+  });
+
+  if (isLoading) return <div className="p-10">Ładowanie...</div>;
+
+  const stats = [
+    { label: "Aktywne Cele", value: `${data?.active_goals_count || 0}`, color: "text-blue-500" },
+    { label: "Finanse (Dziś)", value: `${data?.finance_balance || 0} zł`, color: data?.finance_balance && data.finance_balance >= 0 ? "text-emerald-500" : "text-error" },
+    { label: "Dzisiejsze Kalorie", value: `${Math.round(data?.health_calories || 0)} kcal`, color: "text-orange-500" },
+    { label: "Nawyki", value: `${data?.habits.length || 0}`, color: "text-cyan-500" },
+  ];
+
   return (
     <div className="space-y-6">
       <div>
@@ -7,12 +30,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { label: "Aktywne Cele", value: "12", color: "text-blue-500" },
-          { label: "Wysłane Aplikacje", value: "24", color: "text-cyan-500" },
-          { label: "Wartość Portfela", value: "12,400 zł", color: "text-emerald-500" },
-          { label: "Dzisiejsze Kalorie", value: "1,850 kcal", color: "text-orange-500" },
-        ].map((stat) => (
+        {stats.map((stat) => (
           <div key={stat.label} className="bg-[#111114] border border-white/5 p-6 rounded-2xl">
             <p className="text-[10px] font-display text-gray-500 tracking-wider whitespace-nowrap">{stat.label}</p>
             <p className={`text-2xl font-display mt-2 ${stat.color} tracking-tighter`}>{stat.value}</p>
