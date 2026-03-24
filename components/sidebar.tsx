@@ -17,7 +17,7 @@ import { removeToken } from "@/lib/auth";
 import { useState } from "react";
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Cele", href: "/goals", icon: Target },
   { name: "Finanse", href: "/finance", icon: Wallet },
   { name: "Zdrowie", href: "/health", icon: HeartPulse },

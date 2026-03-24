@@ -12,6 +12,12 @@
   --color-secondary-hover: #33dcff;
 }
 
+@layer base {
+  *, ::before, ::after {
+    box-shadow: none !important;
+  }
+}
+
 :root {
   font-family: var(--font-sans);
   font-feature-settings: "kern", "liga", "clig", "calt";
@@ -70,13 +76,11 @@ body {
   background-color: var(--color-primary) !important;
   border-color: var(--color-primary) !important;
   color: var(--color-primary-content) !important;
-  box-shadow: 0 0 20px rgba(123, 46, 255, 0.2);
 }
 
 .btn-primary:hover {
   background-color: var(--color-primary-hover) !important;
   border-color: var(--color-primary-hover) !important;
-  box-shadow: 0 0 30px rgba(123, 46, 255, 0.4);
 }
 
 .stat-value {

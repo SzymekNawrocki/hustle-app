@@ -54,6 +54,10 @@ export interface DashboardToday {
   finance_balance: number;
   health_calories: number;
   active_goals_count: number;
+  recent_offers: JobOffer[];
+  today_meals: MealLog[];
+  recent_expenses: Expense[];
+  latest_goal: Goal | null;
 }
 
 export interface SmartCreateInput {
@@ -217,4 +221,15 @@ export interface Expense {
 
 export interface HustleInputRequest {
   text: string;
+}
+
+export interface ActivityDay {
+  date: string;
+  finance: number;
+  health: number;
+  goals: number;
+}
+
+export interface ActivityHistory {
+  days: ActivityDay[];
 }
