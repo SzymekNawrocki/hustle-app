@@ -8,7 +8,7 @@ import { z } from "zod";
 import { api, getApiError } from "@/lib/api";
 import { setToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { LogIn, Mail, Lock, Loader2, AlertCircle, ArrowRight } from "lucide-react";
+import { LogIn, Mail, Lock, Loader2, AlertCircle, ArrowRight, Stars } from "lucide-react";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -40,6 +40,20 @@ export default function LoginPage() {
         },
       });
 
+      setToken(response.data.access_token);
+      router.push("/dashboard");
+    } catch (err) {
+      setError(getApiError(err));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await api.post("/auth/demo-login");
       setToken(response.data.access_token);
       router.push("/dashboard");
     } catch (err) {
@@ -141,6 +155,16 @@ export default function LoginPage() {
                     Zaloguj się <ArrowRight className="w-5 h-5" />
                   </>
                 )}
+              </button>
+
+              <button
+                disabled={isLoading}
+                onClick={handleDemoLogin}
+                type="button"
+                className="btn btn-outline btn-block btn-lg gap-3 font-display text-sm tracking-wide h-12 border-primary/20 hover:bg-primary/10 hover:border-primary/40 transition-all"
+              >
+                <Stars className="w-4 h-4 text-primary" />
+                Wypróbuj Demo
               </button>
             </form>
 
