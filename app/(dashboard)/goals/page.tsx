@@ -84,13 +84,13 @@ export default function GoalsPage() {
       <Alert variant="destructive" className="shadow-lg">
         <AlertDescription className="flex items-start justify-between gap-4">
           <div>
-            <div className="font-medium">Błąd podczas ładowania celów!</div>
+            <div className="font-medium">Error loading goals!</div>
             <div className="text-xs opacity-80">
               {(error as any)?.response?.data?.detail || (error as any).message}
             </div>
           </div>
           <Button size="sm" onClick={() => refetch()}>
-            Spróbuj ponownie
+            Try again
           </Button>
         </AlertDescription>
       </Alert>
@@ -102,8 +102,8 @@ export default function GoalsPage() {
     <div className="space-y-10 animate-in fade-in duration-700 font-sans">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl lg:text-5xl font-display text-base-content tracking-tight border-l-4 border-primary pl-4">Twoje cele</h1>
-          <p className="text-base-content/60 mt-2 font-display tracking-wide text-xs">Zdefiniuj i monitoruj swoje postępy z AI.</p>
+          <h1 className="text-3xl lg:text-5xl font-display text-base-content tracking-tight border-l-4 border-primary pl-4">Your goals</h1>
+          <p className="text-base-content/60 mt-2 font-display tracking-wide text-xs">Define and track your progress with AI.</p>
         </div>
         <div className="flex gap-3">
           <Button
@@ -111,7 +111,7 @@ export default function GoalsPage() {
             className="shadow-[0_0_20px_rgba(123,46,255,0.2)] gap-3 font-display text-lg px-8 transition-all hover:scale-[1.02]"
           >
             <Plus className="w-5 h-5" />
-            Nowy cel
+            New goal
           </Button>
         </div>
       </div>
@@ -123,7 +123,7 @@ export default function GoalsPage() {
               <div className="flex flex-col items-center gap-6 opacity-40">
                 <Target className="w-24 h-24" />
                 <p className="text-xl font-display tracking-wide">
-                  Brak aktywnych celów. Zacznij od Smart Create!
+                  No active goals. Start with Smart Create!
                 </p>
               </div>
             </CardContent>
@@ -148,7 +148,7 @@ export default function GoalsPage() {
                         variant={goal.status === "COMPLETED" ? "secondary" : "default"}
                         className="font-display py-3 px-4 tracking-tight"
                       >
-                        {goal.status === "COMPLETED" ? "Ukończono" : "W toku"}
+                        {goal.status === "COMPLETED" ? "Completed" : "In progress"}
                       </Badge>
                       <Button
                         onClick={() => deleteGoalMutation.mutate(goal.id)}
@@ -173,7 +173,7 @@ export default function GoalsPage() {
 
                   <div className="space-y-6 pt-6">
                     <div className="flex items-center justify-between font-display tracking-wide text-xs">
-                      <span className="opacity-40">Twój postęp</span>
+                      <span className="opacity-40">Your progress</span>
                       <span className="text-secondary">{goal.progress_percentage}%</span>
                     </div>
                     <div className="w-full h-4 rounded-full border border-white/5 bg-base-300/40 overflow-hidden shadow-inner">
@@ -185,7 +185,7 @@ export default function GoalsPage() {
                     
                     <div className="flex items-center gap-3 font-display tracking-wide text-xs opacity-40 bg-base-300/50 p-2.5 rounded-xl w-fit border border-white/5">
                       <Calendar className="w-4 h-4" />
-                      <span>Termin: {goal.target_date || "Brak"}</span>
+                      <span>Due: {goal.target_date || "N/A"}</span>
                     </div>
                   </div>
                 </div>
@@ -196,7 +196,7 @@ export default function GoalsPage() {
                     {/* Milestones */}
                     <div className="space-y-6">
                        <h3 className="text-xs font-display tracking-wide opacity-40 flex items-center gap-3">
-                         <ChevronRight className="w-3 h-3" /> Etapy (Milestones)
+                         <ChevronRight className="w-3 h-3" /> Milestones
                        </h3>
                        <div className="space-y-4">
                          {goal.milestones?.map((m) => (
@@ -221,7 +221,7 @@ export default function GoalsPage() {
                     {/* Tasks */}
                     <div className="space-y-6">
                        <h3 className="text-xs font-display tracking-wide opacity-40 flex items-center gap-3">
-                         <ChevronRight className="w-3 h-3" /> Zadania (Daily)
+                         <ChevronRight className="w-3 h-3" /> Tasks (daily)
                        </h3>
                        <div className="space-y-4">
                          {goal.tasks?.map((t) => (
@@ -246,7 +246,7 @@ export default function GoalsPage() {
                            variant="outline"
                            className="w-full border-2 border-dashed border-white/5 mt-4 opacity-40 hover:opacity-100 hover:text-primary hover:border-primary/40 font-display tracking-wide text-xs transition-all rounded-2xl"
                          >
-                           + Dodaj zadanie
+                           + Add task
                          </Button>
                        </div>
                     </div>

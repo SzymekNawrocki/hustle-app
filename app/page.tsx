@@ -35,17 +35,17 @@ export default function LandingPage() {
                 </div>
                 
                 <h1 className="text-4xl lg:text-6xl font-display tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
-                  Podnieś swoje życie na <span className="text-primary">wyższy poziom</span>
+                  Level up your life to the <span className="text-primary">next stage</span>
                 </h1>
                 
                 <p className="text-lg lg:text-xl text-base-content/60 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200 font-sans">
-                  Zintegrowana platforma do zarządzania karierą, finansami i zdrowiem z HustleOS.
+                  An integrated platform to manage your career, finances, and health with HustleOS.
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-10 duration-700 delay-300">
                 <Button asChild size="lg" className="px-12 gap-3 text-lg">
-                  <Link href="/login">Zaloguj się</Link>
+                  <Link href="/login">Sign in</Link>
                 </Button>
               </div>
             </div>

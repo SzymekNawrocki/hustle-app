@@ -32,7 +32,7 @@ export default function HustleInput({ type }: HustleInputProps) {
     },
     onSuccess: (data) => {
       setStatus("success");
-      setMessage(`Zapisano: ${data.amount} zł (${data.category})`);
+      setMessage(`Saved: ${data.amount} PLN (${data.category})`);
       setText("");
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-today"] });
@@ -40,7 +40,7 @@ export default function HustleInput({ type }: HustleInputProps) {
     },
     onError: (err: any) => {
       setStatus("error");
-      setMessage(err.response?.data?.detail || "Błąd parsowania. Spróbuj inaczej.");
+      setMessage(err.response?.data?.detail || "Parsing error. Try a different phrasing.");
       setTimeout(() => setStatus("idle"), 5000);
     },
   });
@@ -59,8 +59,8 @@ export default function HustleInput({ type }: HustleInputProps) {
             {isIncome ? <Landmark className="w-5 h-5" /> : <Wallet className="w-5 h-5" />}
           </div>
           <div>
-            <h3 className="text-sm font-display tracking-wider uppercase">{isIncome ? 'Wpływ gotówki' : 'Wydatek Hustle'}</h3>
-            <p className="text-xs opacity-50 font-sans uppercase tracking-wide">{isIncome ? 'Wypłata, przelew, bonus' : 'Kursy, jedzenie, lifestyle...'}</p>
+            <h3 className="text-sm font-display tracking-wider uppercase">{isIncome ? 'Cash inflow' : 'Hustle expense'}</h3>
+            <p className="text-xs opacity-50 font-sans uppercase tracking-wide">{isIncome ? 'Salary, transfer, bonus' : 'Courses, food, lifestyle...'}</p>
           </div>
         </div>
 
@@ -69,7 +69,7 @@ export default function HustleInput({ type }: HustleInputProps) {
             type="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder={isIncome ? "np. 5000 zł od szefa..." : "np. 50 zł na pizzę..."}
+            placeholder={isIncome ? "e.g. 5000 PLN salary..." : "e.g. 50 PLN for pizza..."}
             className={`w-full bg-base-100/50 border-white/5 transition-all font-sans text-sm py-6 rounded-2xl pr-12 h-14 focus:ring-1 ${isIncome ? 'focus:ring-success border-success/20' : 'focus:ring-primary border-primary/20'}`}
             disabled={hustleMutation.isPending}
           />

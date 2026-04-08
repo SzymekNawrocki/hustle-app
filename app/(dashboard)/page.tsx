@@ -76,15 +76,15 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl lg:text-4xl font-display text-base-content tracking-tight mb-2">Dashboard</h1>
-          <p className="text-sm text-base-content/60 font-sans">Witaj z powrotem! Oto podsumowanie Twojego dnia.</p>
+          <p className="text-sm text-base-content/60 font-sans">Welcome back! Here’s your day at a glance.</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="p-3 bg-base-200 rounded-xl border border-white/5 shadow-2xl">
             <Calendar className="w-5 h-5 text-primary" />
           </div>
           <div className="text-right">
-            <p className="text-xs font-display opacity-40 tracking-wide">Dzisiaj jest</p>
-            <p className="font-display text-lg tracking-tight">{new Date().toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+            <p className="text-xs font-display opacity-40 tracking-wide">Today is</p>
+            <p className="font-display text-lg tracking-tight">{new Date().toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
           </div>
         </div>
       </div>
@@ -93,9 +93,9 @@ export default function DashboardPage() {
         <div className="lg:col-span-2 space-y-8">
           <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl">
             <CardHeader className="p-6 flex flex-row items-center justify-between">
-              <CardTitle className="text-xl font-display text-base-content tracking-wide">Zadania na dziś</CardTitle>
+              <CardTitle className="text-xl font-display text-base-content tracking-wide">Today’s tasks</CardTitle>
               <Button variant="ghost" size="sm" className="text-primary font-display tracking-tight">
-                Pokaż wszystkie
+                View all
               </Button>
             </CardHeader>
             <CardContent className="p-6 pt-0">
@@ -107,10 +107,10 @@ export default function DashboardPage() {
                     </div>
                     <div className="flex-1">
                       <p className="text-base-content">{item.title}</p>
-                      <p className="text-xs font-display opacity-50 tracking-wide">Deadline: Dzisiaj, 18:00</p>
+                      <p className="text-xs font-display opacity-50 tracking-wide">Due: Today, 6:00 PM</p>
                     </div>
                     <Badge variant="outline" className="border-white/10 font-display px-3 py-3 tracking-tighter whitespace-nowrap">
-                      W toku
+                      In progress
                     </Badge>
                   </div>
                 ))}
@@ -120,7 +120,7 @@ export default function DashboardPage() {
 
           <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden">
             <CardHeader className="p-6 flex flex-row items-center justify-between">
-              <CardTitle className="text-xl font-display text-base-content tracking-wide">Nawyki</CardTitle>
+              <CardTitle className="text-xl font-display text-base-content tracking-wide">Habits</CardTitle>
               <Sparkles className="w-5 h-5 text-secondary animate-pulse" />
             </CardHeader>
             <CardContent className="p-6 pt-0">
@@ -128,9 +128,7 @@ export default function DashboardPage() {
                 {items.filter(i => i.category === 'NAWYK').map((item) => (
                   <div key={item.id} className="p-4 bg-base-100/50 rounded-2xl border border-white/5">
                     <div className="flex items-center justify-between mb-3 font-display">
-                      <span className="text-xs text-secondary tracking-wide">
-                        Codziennie
-                      </span>
+                      <span className="text-xs text-secondary tracking-wide">Daily</span>
                       <span className="text-xs opacity-60">75%</span>
                     </div>
                     <p className="text-base-content mb-3 tracking-tight">{item.title}</p>
@@ -150,13 +148,13 @@ export default function DashboardPage() {
               <BarChart3 className="w-32 h-32" />
             </div>
             <CardContent className="p-8 relative">
-              <h3 className="text-xs font-display mb-4 tracking-wide opacity-80">AI Insight</h3>
+              <h3 className="text-xs font-display mb-4 tracking-wide opacity-80">AI insight</h3>
               <p className="text-xl font-display leading-tight mb-6">
-                "Twoja produktywność wzrosła o 15%. Trzymaj to tempo!"
+                “Your productivity is up by 15%. Keep it up!”
               </p>
               <div className="flex items-center gap-2 text-xs font-display opacity-80 border-t border-primary-content/20 pt-4 tracking-tight">
                 <Zap className="w-4 h-4 fill-current" />
-                Analiza skończona 5 min temu
+                Analysis completed 5 minutes ago
               </div>
             </CardContent>
           </Card>
@@ -168,21 +166,21 @@ export default function DashboardPage() {
 
           <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl">
              <CardContent className="p-6">
-                <h3 className="text-xs font-display mb-4 tracking-wider opacity-40">Szybki podgląd</h3>
+                <h3 className="text-xs font-display mb-4 tracking-wider opacity-40">Quick overview</h3>
                 <div className="space-y-4">
                    <div className="flex items-center justify-between">
-                      <p className="text-xs font-display tracking-wide opacity-60">Finanse</p>
+                      <p className="text-xs font-display tracking-wide opacity-60">Finance</p>
                       <p className={`text-lg font-display tracking-tighter ${data?.finance_balance && data.finance_balance >= 0 ? 'text-secondary' : 'text-error'}`}>
-                        {data?.finance_balance ? (data.finance_balance > 0 ? `+${data.finance_balance}` : data.finance_balance) : '0'} zł
+                        {data?.finance_balance ? (data.finance_balance > 0 ? `+${data.finance_balance}` : data.finance_balance) : '0'} PLN
                       </p>
                    </div>
                    <div className="flex items-center justify-between">
-                      <p className="text-xs font-display tracking-wide opacity-60">Zdrowie</p>
+                      <p className="text-xs font-display tracking-wide opacity-60">Health</p>
                       <p className="text-lg font-display text-secondary tracking-tighter">{Math.round(data?.health_calories || 0)} kcal</p>
                    </div>
                    <div className="flex items-center justify-between">
-                      <p className="text-xs font-display tracking-wide opacity-60">Cele</p>
-                      <p className="text-lg font-display text-secondary tracking-tighter">{data?.active_goals_count || 0} aktywne</p>
+                      <p className="text-xs font-display tracking-wide opacity-60">Goals</p>
+                      <p className="text-lg font-display text-secondary tracking-tighter">{data?.active_goals_count || 0} active</p>
                    </div>
                 </div>
              </CardContent>

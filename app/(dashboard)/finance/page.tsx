@@ -101,7 +101,7 @@ export default function FinancePage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl lg:text-5xl font-display text-base-content tracking-tight border-l-4 border-primary pl-4 uppercase">Finance Flow</h1>
-          <p className="text-base-content/60 mt-2 font-display tracking-wide text-xs uppercase opacity-60">Zarządzanie majątkiem 3 koszyków</p>
+          <p className="text-base-content/60 mt-2 font-display tracking-wide text-xs uppercase opacity-60">Manage your money across 3 buckets</p>
         </div>
       </div>
 
@@ -111,11 +111,11 @@ export default function FinancePage() {
               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform duration-500">
                 <Wallet className="w-24 h-24" />
               </div>
-              <div className="font-display text-xs opacity-60 tracking-wide uppercase">Bilans całkowity</div>
+              <div className="font-display text-xs opacity-60 tracking-wide uppercase">Total balance</div>
               <div className={`text-4xl font-display mt-2 tracking-tight ${balance >= 0 ? 'text-success' : 'text-error'}`}>
-                {balance.toLocaleString()} zł
+                {balance.toLocaleString()} PLN
               </div>
-              <div className="mt-2 font-display opacity-50 tracking-wide text-xs uppercase">Dostępne środki w systemie</div>
+              <div className="mt-2 font-display opacity-50 tracking-wide text-xs uppercase">Available funds</div>
             </CardContent>
           </Card>
 
@@ -124,9 +124,9 @@ export default function FinancePage() {
               <div className="absolute top-0 right-0 p-4 opacity-5 text-success group-hover:scale-110 transition-transform duration-500">
                 <ArrowUpCircle className="w-24 h-24" />
               </div>
-              <div className="font-display text-xs opacity-60 tracking-wide uppercase">Suma przychodów</div>
-              <div className="text-4xl font-display mt-2 text-success tracking-tight">{totalIncome.toLocaleString()} zł</div>
-              <div className="mt-2 font-display text-success/70 tracking-wide text-xs uppercase">Całkowity wpływ</div>
+              <div className="font-display text-xs opacity-60 tracking-wide uppercase">Total income</div>
+              <div className="text-4xl font-display mt-2 text-success tracking-tight">{totalIncome.toLocaleString()} PLN</div>
+              <div className="mt-2 font-display text-success/70 tracking-wide text-xs uppercase">Total inflow</div>
             </CardContent>
           </Card>
 
@@ -135,9 +135,9 @@ export default function FinancePage() {
               <div className="absolute top-0 right-0 p-4 opacity-5 text-error group-hover:scale-110 transition-transform duration-500">
                 <ArrowDownCircle className="w-24 h-24" />
               </div>
-              <div className="font-display text-xs opacity-60 tracking-wide uppercase">Suma wydatków</div>
-              <div className="text-4xl font-display mt-2 text-error tracking-tight">{totalExpenses.toLocaleString()} zł</div>
-              <div className="mt-2 font-display text-error/70 tracking-wide text-xs uppercase">Łączne koszty</div>
+              <div className="font-display text-xs opacity-60 tracking-wide uppercase">Total expenses</div>
+              <div className="text-4xl font-display mt-2 text-error tracking-tight">{totalExpenses.toLocaleString()} PLN</div>
+              <div className="mt-2 font-display text-error/70 tracking-wide text-xs uppercase">Total cost</div>
             </CardContent>
           </Card>
       </div>
@@ -153,24 +153,24 @@ export default function FinancePage() {
             <CardHeader className="p-6 border-b border-white/5 bg-base-300/30 flex flex-row items-center justify-between">
                   <CardTitle className="text-xl font-display text-base-content tracking-wide flex items-center gap-3">
                     <Activity className="w-5 h-5 text-primary" />
-                    Ostatnie operacje
+                    Recent transactions
                   </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-base-300/30 text-base-content/40 tracking-wide text-xs font-display border-white/5 uppercase hover:bg-base-300/30">
-                      <TableHead className="py-6 pl-8">Opis i data</TableHead>
-                      <TableHead className="py-6">Kategoria</TableHead>
-                      <TableHead className="py-6">Kwota</TableHead>
-                      <TableHead className="py-6 pr-8 text-right">Akcja</TableHead>
+                      <TableHead className="py-6 pl-8">Description & date</TableHead>
+                      <TableHead className="py-6">Category</TableHead>
+                      <TableHead className="py-6">Amount</TableHead>
+                      <TableHead className="py-6 pr-8 text-right">Action</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {expenses?.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={4} className="py-20 text-center opacity-40 font-display text-xs">
-                          Brak operacji do wyświetlenia. Wpisz coś powyżej!
+                          No transactions to display. Add one above!
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -181,7 +181,7 @@ export default function FinancePage() {
                               {exp.description}
                             </div>
                             <div className="text-xs opacity-40 uppercase tracking-wider mt-1">
-                              {new Date(exp.timestamp).toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                              {new Date(exp.timestamp).toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                             </div>
                           </TableCell>
                           <TableCell className="py-6">
@@ -193,7 +193,7 @@ export default function FinancePage() {
                             </Badge>
                           </TableCell>
                           <TableCell className={`py-6 font-display text-lg tracking-tight ${exp.category === ExpenseCategory.INCOME ? 'text-success' : 'text-base-content'}`}>
-                            {exp.category === ExpenseCategory.INCOME ? '+' : '-'}{exp.amount.toLocaleString()} zł
+                            {exp.category === ExpenseCategory.INCOME ? '+' : '-'}{exp.amount.toLocaleString()} PLN
                           </TableCell>
                           <TableCell className="py-6 pr-8 text-right">
                             <Button
@@ -217,7 +217,7 @@ export default function FinancePage() {
         <div className="space-y-8">
           <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl p-8 sticky top-8">
             <CardTitle className="text-xl font-display text-base-content mb-8 tracking-wide flex items-center justify-between">
-              Analiza struktury
+              Breakdown
               <PieChartIcon className="w-5 h-5 opacity-20" />
             </CardTitle>
             <div className="h-[300px] w-full relative">
@@ -245,7 +245,7 @@ export default function FinancePage() {
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-xs font-display opacity-40 tracking-widest uppercase">Struktura</span>
+                  <span className="text-xs font-display opacity-40 tracking-widest uppercase">Breakdown</span>
                   <span className="text-2xl font-display text-primary uppercase">Flow</span>
               </div>
             </div>
@@ -256,11 +256,11 @@ export default function FinancePage() {
                      <div className="w-2.5 h-2.5 rounded-full shadow-[0_0_10px_rgba(0,0,0,0.5)]" style={{backgroundColor: CATEGORY_COLORS[item.name]}} />
                      <span className="text-xs font-display opacity-60 tracking-wide uppercase group-hover:opacity-100 transition-opacity">{item.name}</span>
                   </div>
-                  <span className="text-xs font-display text-base-content/80">{item.value.toLocaleString()} zł</span>
+                  <span className="text-xs font-display text-base-content/80">{item.value.toLocaleString()} PLN</span>
                 </div>
               ))}
               {chartData.length === 0 && (
-                <div className="text-center py-10 opacity-20 font-display text-xs uppercase">Brak danych</div>
+                <div className="text-center py-10 opacity-20 font-display text-xs uppercase">No data</div>
               )}
             </div>
           </Card>

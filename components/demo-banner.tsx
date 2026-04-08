@@ -30,7 +30,7 @@ export function DemoBanner() {
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-primary text-xs font-display uppercase tracking-wide">
             <Info className="w-4 h-4" />
-            <span>Jesteś w trybie demo. Dane są resetowane automatycznie przy każdym logowaniu gościa.</span>
+            <span>You are in demo mode. Data is automatically reset on each guest login.</span>
           </div>
           <button 
             onClick={() => setIsVisible(false)}

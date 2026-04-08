@@ -73,8 +73,8 @@ export default function RegisterPage() {
                 <h1 className="text-4xl font-display text-primary tracking-tight">HustleOS</h1>
               </div>
               <div>
-                <h2 className="text-xl font-display text-base-content tracking-tight">Stwórz konto</h2>
-                <p className="text-base-content/60 font-display text-xs mt-2 leading-relaxed tracking-wide">Dołącz do społeczności sukcesu</p>
+                <h2 className="text-xl font-display text-base-content tracking-tight">Create an account</h2>
+                <p className="text-base-content/60 font-display text-xs mt-2 leading-relaxed tracking-wide">Join the success community</p>
               </div>
             </div>
 
@@ -90,7 +90,7 @@ export default function RegisterPage() {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text-alt font-display opacity-40 tracking-wider">Imię i nazwisko</span>
+                  <span className="label-text-alt font-display opacity-40 tracking-wider">Full name</span>
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-4 flex items-center text-primary/40 group-focus-within:text-primary transition-colors">
@@ -99,7 +99,7 @@ export default function RegisterPage() {
                   <Input
                     {...register("full_name")}
                     type="text"
-                    placeholder="Jan Kowalski"
+                    placeholder="Jane Doe"
                     className="w-full bg-base-100/50 border-white/10 pl-12 transition-all py-6 h-12 rounded-2xl"
                   />
                 </div>
@@ -112,7 +112,7 @@ export default function RegisterPage() {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text-alt font-display opacity-40 tracking-wider">Adres Email</span>
+                  <span className="label-text-alt font-display opacity-40 tracking-wider">Email</span>
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-4 flex items-center text-primary/40 group-focus-within:text-primary transition-colors">
@@ -121,7 +121,7 @@ export default function RegisterPage() {
                   <Input
                     {...register("email")}
                     type="email"
-                    placeholder="twoj@email.com"
+                    placeholder="you@example.com"
                     className="w-full bg-base-100/50 border-white/10 pl-12 transition-all py-6 h-12 rounded-2xl"
                   />
                 </div>
@@ -134,7 +134,7 @@ export default function RegisterPage() {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text-alt font-display opacity-40 tracking-wider">Hasło</span>
+                  <span className="label-text-alt font-display opacity-40 tracking-wider">Password</span>
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-4 flex items-center text-primary/40 group-focus-within:text-primary transition-colors">
@@ -163,7 +163,7 @@ export default function RegisterPage() {
                   <span className="h-4 w-4 rounded-full border-2 border-primary-foreground/40 border-t-primary-foreground animate-spin" />
                 ) : (
                   <>
-                    Zarejestruj się <ArrowRight className="w-5 h-5" />
+                    Sign up <ArrowRight className="w-5 h-5" />
                   </>
                 )}
               </Button>
@@ -172,15 +172,15 @@ export default function RegisterPage() {
             <div className="space-y-6">
               <div className="flex items-center gap-4 opacity-40">
                 <Separator className="flex-1" />
-                <span className="text-xs font-display">LUB</span>
+                <span className="text-xs font-display">OR</span>
                 <Separator className="flex-1" />
               </div>
               
               <div className="text-center">
                 <p className="text-sm opacity-60">
-                  Masz już konto?{" "}
+                  Already have an account?{" "}
                   <a href="/login" university-href="/login" className="text-primary font-display text-xs hover:opacity-70 transition-opacity">
-                    Zaloguj się
+                    Sign in
                   </a>
                 </p>
               </div>

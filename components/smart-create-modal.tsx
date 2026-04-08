@@ -36,7 +36,7 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
       console.error("SMART_CREATE: Error occurred:", error.response?.data || error.message);
       const detail = error.response?.data?.detail;
       const errorMsg = typeof detail === 'string' ? detail : JSON.stringify(detail);
-      alert(`Wystąpił błąd podczas generowania celu: ${errorMsg || error.message}`);
+      alert(`An error occurred while generating the goal: ${errorMsg || error.message}`);
     }
 
   });
@@ -57,7 +57,7 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
               </div>
               <div>
                 <h2 className="text-2xl font-display text-base-content tracking-tight">Smart Create</h2>
-                <p className="text-xs font-display opacity-50 mt-1 tracking-wide leading-relaxed">Opisz swój cel, a AI zaplanuje Twoją drogę do sukcesu.</p>
+                <p className="text-xs font-display opacity-50 mt-1 tracking-wide leading-relaxed">Describe your goal and AI will plan your path to success.</p>
               </div>
             </div>
             <Button
@@ -73,18 +73,18 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
           <div className="space-y-8 text-left">
             <div className="form-control">
               <label className="label">
-                <span className="label-text-alt font-display opacity-40 tracking-wider">Twój Cel</span>
+                <span className="label-text-alt font-display opacity-40 tracking-wider">Your goal</span>
               </label>
               <Textarea
                 value={idea}
                 onChange={(e) => setIdea(e.target.value)}
-                placeholder="Np. Chciałbym nauczyć się Next.js w miesiąc i zbudować portfolio"
+                placeholder="e.g. I want to learn Next.js in a month and build a portfolio"
                 className="h-44 bg-base-100/50 border-white/5 transition-all resize-none text-base p-6 rounded-2xl leading-relaxed"
               />
             </div>
 
             <p className="text-xs font-display opacity-40 text-center tracking-wide px-8 leading-relaxed">
-              AI przeanalizuje Twój pomysł i wygeneruje konkretny cel wraz z listą kroków milowych.
+              AI will analyze your idea and generate a concrete goal along with a list of milestones.
             </p>
 
             <Button
@@ -95,12 +95,12 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
               {isPending ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  AI generuje...
+                  AI is generating...
                 </>
               ) : (
                 <>
                   <Sparkles className="w-6 h-6" />
-                  Generuj cel z AI
+                  Generate goal with AI
                 </>
               )}
             </Button>

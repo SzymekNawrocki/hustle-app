@@ -9,7 +9,7 @@ const exo2 = Exo_2({
 
 export const metadata: Metadata = {
   title: "HustleOS",
-  description: "Zbuduj swój system sukcesu",
+  description: "Build your success system",
 };
 
 import { Providers } from "./providers";
@@ -23,12 +23,33 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const year = new Date().getFullYear();
+
   return (
-    <html lang="pl" data-theme="luxury" className={cn(exo2.variable, "font-sans", geist.variable)}>
+    <html lang="en" data-theme="luxury" className={cn(exo2.variable, "font-sans", geist.variable)}>
       <body
-        className="font-sans antialiased"
+        className="font-sans antialiased min-h-dvh flex flex-col"
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="flex-1">
+            {children}
+          </div>
+          <footer className="border-t border-border/60 bg-background/40 backdrop-blur-sm">
+            <div className="mx-auto max-w-7xl px-4 py-6 text-sm text-muted-foreground">
+              <span>© {year} </span>
+              <span>
+                <a
+                  href="https://devemite.vercel.app/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline underline-offset-4 hover:text-foreground transition-colors"
+                >
+                  Devemite
+                </a>
+              </span>
+            </div>
+          </footer>
+        </Providers>
       </body>
     </html>
   );

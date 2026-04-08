@@ -85,8 +85,8 @@ export default function LoginPage() {
                 <h1 className="text-4xl font-display text-primary tracking-tight">HustleOS</h1>
               </div>
               <div>
-                <h2 className="text-xl font-display text-base-content tracking-tight">Witaj ponownie</h2>
-                <p className="text-base-content/60 font-display text-xs mt-2 leading-relaxed tracking-wide">System sukcesu czeka na Ciebie</p>
+                <h2 className="text-xl font-display text-base-content tracking-tight">Welcome back</h2>
+                <p className="text-base-content/60 font-display text-xs mt-2 leading-relaxed tracking-wide">Your success system is waiting</p>
               </div>
             </div>
 
@@ -102,7 +102,7 @@ export default function LoginPage() {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text-alt font-display opacity-40 tracking-wider">Adres Email</span>
+                  <span className="label-text-alt font-display opacity-40 tracking-wider">Email</span>
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-4 flex items-center text-primary/40 group-focus-within:text-primary transition-colors">
@@ -111,7 +111,7 @@ export default function LoginPage() {
                   <Input
                     {...register("username")}
                     type="email"
-                    placeholder="twoj@email.com"
+                    placeholder="you@example.com"
                     className="w-full bg-base-100/50 border-white/5 pl-12 transition-all py-6 h-12 rounded-2xl"
                   />
                 </div>
@@ -125,10 +125,10 @@ export default function LoginPage() {
               <div className="form-control">
                 <div className="flex justify-between items-end mb-1">
                   <label className="label p-0">
-                    <span className="label-text-alt font-display opacity-40 tracking-wider">Hasło</span>
+                    <span className="label-text-alt font-display opacity-40 tracking-wider">Password</span>
                   </label>
                   <a href="/forgot-password" university-href="/forgot-password" className="text-xs font-display text-primary hover:opacity-70 transition-opacity tracking-wide">
-                    Zapomniałeś?
+                    Forgot?
                   </a>
                 </div>
                 <div className="relative group">
@@ -158,7 +158,7 @@ export default function LoginPage() {
                   <span className="h-4 w-4 rounded-full border-2 border-primary-foreground/40 border-t-primary-foreground animate-spin" />
                 ) : (
                   <>
-                    Zaloguj się <ArrowRight className="w-5 h-5" />
+                    Sign in <ArrowRight className="w-5 h-5" />
                   </>
                 )}
               </Button>
@@ -171,22 +171,22 @@ export default function LoginPage() {
                 className="w-full gap-3 font-display text-sm tracking-wide h-12 border-primary/20 hover:bg-primary/10 hover:border-primary/40 transition-all"
               >
                 <Stars className="w-4 h-4 text-primary" />
-                Wypróbuj Demo
+                Try Demo
               </Button>
             </form>
 
             <div className="space-y-6">
               <div className="flex items-center gap-4 opacity-40">
                 <Separator className="flex-1" />
-                <span className="text-xs font-display">LUB</span>
+                <span className="text-xs font-display">OR</span>
                 <Separator className="flex-1" />
               </div>
               
               <div className="text-center">
                 <p className="text-sm opacity-60">
-                  Nie masz jeszcze konta?{" "}
+                  Don&apos;t have an account?{" "}
                   <a href="/register" className="text-primary text-xs hover:opacity-70 transition-opacity">
-                    Zarejestruj się
+                    Sign up
                   </a>
                 </p>
               </div>

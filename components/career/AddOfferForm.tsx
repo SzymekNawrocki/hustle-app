@@ -11,6 +11,14 @@ import { Textarea } from "@/components/ui/textarea";
 
 const STATUSES = ["wysłano", "1 etap", "2 etap", "3 etap", "umowa"] as const;
 
+const STATUS_LABELS: Record<(typeof STATUSES)[number], string> = {
+  "wysłano": "Sent",
+  "1 etap": "Stage 1",
+  "2 etap": "Stage 2",
+  "3 etap": "Stage 3",
+  "umowa": "Offer",
+};
+
 export default function AddOfferForm() {
   const [isPending, startTransition] = useTransition();
   const [title, setTitle] = useState("");
@@ -33,7 +41,7 @@ export default function AddOfferForm() {
         setUrl("");
         setNotes("");
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Nie udało się dodać oferty");
+        setError(err instanceof Error ? err.message : "Failed to add offer");
       }
     });
   };
@@ -42,26 +50,26 @@ export default function AddOfferForm() {
     <form onSubmit={onSubmit} className="font-sans">
       <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden">
         <CardContent className="p-8 gap-6 flex flex-col">
-          <h2 className="text-2xl font-display text-base-content tracking-tight">Dodaj ofertę</h2>
+          <h2 className="text-2xl font-display text-base-content tracking-tight">Add offer</h2>
 
           <label className="space-y-2">
-            <span className="block font-display opacity-50 tracking-wide text-xs">Stanowisko</span>
+            <span className="block font-display opacity-50 tracking-wide text-xs">Position</span>
             <Input
               className="bg-base-100/50 border-white/5 transition-all py-6 h-12 rounded-2xl"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Np. Frontend Developer"
+              placeholder="e.g. Frontend Developer"
               required
             />
           </label>
 
           <label className="space-y-2">
-            <span className="block font-display opacity-50 tracking-wide text-xs">Firma</span>
+            <span className="block font-display opacity-50 tracking-wide text-xs">Company</span>
             <Input
               className="bg-base-100/50 border-white/5 transition-all py-6 h-12 rounded-2xl"
               value={company}
               onChange={(e) => setCompany(e.target.value)}
-              placeholder="Np. Acme"
+              placeholder="e.g. Acme"
             />
           </label>
 
@@ -74,7 +82,7 @@ export default function AddOfferForm() {
             >
               {STATUSES.map((s) => (
                 <option key={s} value={s} className="bg-base-200">
-                  {s}
+                  {STATUS_LABELS[s]}
                 </option>
               ))}
             </select>
@@ -92,12 +100,12 @@ export default function AddOfferForm() {
           </label>
 
           <label className="space-y-2">
-            <span className="block font-display opacity-50 tracking-wide text-xs">Notatki</span>
+            <span className="block font-display opacity-50 tracking-wide text-xs">Notes</span>
             <Textarea
               className="bg-base-100/50 border-white/5 transition-all h-24 resize-none rounded-2xl"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Dodatkowe informacje o ofercie..."
+              placeholder="Additional details about the offer..."
             />
           </label>
 
@@ -114,7 +122,7 @@ export default function AddOfferForm() {
             disabled={isPending}
             type="submit"
           >
-            {isPending ? "Dodawanie..." : "Dodaj"}
+            {isPending ? "Adding..." : "Add"}
           </Button>
         </CardContent>
       </Card>

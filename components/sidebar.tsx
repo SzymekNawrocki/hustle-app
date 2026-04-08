@@ -19,10 +19,10 @@ import { Button } from "@/components/ui/button";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Cele", href: "/goals", icon: Target },
-  { name: "Finanse", href: "/finance", icon: Wallet },
-  { name: "Zdrowie", href: "/health", icon: HeartPulse },
-  { name: "Kariera", href: "/career", icon: Briefcase },
+  { name: "Goals", href: "/goals", icon: Target },
+  { name: "Finance", href: "/finance", icon: Wallet },
+  { name: "Health", href: "/health", icon: HeartPulse },
+  { name: "Career", href: "/career", icon: Briefcase },
 ];
 
 function SidebarNavContent({
@@ -78,7 +78,7 @@ function SidebarNavContent({
           className="w-full justify-start gap-4 font-display text-xs text-error hover:bg-error/10 rounded-2xl border border-white/5"
         >
           <LogOut className="w-5 h-5 shrink-0" />
-          Wyloguj się
+          Log out
         </Button>
       </div>
     </div>

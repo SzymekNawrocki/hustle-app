@@ -98,17 +98,17 @@ export default function HealthPage() {
     <div className="space-y-10 animate-in fade-in duration-700 font-sans">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl lg:text-5xl font-display text-base-content tracking-tight border-l-4 border-primary pl-4">Zdrowie</h1>
-          <p className="text-base-content/60 mt-2 font-display tracking-wide text-xs">Dbałość o formę zaczyna się od świadomego jedzenia.</p>
+          <h1 className="text-3xl lg:text-5xl font-display text-base-content tracking-tight border-l-4 border-primary pl-4">Health</h1>
+          <p className="text-base-content/60 mt-2 font-display tracking-wide text-xs">Fitness starts with mindful eating.</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 text-left">
         {[
-          { label: "Kalorie", value: `${Math.round(totalNutrition.calories)} kcal`, icon: Flame, color: "text-orange-500", bg: "bg-orange-500/10", badge: "primary" },
-          { label: "Białko", value: `${Math.round(totalNutrition.protein)}g`, icon: Beef, color: "text-secondary", bg: "bg-secondary/10", badge: "secondary" },
-          { label: "Węglowody", value: `${Math.round(totalNutrition.carbs)}g`, icon: Wheat, color: "text-blue-400", bg: "bg-blue-400/10", badge: "primary" },
-          { label: "Tłuszcze", value: `${Math.round(totalNutrition.fat)}g`, icon: Dna, color: "text-purple-400", bg: "bg-purple-400/10", badge: "secondary" },
+          { label: "Calories", value: `${Math.round(totalNutrition.calories)} kcal`, icon: Flame, color: "text-orange-500", bg: "bg-orange-500/10", badge: "primary" },
+          { label: "Protein", value: `${Math.round(totalNutrition.protein)}g`, icon: Beef, color: "text-secondary", bg: "bg-secondary/10", badge: "secondary" },
+          { label: "Carbs", value: `${Math.round(totalNutrition.carbs)}g`, icon: Wheat, color: "text-blue-400", bg: "bg-blue-400/10", badge: "primary" },
+          { label: "Fat", value: `${Math.round(totalNutrition.fat)}g`, icon: Dna, color: "text-purple-400", bg: "bg-purple-400/10", badge: "secondary" },
         ].map((stat) => (
           <Card key={stat.label} className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden group">
             <CardContent className="p-8 flex flex-row items-center gap-6">
@@ -119,7 +119,7 @@ export default function HealthPage() {
                 <p className="text-xs font-display opacity-40 tracking-wide">Statystyka</p>
                 <p className={`text-4xl font-display ${stat.color} tracking-tighter`}>{stat.value}</p>
                 <Badge variant={stat.badge === "secondary" ? "secondary" : "default"} className="mt-1 font-display tracking-tighter">
-                  Dzisiaj
+                  Today
                 </Badge>
               </div>
             </CardContent>
@@ -139,7 +139,7 @@ export default function HealthPage() {
                 </div>
                 <div>
                   <h2 className="text-2xl font-display text-base-content tracking-tight">AI Meal Logger</h2>
-                  <p className="text-base-content/60 font-display tracking-wide text-xs mt-1 pr-4 leading-relaxed">Poinformuj AI co zjadłeś, a my policzymy makroskładniki.</p>
+                  <p className="text-base-content/60 font-display tracking-wide text-xs mt-1 pr-4 leading-relaxed">Tell AI what you ate and we’ll calculate your macros.</p>
                 </div>
               </div>
 
@@ -147,7 +147,7 @@ export default function HealthPage() {
                 <Textarea
                   value={mealText}
                   onChange={(e) => setMealText(e.target.value)}
-                  placeholder="Np. 2 jajka sadzone na maśle, 2 kromki chleba razowego..."
+                  placeholder="e.g. 2 fried eggs with butter, 2 slices of whole-grain bread..."
                   className="h-56 bg-base-100/50 border-white/5 transition-all text-base leading-relaxed font-sans p-6 rounded-2xl resize-none"
                 />
                 
@@ -170,7 +170,7 @@ export default function HealthPage() {
                   ) : (
                     <Utensils className="w-6 h-6" />
                   )}
-                  Dodaj posiłek
+                  Add meal
                 </Button>
               </div>
             </CardContent>
@@ -184,13 +184,13 @@ export default function HealthPage() {
                 <div className="p-3 bg-base-300/50 rounded-2xl border border-white/5">
                   <Clock className="w-6 h-6 opacity-40" />
                 </div>
-                <CardTitle className="text-xl font-display text-base-content tracking-tight">Historia posiłków</CardTitle>
+                <CardTitle className="text-xl font-display text-base-content tracking-tight">Meal history</CardTitle>
             </CardHeader>
               
             <CardContent className="p-0">
               <div className="divide-y divide-white/5 max-h-[660px] overflow-y-auto">
                 {meals?.length === 0 && (
-                  <div className="py-32 text-center opacity-40 font-display font-bold text-xl uppercase tracking-widest italic">Brak zalogowanych posiłków.</div>
+                  <div className="py-32 text-center opacity-40 font-display font-bold text-xl uppercase tracking-widest italic">No meals logged yet.</div>
                 )}
                 {meals?.map((meal) => (
                   <div key={meal.id} className="p-8 hover:bg-primary/5 transition-all group border-b border-white/5">

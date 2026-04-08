@@ -12,6 +12,14 @@ import { Textarea } from "@/components/ui/textarea";
 
 const STATUSES = ["wysłano", "1 etap", "2 etap", "3 etap", "umowa"] as const;
 
+const STATUS_LABELS: Record<(typeof STATUSES)[number], string> = {
+  "wysłano": "Sent",
+  "1 etap": "Stage 1",
+  "2 etap": "Stage 2",
+  "3 etap": "Stage 3",
+  "umowa": "Offer",
+};
+
 export default function OfferList({ offers }: { offers: JobOffer[] }) {
   const [isPending, startTransition] = useTransition();
   const [pendingOfferId, setPendingOfferId] = useState<number | null>(null);
@@ -21,7 +29,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
   return (
     <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden font-sans">
       <CardHeader className="p-8 border-b border-white/5 flex flex-row items-center justify-between bg-base-300/30">
-        <CardTitle className="text-2xl font-display text-base-content tracking-tight">Oferty</CardTitle>
+        <CardTitle className="text-2xl font-display text-base-content tracking-tight">Offers</CardTitle>
         <Badge className="font-display px-4 py-3">{offers.length}</Badge>
       </CardHeader>
 
@@ -29,7 +37,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
         <div className="divide-y divide-white/5">
           {offers.length === 0 && (
             <div className="p-16 text-center opacity-40 font-display text-xl tracking-wide">
-              Brak ofert. Dodaj pierwszą.
+              No offers yet. Add your first one.
             </div>
           )}
 
@@ -42,7 +50,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                 </div>
                 <div className="mt-4 flex flex-wrap items-center gap-4">
                   <Badge variant="secondary" className="font-display text-xs py-2.5 px-3.5 tracking-wide">
-                    {offer.status}
+                    {STATUS_LABELS[offer.status as (typeof STATUSES)[number]] ?? offer.status}
                   </Badge>
                   <select
                     name="status"
@@ -65,7 +73,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                   >
                     {STATUSES.map((s) => (
                       <option key={s} value={s} className="bg-base-200">
-                        {s}
+                        {STATUS_LABELS[s]}
                       </option>
                     ))}
                   </select>
@@ -77,7 +85,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                   >
                     <a href={offer.url} target="_blank" rel="noreferrer">
                       <ExternalLink className="w-4 h-4" />
-                      Link
+                      Open link
                     </a>
                   </Button>
                   <Button
@@ -93,7 +101,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                     size="xs"
                     className="gap-2 font-display tracking-wider opacity-60 hover:opacity-100 hover:text-primary transition-all"
                   >
-                    Notatki
+                    Notes
                   </Button>
                 </div>
 
@@ -103,7 +111,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                       className="w-full bg-base-100/30 border-white/5 transition-all h-24 resize-none text-sm rounded-2xl"
                       value={tempNotes}
                       onChange={(e) => setTempNotes(e.target.value)}
-                      placeholder="Wpisz swoje notatki..."
+                      placeholder="Write your notes..."
                     />
                     <div className="flex justify-end gap-2">
                       <Button
@@ -111,7 +119,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                         variant="ghost"
                         size="xs"
                       >
-                        Anuluj
+                        Cancel
                       </Button>
                       <Button
                         onClick={() => {
@@ -128,7 +136,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                         disabled={isPending && pendingOfferId === offer.id}
                         size="xs"
                       >
-                        {isPending && pendingOfferId === offer.id ? "Zapisywanie..." : "Zapisz"}
+                        {isPending && pendingOfferId === offer.id ? "Saving..." : "Save"}
                       </Button>
                     </div>
                   </div>

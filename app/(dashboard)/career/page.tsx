@@ -8,8 +8,8 @@ export default async function CareerPage() {
   return (
     <div className="space-y-10 animate-in fade-in duration-700 font-sans">
       <div>
-        <h1 className="text-3xl lg:text-5xl font-display text-base-content tracking-tight border-l-4 border-primary pl-4">Kariera</h1>
-        <p className="text-base-content/60 mt-2 font-display tracking-wide text-xs">Śledź aplikacje i statusy rekrutacji.</p>
+        <h1 className="text-3xl lg:text-5xl font-display text-base-content tracking-tight border-l-4 border-primary pl-4">Career</h1>
+        <p className="text-base-content/60 mt-2 font-display tracking-wide text-xs">Track your applications and recruitment status.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

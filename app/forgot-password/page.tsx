@@ -24,7 +24,7 @@ export default function ForgotPasswordPage() {
       await new Promise(resolve => setTimeout(resolve, 1500));
       setIsSent(true);
     } catch (err) {
-      setError("Wystąpił błąd. Spróbuj ponownie później.");
+      setError("Something went wrong. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
                 asChild
                 className="absolute left-0 top-0 text-base-content/40 hover:text-primary transition-colors"
               >
-                <a href="/login" university-href="/login" aria-label="Powrót">
+                <a href="/login" university-href="/login" aria-label="Back">
                   <ArrowLeft className="w-5 h-5" />
                 </a>
               </Button>
@@ -56,8 +56,8 @@ export default function ForgotPasswordPage() {
                 <h1 className="text-4xl font-display text-primary tracking-tight">HustleOS</h1>
               </div>
               <div>
-                <h2 className="text-xl font-display text-base-content tracking-tight">Zresetuj hasło</h2>
-                <p className="text-base-content/60 font-display text-xs mt-2 leading-relaxed tracking-wide">Bezpieczeństwo przede wszystkim</p>
+                <h2 className="text-xl font-display text-base-content tracking-tight">Reset password</h2>
+                <p className="text-base-content/60 font-display text-xs mt-2 leading-relaxed tracking-wide">Security first</p>
               </div>
             </div>
 
@@ -74,7 +74,7 @@ export default function ForgotPasswordPage() {
 
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text-alt font-display opacity-40 tracking-wider">Adres Email</span>
+                    <span className="label-text-alt font-display opacity-40 tracking-wider">Email</span>
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-4 flex items-center text-primary/40 group-focus-within:text-primary transition-colors">
@@ -85,7 +85,7 @@ export default function ForgotPasswordPage() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="twoj@email.com"
+                      placeholder="you@example.com"
                       className="w-full bg-base-100/50 border-white/5 pl-12 transition-all py-6 h-12 rounded-2xl"
                     />
                   </div>
@@ -99,7 +99,7 @@ export default function ForgotPasswordPage() {
                   {isLoading ? (
                     <span className="h-4 w-4 rounded-full border-2 border-primary-foreground/40 border-t-primary-foreground animate-spin" />
                   ) : (
-                    "Wyślij instrukcje"
+                    "Send instructions"
                   )}
                 </Button>
               </form>
@@ -111,9 +111,9 @@ export default function ForgotPasswordPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <h2 className="text-xl font-display text-base-content tracking-tight">Sprawdź skrzynkę</h2>
+                  <h2 className="text-xl font-display text-base-content tracking-tight">Check your inbox</h2>
                   <p className="text-base-content/60 leading-relaxed font-sans">
-                    Instrukcje resetowania hasła zostały wysłane na:<br />
+                    Password reset instructions were sent to:<br />
                     <span className="text-base-content underline decoration-primary underline-offset-4">{email}</span>
                   </p>
                 </div>
@@ -123,7 +123,7 @@ export default function ForgotPasswordPage() {
                     asChild
                     className="font-display text-xs hover:text-primary transition-colors tracking-wide"
                   >
-                    <a href="/login" university-href="/login">Powrót do logowania</a>
+                    <a href="/login" university-href="/login">Back to sign in</a>
                   </Button>
                 </div>
               </div>
@@ -131,9 +131,9 @@ export default function ForgotPasswordPage() {
 
             {!isSent && (
               <p className="mt-8 text-center text-sm opacity-60">
-                Pamiętasz hasło?{" "}
+                Remember your password?{" "}
                 <a href="/login" university-href="/login" className="text-primary font-display text-xs hover:opacity-70 transition-opacity tracking-wide">
-                  Zaloguj się
+                  Sign in
                 </a>
               </p>
             )}
