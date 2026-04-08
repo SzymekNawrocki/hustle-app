@@ -27,9 +27,9 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
   const [tempNotes, setTempNotes] = useState("");
 
   return (
-    <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden font-sans">
-      <CardHeader className="p-8 border-b border-white/5 flex flex-row items-center justify-between bg-base-300/30">
-        <CardTitle className="text-2xl font-display text-base-content tracking-tight">Offers</CardTitle>
+    <Card className="bg-card/60 backdrop-blur-md border border-border/60 shadow-2xl overflow-hidden font-sans">
+      <CardHeader className="p-8 border-b border-border/60 flex flex-row items-center justify-between bg-muted/30">
+        <CardTitle className="text-2xl font-display text-foreground tracking-tight">Offers</CardTitle>
         <Badge className="font-display px-4 py-3">{offers.length}</Badge>
       </CardHeader>
 
@@ -44,7 +44,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
           {offers.map((offer) => (
             <div key={offer.id} className="p-8 flex flex-col sm:flex-row sm:items-center gap-6 hover:bg-primary/5 transition-all">
               <div className="flex-1 min-w-0">
-                <div className="font-display text-2xl text-base-content tracking-tight truncate">
+                <div className="font-display text-2xl text-foreground tracking-tight truncate">
                   {offer.title}
                   {offer.company ? <span className="text-secondary opacity-60"> {` @ ${offer.company}`}</span> : null}
                 </div>
@@ -55,7 +55,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                   <select
                     name="status"
                     defaultValue={offer.status}
-                    className="flex h-8 rounded-xl border border-white/5 bg-base-300/50 px-2 text-xs font-display tracking-wide shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
+                    className="flex h-8 rounded-xl border border-border/60 bg-muted/30 px-2 text-xs font-display tracking-wide shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
                     disabled={isPending && pendingOfferId === offer.id}
                     onChange={(e) => {
                       const nextStatus = e.target.value;
@@ -72,7 +72,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                     }}
                   >
                     {STATUSES.map((s) => (
-                      <option key={s} value={s} className="bg-base-200">
+                      <option key={s} value={s} className="bg-popover">
                         {STATUS_LABELS[s]}
                       </option>
                     ))}
@@ -108,7 +108,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                 {editingNotesId === offer.id ? (
                   <div className="mt-4 space-y-3 animate-in fade-in slide-in-from-top-2">
                     <Textarea
-                      className="w-full bg-base-100/30 border-white/5 transition-all h-24 resize-none text-sm rounded-2xl"
+                      className="w-full bg-background/40 border-border/60 transition-all h-24 resize-none text-sm rounded-2xl"
                       value={tempNotes}
                       onChange={(e) => setTempNotes(e.target.value)}
                       placeholder="Write your notes..."
@@ -142,7 +142,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                   </div>
                 ) : (
                   offer.notes && (
-                    <div className="mt-4 p-4 bg-base-300/30 rounded-xl border border-white/5 text-sm text-base-content/60 leading-relaxed font-sans">
+                    <div className="mt-4 p-4 bg-muted/30 rounded-xl border border-border/60 text-sm text-muted-foreground leading-relaxed font-sans">
                       {offer.notes}
                     </div>
                   )
@@ -153,7 +153,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-error/40 hover:text-error hover:bg-error/10 transition-all rounded-xl"
+                  className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 transition-all rounded-xl"
                   type="submit"
                 >
                   <Trash2 className="w-6 h-6" />

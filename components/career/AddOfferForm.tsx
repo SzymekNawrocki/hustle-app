@@ -48,14 +48,14 @@ export default function AddOfferForm() {
 
   return (
     <form onSubmit={onSubmit} className="font-sans">
-      <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden">
+      <Card className="bg-card/60 backdrop-blur-md border border-border/60 shadow-2xl overflow-hidden">
         <CardContent className="p-8 gap-6 flex flex-col">
-          <h2 className="text-2xl font-display text-base-content tracking-tight">Add offer</h2>
+          <h2 className="text-2xl font-display text-foreground tracking-tight">Add offer</h2>
 
           <label className="space-y-2">
             <span className="block font-display opacity-50 tracking-wide text-xs">Position</span>
             <Input
-              className="bg-base-100/50 border-white/5 transition-all py-6 h-12 rounded-2xl"
+              className="bg-background/40 border-border/60 transition-all py-6 h-12 rounded-2xl"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Frontend Developer"
@@ -66,7 +66,7 @@ export default function AddOfferForm() {
           <label className="space-y-2">
             <span className="block font-display opacity-50 tracking-wide text-xs">Company</span>
             <Input
-              className="bg-base-100/50 border-white/5 transition-all py-6 h-12 rounded-2xl"
+              className="bg-background/40 border-border/60 transition-all py-6 h-12 rounded-2xl"
               value={company}
               onChange={(e) => setCompany(e.target.value)}
               placeholder="e.g. Acme"
@@ -76,12 +76,12 @@ export default function AddOfferForm() {
           <label className="space-y-2">
             <span className="block font-display opacity-50 tracking-wide text-xs">Status</span>
             <select
-              className="flex h-10 w-full rounded-2xl border border-white/5 bg-base-100/50 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
+              className="flex h-10 w-full rounded-2xl border border-border/60 bg-background/40 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
               value={status}
               onChange={(e) => setStatus(e.target.value as any)}
             >
               {STATUSES.map((s) => (
-                <option key={s} value={s} className="bg-base-200">
+                <option key={s} value={s} className="bg-popover">
                   {STATUS_LABELS[s]}
                 </option>
               ))}
@@ -91,7 +91,7 @@ export default function AddOfferForm() {
           <label className="space-y-2">
             <span className="block font-display opacity-50 tracking-wide text-xs">Link</span>
             <Input
-              className="bg-base-100/50 border-white/5 transition-all py-6 h-12 rounded-2xl"
+              className="bg-background/40 border-border/60 transition-all py-6 h-12 rounded-2xl"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://..."
@@ -102,7 +102,7 @@ export default function AddOfferForm() {
           <label className="space-y-2">
             <span className="block font-display opacity-50 tracking-wide text-xs">Notes</span>
             <Textarea
-              className="bg-base-100/50 border-white/5 transition-all h-24 resize-none rounded-2xl"
+              className="bg-background/40 border-border/60 transition-all h-24 resize-none rounded-2xl"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Additional details about the offer..."

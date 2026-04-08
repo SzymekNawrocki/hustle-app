@@ -46,17 +46,17 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-2xl animate-in fade-in duration-500 font-sans">
       <Card
-        className="w-full max-w-lg bg-base-200/50 backdrop-blur-xl border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden animate-in zoom-in duration-500 rounded-[2.5rem]"
+        className="w-full max-w-lg bg-card/60 backdrop-blur-xl border border-border/60 shadow-[0_0_100px_rgba(0,0,0,0.85)] overflow-hidden animate-in zoom-in duration-500 rounded-[2.5rem]"
         onClick={(e) => e.stopPropagation()}
       >
         <CardContent className="p-10">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-primary/20 rounded-2xl shadow-inner border border-white/5">
+              <div className="p-3 bg-primary/20 rounded-2xl shadow-inner border border-border/60">
                 <Sparkles className="w-8 h-8 text-primary" />
               </div>
               <div>
-                <h2 className="text-2xl font-display text-base-content tracking-tight">Smart Create</h2>
+                <h2 className="text-2xl font-display text-foreground tracking-tight">Smart Create</h2>
                 <p className="text-xs font-display opacity-50 mt-1 tracking-wide leading-relaxed">Describe your goal and AI will plan your path to success.</p>
               </div>
             </div>
@@ -79,7 +79,7 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
                 value={idea}
                 onChange={(e) => setIdea(e.target.value)}
                 placeholder="e.g. I want to learn Next.js in a month and build a portfolio"
-                className="h-44 bg-base-100/50 border-white/5 transition-all resize-none text-base p-6 rounded-2xl leading-relaxed"
+                className="h-44 bg-background/40 border-border/60 transition-all resize-none text-base p-6 rounded-2xl leading-relaxed"
               />
             </div>
 

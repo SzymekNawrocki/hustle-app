@@ -5,7 +5,7 @@ export default function Loading() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <Card className="bg-base-200/50 backdrop-blur-xl border border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+        <Card className="bg-card/60 backdrop-blur-xl border border-border/60 shadow-[0_0_50px_rgba(0,0,0,0.6)]">
           <CardContent className="p-8 lg:p-10 space-y-8">
             <div className="text-center space-y-4">
               <Skeleton className="h-10 w-48 mx-auto" />

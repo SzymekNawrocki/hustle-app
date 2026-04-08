@@ -102,8 +102,8 @@ export default function GoalsPage() {
     <div className="space-y-10 animate-in fade-in duration-700 font-sans">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl lg:text-5xl font-display text-base-content tracking-tight border-l-4 border-primary pl-4">Your goals</h1>
-          <p className="text-base-content/60 mt-2 font-display tracking-wide text-xs">Define and track your progress with AI.</p>
+          <h1 className="text-3xl lg:text-5xl font-display text-foreground tracking-tight border-l-4 border-primary pl-4">Your goals</h1>
+          <p className="text-muted-foreground mt-2 font-display tracking-wide text-xs">Define and track your progress with AI.</p>
         </div>
         <div className="flex gap-3">
           <Button
@@ -118,7 +118,7 @@ export default function GoalsPage() {
 
       <div className="grid grid-cols-1 gap-10">
         {goals?.length === 0 && (
-          <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 p-24 text-center rounded-[3rem] shadow-2xl">
+          <Card className="bg-card/60 backdrop-blur-md border border-border/60 p-24 text-center rounded-[3rem] shadow-2xl">
             <CardContent className="p-0">
               <div className="flex flex-col items-center gap-6 opacity-40">
                 <Target className="w-24 h-24" />
@@ -133,7 +133,7 @@ export default function GoalsPage() {
         {goals?.map((goal) => (
           <Card
             key={goal.id} 
-            className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden group rounded-[2.5rem]"
+            className="bg-card/60 backdrop-blur-md border border-border/60 shadow-2xl overflow-hidden group rounded-[2.5rem]"
           >
             <CardContent className="p-0">
               <div className="p-10 flex flex-col lg:flex-row gap-12">
@@ -154,7 +154,7 @@ export default function GoalsPage() {
                         onClick={() => deleteGoalMutation.mutate(goal.id)}
                         variant="ghost"
                         size="icon"
-                        className="text-error/40 hover:text-error hover:bg-error/10 transition-all rounded-xl"
+                        className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 transition-all rounded-xl"
                         disabled={deleteGoalMutation.isPending}
                       >
                         {deleteGoalMutation.isPending ? (
@@ -167,8 +167,8 @@ export default function GoalsPage() {
                   </div>
 
                   <div>
-                    <h2 className="text-2xl lg:text-3xl font-display text-base-content leading-tight tracking-tight">{goal.title}</h2>
-                    <p className="text-base-content/60 mt-6 font-display tracking-wide text-xs leading-relaxed pr-6">{goal.description}</p>
+                    <h2 className="text-2xl lg:text-3xl font-display text-foreground leading-tight tracking-tight">{goal.title}</h2>
+                    <p className="text-muted-foreground mt-6 font-display tracking-wide text-xs leading-relaxed pr-6">{goal.description}</p>
                   </div>
 
                   <div className="space-y-6 pt-6">
@@ -176,14 +176,14 @@ export default function GoalsPage() {
                       <span className="opacity-40">Your progress</span>
                       <span className="text-secondary">{goal.progress_percentage}%</span>
                     </div>
-                    <div className="w-full h-4 rounded-full border border-white/5 bg-base-300/40 overflow-hidden shadow-inner">
+                    <div className="w-full h-4 rounded-full border border-border/60 bg-muted/40 overflow-hidden shadow-inner">
                       <div
                         className={goal.status === "COMPLETED" ? "h-full bg-secondary" : "h-full bg-primary"}
                         style={{ width: `${goal.progress_percentage}%` }}
                       />
                     </div>
                     
-                    <div className="flex items-center gap-3 font-display tracking-wide text-xs opacity-40 bg-base-300/50 p-2.5 rounded-xl w-fit border border-white/5">
+                    <div className="flex items-center gap-3 font-display tracking-wide text-xs text-muted-foreground bg-muted/30 p-2.5 rounded-xl w-fit border border-border/60">
                       <Calendar className="w-4 h-4" />
                       <span>Due: {goal.target_date || "N/A"}</span>
                     </div>
@@ -203,14 +203,14 @@ export default function GoalsPage() {
                            <button 
                             key={m.id} 
                             onClick={() => toggleMilestone(m.id)}
-                            className="flex items-center gap-4 p-5 bg-base-100/50 backdrop-blur-sm rounded-2xl border border-white/5 w-full hover:bg-primary/5 hover:border-primary/20 transition-all text-left shadow-lg group/ms"
+                            className="flex items-center gap-4 p-5 bg-background/40 backdrop-blur-sm rounded-2xl border border-border/60 w-full hover:bg-primary/5 hover:border-primary/30 transition-all text-left shadow-lg group/ms"
                            >
                              {m.is_completed ? (
                                <CheckCircle2 className="w-6 h-6 text-secondary" />
                              ) : (
-                               <Circle className="w-6 h-6 text-base-content/10 group-hover/ms:text-primary/40" />
+                               <Circle className="w-6 h-6 text-foreground/10 group-hover/ms:text-primary/50" />
                              )}
-                             <span className={`font-display text-base tracking-tight ${m.is_completed ? "opacity-30 line-through" : "text-base-content"}`}>
+                             <span className={`font-display text-base tracking-tight ${m.is_completed ? "opacity-30 line-through" : "text-foreground"}`}>
                                {m.title}
                              </span>
                            </button>
@@ -228,7 +228,7 @@ export default function GoalsPage() {
                            <button 
                             key={t.id} 
                             onClick={() => toggleTask(t.id)}
-                            className="flex items-center gap-4 p-5 bg-base-300/30 rounded-2xl border border-white/5 w-full hover:bg-secondary/5 hover:border-secondary/20 transition-all text-left group/task shadow-lg"
+                            className="flex items-center gap-4 p-5 bg-muted/20 rounded-2xl border border-border/60 w-full hover:bg-secondary/5 hover:border-secondary/30 transition-all text-left group/task shadow-lg"
                            >
                              {t.is_completed ? (
                                <CheckCircle2 className="w-6 h-6 text-secondary" />
@@ -237,7 +237,7 @@ export default function GoalsPage() {
                                  <Circle className="w-4 h-4 text-transparent" />
                                </div>
                              )}
-                             <span className={`font-display text-base tracking-tight ${t.is_completed ? "opacity-30 line-through" : "text-base-content"}`}>
+                             <span className={`font-display text-base tracking-tight ${t.is_completed ? "opacity-30 line-through" : "text-foreground"}`}>
                                {t.title}
                              </span>
                            </button>

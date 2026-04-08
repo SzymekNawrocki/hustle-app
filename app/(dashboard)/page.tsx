@@ -75,11 +75,11 @@ export default function DashboardPage() {
     <div className="space-y-10 animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl lg:text-4xl font-display text-base-content tracking-tight mb-2">Dashboard</h1>
-          <p className="text-sm text-base-content/60 font-sans">Welcome back! Here’s your day at a glance.</p>
+          <h1 className="text-3xl lg:text-4xl font-display text-foreground tracking-tight mb-2">Dashboard</h1>
+          <p className="text-sm text-muted-foreground font-sans">Welcome back! Here’s your day at a glance.</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="p-3 bg-base-200 rounded-xl border border-white/5 shadow-2xl">
+          <div className="p-3 bg-card/60 rounded-xl border border-border/60 shadow-2xl">
             <Calendar className="w-5 h-5 text-primary" />
           </div>
           <div className="text-right">
@@ -91,9 +91,9 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl">
+          <Card className="bg-card/60 backdrop-blur-md border border-border/60 shadow-2xl">
             <CardHeader className="p-6 flex flex-row items-center justify-between">
-              <CardTitle className="text-xl font-display text-base-content tracking-wide">Today’s tasks</CardTitle>
+              <CardTitle className="text-xl font-display text-foreground tracking-wide">Today’s tasks</CardTitle>
               <Button variant="ghost" size="sm" className="text-primary font-display tracking-tight">
                 View all
               </Button>
@@ -101,12 +101,12 @@ export default function DashboardPage() {
             <CardContent className="p-6 pt-0">
               <div className="space-y-4 font-sans">
                 {items.filter(i => i.category === 'ZADANIE').map((item) => (
-                  <div key={item.id} className="flex items-center gap-4 p-4 bg-base-100/50 rounded-2xl border border-white/5 hover:border-primary/50 hover:bg-base-300/50 transition-all group">
+                  <div key={item.id} className="flex items-center gap-4 p-4 bg-background/40 rounded-2xl border border-border/60 hover:border-primary/50 hover:bg-accent/30 transition-all group">
                     <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary group-hover:text-primary-content transition-colors shadow-[0_0_15px_rgba(123,46,255,0.3)]">
                       <CheckCircle2 className="w-5 h-5" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-base-content">{item.title}</p>
+                      <p className="text-foreground">{item.title}</p>
                       <p className="text-xs font-display opacity-50 tracking-wide">Due: Today, 6:00 PM</p>
                     </div>
                     <Badge variant="outline" className="border-white/10 font-display px-3 py-3 tracking-tighter whitespace-nowrap">
@@ -118,21 +118,21 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden">
+          <Card className="bg-card/60 backdrop-blur-md border border-border/60 shadow-2xl overflow-hidden">
             <CardHeader className="p-6 flex flex-row items-center justify-between">
-              <CardTitle className="text-xl font-display text-base-content tracking-wide">Habits</CardTitle>
+              <CardTitle className="text-xl font-display text-foreground tracking-wide">Habits</CardTitle>
               <Sparkles className="w-5 h-5 text-secondary animate-pulse" />
             </CardHeader>
             <CardContent className="p-6 pt-0">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-sans">
                 {items.filter(i => i.category === 'NAWYK').map((item) => (
-                  <div key={item.id} className="p-4 bg-base-100/50 rounded-2xl border border-white/5">
+                  <div key={item.id} className="p-4 bg-background/40 rounded-2xl border border-border/60">
                     <div className="flex items-center justify-between mb-3 font-display">
                       <span className="text-xs text-secondary tracking-wide">Daily</span>
                       <span className="text-xs opacity-60">75%</span>
                     </div>
-                    <p className="text-base-content mb-3 tracking-tight">{item.title}</p>
-                    <div className="w-full bg-base-300 rounded-full h-2 overflow-hidden border border-white/5">
+                    <p className="text-foreground mb-3 tracking-tight">{item.title}</p>
+                    <div className="w-full bg-muted rounded-full h-2 overflow-hidden border border-border/60">
                         <div className="bg-secondary h-full rounded-full w-3/4 shadow-[0_0_15px_rgba(0,212,255,0.5)]" />
                     </div>
                   </div>
@@ -164,13 +164,13 @@ export default function DashboardPage() {
             <HustleInput type="EXPENSE" />
           </div>
 
-          <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl">
+          <Card className="bg-card/60 backdrop-blur-md border border-border/60 shadow-2xl">
              <CardContent className="p-6">
                 <h3 className="text-xs font-display mb-4 tracking-wider opacity-40">Quick overview</h3>
                 <div className="space-y-4">
                    <div className="flex items-center justify-between">
                       <p className="text-xs font-display tracking-wide opacity-60">Finance</p>
-                      <p className={`text-lg font-display tracking-tighter ${data?.finance_balance && data.finance_balance >= 0 ? 'text-secondary' : 'text-error'}`}>
+                      <p className={`text-lg font-display tracking-tighter ${data?.finance_balance && data.finance_balance >= 0 ? 'text-secondary' : 'text-destructive'}`}>
                         {data?.finance_balance ? (data.finance_balance > 0 ? `+${data.finance_balance}` : data.finance_balance) : '0'} PLN
                       </p>
                    </div>

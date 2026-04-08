@@ -70,12 +70,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-base-100 flex items-center justify-center p-4 selection:bg-primary selection:text-primary-content">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 selection:bg-primary selection:text-primary-foreground">
       <div className="fixed inset-0 bg-[#0D0D0D] -z-20" />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 blur-[150px] rounded-full -z-10 animate-pulse" />
       
       <div className="w-full max-w-md relative animate-in fade-in zoom-in duration-500">
-        <Card className="bg-base-200/50 backdrop-blur-xl border border-white/5 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+        <Card className="bg-card/60 backdrop-blur-xl border border-border/60 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.6)]">
           <CardContent className="p-8 lg:p-10 space-y-8">
             <div className="text-center space-y-4">
               <div className="flex flex-col items-center justify-center gap-4 mb-2">
@@ -85,8 +85,8 @@ export default function LoginPage() {
                 <h1 className="text-4xl font-display text-primary tracking-tight">HustleOS</h1>
               </div>
               <div>
-                <h2 className="text-xl font-display text-base-content tracking-tight">Welcome back</h2>
-                <p className="text-base-content/60 font-display text-xs mt-2 leading-relaxed tracking-wide">Your success system is waiting</p>
+                <h2 className="text-xl font-display text-foreground tracking-tight">Welcome back</h2>
+                <p className="text-muted-foreground font-display text-xs mt-2 leading-relaxed tracking-wide">Your success system is waiting</p>
               </div>
             </div>
 
@@ -112,7 +112,7 @@ export default function LoginPage() {
                     {...register("username")}
                     type="email"
                     placeholder="you@example.com"
-                    className="w-full bg-base-100/50 border-white/5 pl-12 transition-all py-6 h-12 rounded-2xl"
+                    className="w-full bg-background/40 border-border/60 pl-12 transition-all py-6 h-12 rounded-2xl"
                   />
                 </div>
                 {errors.username && (
@@ -139,7 +139,7 @@ export default function LoginPage() {
                     {...register("password")}
                     type="password"
                     placeholder="••••••••"
-                    className="w-full bg-base-100/50 border-white/5 pl-12 transition-all py-6 h-12 rounded-2xl"
+                    className="w-full bg-background/40 border-border/60 pl-12 transition-all py-6 h-12 rounded-2xl"
                   />
                 </div>
                 {errors.password && (

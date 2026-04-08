@@ -100,44 +100,44 @@ export default function FinancePage() {
     <div className="space-y-10 animate-in fade-in duration-700 font-sans pb-20">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl lg:text-5xl font-display text-base-content tracking-tight border-l-4 border-primary pl-4 uppercase">Finance Flow</h1>
-          <p className="text-base-content/60 mt-2 font-display tracking-wide text-xs uppercase opacity-60">Manage your money across 3 buckets</p>
+          <h1 className="text-3xl lg:text-5xl font-display text-foreground tracking-tight border-l-4 border-primary pl-4 uppercase">Finance Flow</h1>
+          <p className="text-muted-foreground mt-2 font-display tracking-wide text-xs uppercase opacity-60">Manage your money across 3 buckets</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 rounded-3xl shadow-2xl relative overflow-hidden group hover:border-primary/20 transition-all">
+          <Card className="bg-card/60 backdrop-blur-md border border-border/60 rounded-3xl shadow-2xl relative overflow-hidden group hover:border-primary/30 transition-all">
             <CardContent className="p-8">
               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform duration-500">
                 <Wallet className="w-24 h-24" />
               </div>
               <div className="font-display text-xs opacity-60 tracking-wide uppercase">Total balance</div>
-              <div className={`text-4xl font-display mt-2 tracking-tight ${balance >= 0 ? 'text-success' : 'text-error'}`}>
+              <div className={`text-4xl font-display mt-2 tracking-tight ${balance >= 0 ? 'text-emerald-400' : 'text-destructive'}`}>
                 {balance.toLocaleString()} PLN
               </div>
               <div className="mt-2 font-display opacity-50 tracking-wide text-xs uppercase">Available funds</div>
             </CardContent>
           </Card>
 
-          <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 rounded-3xl shadow-2xl relative overflow-hidden group hover:border-success/20 transition-all">
+          <Card className="bg-card/60 backdrop-blur-md border border-border/60 rounded-3xl shadow-2xl relative overflow-hidden group hover:border-emerald-500/30 transition-all">
             <CardContent className="p-8">
-              <div className="absolute top-0 right-0 p-4 opacity-5 text-success group-hover:scale-110 transition-transform duration-500">
+              <div className="absolute top-0 right-0 p-4 opacity-5 text-emerald-400 group-hover:scale-110 transition-transform duration-500">
                 <ArrowUpCircle className="w-24 h-24" />
               </div>
               <div className="font-display text-xs opacity-60 tracking-wide uppercase">Total income</div>
-              <div className="text-4xl font-display mt-2 text-success tracking-tight">{totalIncome.toLocaleString()} PLN</div>
-              <div className="mt-2 font-display text-success/70 tracking-wide text-xs uppercase">Total inflow</div>
+              <div className="text-4xl font-display mt-2 text-emerald-400 tracking-tight">{totalIncome.toLocaleString()} PLN</div>
+              <div className="mt-2 font-display text-emerald-300/70 tracking-wide text-xs uppercase">Total inflow</div>
             </CardContent>
           </Card>
 
-          <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 rounded-3xl shadow-2xl relative overflow-hidden group hover:border-error/20 transition-all">
+          <Card className="bg-card/60 backdrop-blur-md border border-border/60 rounded-3xl shadow-2xl relative overflow-hidden group hover:border-destructive/30 transition-all">
             <CardContent className="p-8">
-              <div className="absolute top-0 right-0 p-4 opacity-5 text-error group-hover:scale-110 transition-transform duration-500">
+              <div className="absolute top-0 right-0 p-4 opacity-5 text-destructive group-hover:scale-110 transition-transform duration-500">
                 <ArrowDownCircle className="w-24 h-24" />
               </div>
               <div className="font-display text-xs opacity-60 tracking-wide uppercase">Total expenses</div>
-              <div className="text-4xl font-display mt-2 text-error tracking-tight">{totalExpenses.toLocaleString()} PLN</div>
-              <div className="mt-2 font-display text-error/70 tracking-wide text-xs uppercase">Total cost</div>
+              <div className="text-4xl font-display mt-2 text-destructive tracking-tight">{totalExpenses.toLocaleString()} PLN</div>
+              <div className="mt-2 font-display text-destructive/70 tracking-wide text-xs uppercase">Total cost</div>
             </CardContent>
           </Card>
       </div>
@@ -149,9 +149,9 @@ export default function FinancePage() {
              <HustleInput type="EXPENSE" />
           </div>
 
-          <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden">
-            <CardHeader className="p-6 border-b border-white/5 bg-base-300/30 flex flex-row items-center justify-between">
-                  <CardTitle className="text-xl font-display text-base-content tracking-wide flex items-center gap-3">
+          <Card className="bg-card/60 backdrop-blur-md border border-border/60 shadow-2xl overflow-hidden">
+            <CardHeader className="p-6 border-b border-border/60 bg-muted/30 flex flex-row items-center justify-between">
+                  <CardTitle className="text-xl font-display text-foreground tracking-wide flex items-center gap-3">
                     <Activity className="w-5 h-5 text-primary" />
                     Recent transactions
                   </CardTitle>
@@ -159,7 +159,7 @@ export default function FinancePage() {
             <CardContent className="p-0">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-base-300/30 text-base-content/40 tracking-wide text-xs font-display border-white/5 uppercase hover:bg-base-300/30">
+                    <TableRow className="bg-muted/30 text-muted-foreground tracking-wide text-xs font-display border-border/60 uppercase hover:bg-muted/30">
                       <TableHead className="py-6 pl-8">Description & date</TableHead>
                       <TableHead className="py-6">Category</TableHead>
                       <TableHead className="py-6">Amount</TableHead>
@@ -175,9 +175,9 @@ export default function FinancePage() {
                       </TableRow>
                     ) : (
                       expenses?.map((exp) => (
-                        <TableRow key={exp.id} className="hover:bg-white/5 transition-colors border-white/5 group">
+                        <TableRow key={exp.id} className="hover:bg-accent/20 transition-colors border-border/60 group">
                           <TableCell className="py-6 pl-8 align-top whitespace-normal">
-                            <div className="font-display text-sm text-base-content group-hover:text-primary transition-colors">
+                            <div className="font-display text-sm text-foreground group-hover:text-primary transition-colors">
                               {exp.description}
                             </div>
                             <div className="text-xs opacity-40 uppercase tracking-wider mt-1">
@@ -192,7 +192,7 @@ export default function FinancePage() {
                               {exp.category}
                             </Badge>
                           </TableCell>
-                          <TableCell className={`py-6 font-display text-lg tracking-tight ${exp.category === ExpenseCategory.INCOME ? 'text-success' : 'text-base-content'}`}>
+                          <TableCell className={`py-6 font-display text-lg tracking-tight ${exp.category === ExpenseCategory.INCOME ? 'text-emerald-400' : 'text-foreground'}`}>
                             {exp.category === ExpenseCategory.INCOME ? '+' : '-'}{exp.amount.toLocaleString()} PLN
                           </TableCell>
                           <TableCell className="py-6 pr-8 text-right">
@@ -200,7 +200,7 @@ export default function FinancePage() {
                               onClick={() => deleteMutation.mutate(exp.id)}
                               variant="ghost"
                               size="icon-sm"
-                              className="text-error/40 hover:text-error hover:bg-error/10 rounded-xl transition-all"
+                              className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-xl transition-all"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
@@ -215,8 +215,8 @@ export default function FinancePage() {
         </div>
 
         <div className="space-y-8">
-          <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl p-8 sticky top-8">
-            <CardTitle className="text-xl font-display text-base-content mb-8 tracking-wide flex items-center justify-between">
+          <Card className="bg-card/60 backdrop-blur-md border border-border/60 shadow-2xl p-8 sticky top-8">
+            <CardTitle className="text-xl font-display text-foreground mb-8 tracking-wide flex items-center justify-between">
               Breakdown
               <PieChartIcon className="w-5 h-5 opacity-20" />
             </CardTitle>
@@ -251,12 +251,12 @@ export default function FinancePage() {
             </div>
             <div className="mt-8 space-y-3">
               {chartData.map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/10 transition-all group">
+                <div key={i} className="flex items-center justify-between p-4 bg-accent/20 rounded-2xl border border-border/60 hover:bg-accent/30 transition-all group">
                   <div className="flex items-center gap-3">
                      <div className="w-2.5 h-2.5 rounded-full shadow-[0_0_10px_rgba(0,0,0,0.5)]" style={{backgroundColor: CATEGORY_COLORS[item.name]}} />
                      <span className="text-xs font-display opacity-60 tracking-wide uppercase group-hover:opacity-100 transition-opacity">{item.name}</span>
                   </div>
-                  <span className="text-xs font-display text-base-content/80">{item.value.toLocaleString()} PLN</span>
+                  <span className="text-xs font-display text-muted-foreground">{item.value.toLocaleString()} PLN</span>
                 </div>
               ))}
               {chartData.length === 0 && (

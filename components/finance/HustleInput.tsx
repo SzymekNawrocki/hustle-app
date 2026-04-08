@@ -52,7 +52,7 @@ export default function HustleInput({ type }: HustleInputProps) {
   };
 
   return (
-    <Card className={`bg-base-200/50 backdrop-blur-xl border border-white/5 shadow-2xl relative overflow-hidden group transition-all ${isIncome ? 'hover:border-success/30' : 'hover:border-primary/30'}`}>
+    <Card className={`bg-card/60 backdrop-blur-xl border border-border/60 shadow-2xl relative overflow-hidden group transition-all ${isIncome ? 'hover:border-emerald-500/30' : 'hover:border-primary/30'}`}>
       <CardContent className="p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className={`p-2 rounded-lg ${isIncome ? 'bg-success/10 text-success shadow-[0_0_15px_rgba(34,197,94,0.2)]' : 'bg-primary/10 text-primary shadow-[0_0_15px_rgba(123,46,255,0.2)]'}`}>
@@ -70,14 +70,14 @@ export default function HustleInput({ type }: HustleInputProps) {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder={isIncome ? "e.g. 5000 PLN salary..." : "e.g. 50 PLN for pizza..."}
-            className={`w-full bg-base-100/50 border-white/5 transition-all font-sans text-sm py-6 rounded-2xl pr-12 h-14 focus:ring-1 ${isIncome ? 'focus:ring-success border-success/20' : 'focus:ring-primary border-primary/20'}`}
+            className={`w-full bg-background/40 border-border/60 transition-all font-sans text-sm py-6 rounded-2xl pr-12 h-14 focus:ring-1 ${isIncome ? 'focus:ring-emerald-400 border-emerald-500/20' : 'focus:ring-primary border-primary/20'}`}
             disabled={hustleMutation.isPending}
           />
           <Button
             type="submit"
             disabled={hustleMutation.isPending || !text.trim()}
             size="icon"
-            className={`absolute right-2 top-2 h-10 w-10 p-0 rounded-xl transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 ${isIncome ? 'bg-success hover:bg-success/90 text-success-content shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'shadow-[0_0_15px_rgba(123,46,255,0.3)]'}`}
+            className={`absolute right-2 top-2 h-10 w-10 p-0 rounded-xl transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 ${isIncome ? 'bg-emerald-500 hover:bg-emerald-500/90 text-white shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'shadow-[0_0_15px_rgba(123,46,255,0.3)]'}`}
           >
             {hustleMutation.isPending ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -88,7 +88,7 @@ export default function HustleInput({ type }: HustleInputProps) {
         </form>
 
         {status !== "idle" && (
-          <div className={`mt-3 text-xs font-display animate-in fade-in slide-in-from-top-1 ${status === 'success' ? 'text-success' : 'text-error'}`}>
+          <div className={`mt-3 text-xs font-display animate-in fade-in slide-in-from-top-1 ${status === 'success' ? 'text-emerald-400' : 'text-destructive'}`}>
             {message}
           </div>
         )}

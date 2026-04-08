@@ -26,7 +26,7 @@ export default function RootLayout({
   const year = new Date().getFullYear();
 
   return (
-    <html lang="en" data-theme="luxury" className={cn(exo2.variable, "font-sans", geist.variable)}>
+    <html lang="en" className={cn(exo2.variable, "font-sans", geist.variable)}>
       <body
         className="font-sans antialiased min-h-dvh flex flex-col"
       >
