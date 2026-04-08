@@ -28,13 +28,13 @@ export function DemoBanner() {
     <div className="fixed top-0 left-0 right-0 z-50 animate-in slide-in-from-top duration-500">
       <div className="bg-primary/10 backdrop-blur-md border-b border-primary/20 px-4 py-2">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-primary text-[10px] font-display uppercase tracking-[0.2em]">
+          <div className="flex items-center gap-2 text-primary text-xs font-display uppercase tracking-wide">
             <Info className="w-4 h-4" />
             <span>Jesteś w trybie demo. Dane są resetowane automatycznie przy każdym logowaniu gościa.</span>
           </div>
           <button 
             onClick={() => setIsVisible(false)}
-            className="p-1 hover:bg-primary/20 rounded-lg transition-colors"
+            className="cursor-pointer p-1 hover:bg-primary/20 rounded-lg transition-colors"
           >
             <X className="w-4 h-4 text-primary" />
           </button>

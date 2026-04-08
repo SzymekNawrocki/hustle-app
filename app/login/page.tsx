@@ -8,7 +8,13 @@ import { z } from "zod";
 import { api, getApiError } from "@/lib/api";
 import { setToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { LogIn, Mail, Lock, Loader2, AlertCircle, ArrowRight, Stars } from "lucide-react";
+import { LogIn, Mail, Lock, AlertCircle, ArrowRight, Stars } from "lucide-react";
+
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -69,10 +75,8 @@ export default function LoginPage() {
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 blur-[150px] rounded-full -z-10 animate-pulse" />
       
       <div className="w-full max-w-md relative animate-in fade-in zoom-in duration-500">
-        <div className="card bg-base-200/50 backdrop-blur-xl border border-white/5 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-          <div className="h-1.5 bg-gradient-to-r from-primary via-secondary to-primary animate-gradient bg-[length:200%_auto]" />
-
-          <div className="card-body p-8 lg:p-10 space-y-8">
+        <Card className="bg-base-200/50 backdrop-blur-xl border border-white/5 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+          <CardContent className="p-8 lg:p-10 space-y-8">
             <div className="text-center space-y-4">
               <div className="flex flex-col items-center justify-center gap-4 mb-2">
                 <div className="p-3 bg-primary rounded-2xl shadow-[0_0_30px_rgba(123,46,255,0.5)]">
@@ -82,16 +86,18 @@ export default function LoginPage() {
               </div>
               <div>
                 <h2 className="text-xl font-display text-base-content tracking-tight">Witaj ponownie</h2>
-                <p className="text-base-content/60 font-display text-[9px] mt-2 leading-relaxed tracking-wider">System sukcesu czeka na Ciebie</p>
+                <p className="text-base-content/60 font-display text-xs mt-2 leading-relaxed tracking-wide">System sukcesu czeka na Ciebie</p>
               </div>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 font-sans">
               {error && (
-                <div className="alert alert-error rounded-xl border-none text-[9px] font-display py-3 tracking-wider">
+                <Alert variant="destructive" className="rounded-xl border-none text-xs font-display py-3 tracking-wide">
                   <AlertCircle className="w-5 h-5 shrink-0" />
-                  <span>{error}</span>
-                </div>
+                  <AlertDescription className="text-xs font-display tracking-wide">
+                    {error}
+                  </AlertDescription>
+                </Alert>
               )}
 
               <div className="form-control">
@@ -102,11 +108,11 @@ export default function LoginPage() {
                   <div className="absolute inset-y-0 left-4 flex items-center text-primary/40 group-focus-within:text-primary transition-colors">
                     <Mail className="w-5 h-5" />
                   </div>
-                  <input
+                  <Input
                     {...register("username")}
                     type="email"
                     placeholder="twoj@email.com"
-                    className="input input-bordered w-full bg-base-100/50 border-white/5 pl-12 focus:input-primary transition-all py-6"
+                    className="w-full bg-base-100/50 border-white/5 pl-12 transition-all py-6 h-12 rounded-2xl"
                   />
                 </div>
                 {errors.username && (
@@ -121,7 +127,7 @@ export default function LoginPage() {
                   <label className="label p-0">
                     <span className="label-text-alt font-display opacity-40 tracking-wider">Hasło</span>
                   </label>
-                  <a href="/forgot-password" university-href="/forgot-password" className="text-[9px] font-display text-primary hover:opacity-70 transition-opacity tracking-wider">
+                  <a href="/forgot-password" university-href="/forgot-password" className="text-xs font-display text-primary hover:opacity-70 transition-opacity tracking-wide">
                     Zapomniałeś?
                   </a>
                 </div>
@@ -129,11 +135,11 @@ export default function LoginPage() {
                   <div className="absolute inset-y-0 left-4 flex items-center text-primary/40 group-focus-within:text-primary transition-colors">
                     <Lock className="w-5 h-5" />
                   </div>
-                  <input
+                  <Input
                     {...register("password")}
                     type="password"
                     placeholder="••••••••"
-                    className="input input-bordered w-full bg-base-100/50 border-white/5 pl-12 focus:input-primary transition-all py-6"
+                    className="w-full bg-base-100/50 border-white/5 pl-12 transition-all py-6 h-12 rounded-2xl"
                   />
                 </div>
                 {errors.password && (
@@ -143,33 +149,38 @@ export default function LoginPage() {
                 )}
               </div>
 
-              <button
+              <Button
                 disabled={isLoading}
                 type="submit"
-                className="btn btn-primary btn-block btn-lg gap-3 font-display text-lg tracking-wide h-12 mt-4 shadow-[0_0_20px_rgba(123,46,255,0.2)] transition-all hover:scale-[1.01]"
+                className="w-full gap-3 font-display text-lg tracking-wide h-12 mt-4 shadow-[0_0_20px_rgba(123,46,255,0.2)] transition-all hover:scale-[1.01]"
               >
                 {isLoading ? (
-                  <span className="loading loading-spinner"></span>
+                  <span className="h-4 w-4 rounded-full border-2 border-primary-foreground/40 border-t-primary-foreground animate-spin" />
                 ) : (
                   <>
                     Zaloguj się <ArrowRight className="w-5 h-5" />
                   </>
                 )}
-              </button>
+              </Button>
 
-              <button
+              <Button
                 disabled={isLoading}
                 onClick={handleDemoLogin}
                 type="button"
-                className="btn btn-outline btn-block btn-lg gap-3 font-display text-sm tracking-wide h-12 border-primary/20 hover:bg-primary/10 hover:border-primary/40 transition-all"
+                variant="outline"
+                className="w-full gap-3 font-display text-sm tracking-wide h-12 border-primary/20 hover:bg-primary/10 hover:border-primary/40 transition-all"
               >
                 <Stars className="w-4 h-4 text-primary" />
                 Wypróbuj Demo
-              </button>
+              </Button>
             </form>
 
             <div className="space-y-6">
-              <div className="divider opacity-10 text-[10px]">LUB</div>
+              <div className="flex items-center gap-4 opacity-40">
+                <Separator className="flex-1" />
+                <span className="text-xs font-display">LUB</span>
+                <Separator className="flex-1" />
+              </div>
               
               <div className="text-center">
                 <p className="text-sm opacity-60">
@@ -180,8 +191,8 @@ export default function LoginPage() {
                 </p>
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

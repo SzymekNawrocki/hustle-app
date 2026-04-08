@@ -3,9 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { 
-  BarChart3, 
   Sparkles
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 export default function LandingPage() {
   return (
@@ -30,7 +31,7 @@ export default function LandingPage() {
               <div className="space-y-4">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-base-200 border border-base-300 shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <Sparkles className="w-4 h-4 text-primary" />
-                  <span className="text-[10px] font-semibold opacity-70">Wspierane przez Groq AI</span>
+                  <span className="text-xs font-semibold opacity-70">Wspierane przez Groq AI</span>
                 </div>
                 
                 <h1 className="text-4xl lg:text-6xl font-display tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
@@ -43,9 +44,9 @@ export default function LandingPage() {
               </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-10 duration-700 delay-300">
-                <Link href="/login" className="btn btn-primary btn-lg px-12 gap-3 text-lg">
-                  Zaloguj się
-                </Link>
+                <Button asChild size="lg" className="px-12 gap-3 text-lg">
+                  <Link href="/login">Zaloguj się</Link>
+                </Button>
               </div>
             </div>
           </div>

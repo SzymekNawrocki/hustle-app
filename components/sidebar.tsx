@@ -10,11 +10,12 @@ import {
   HeartPulse, 
   LogOut, 
   X, 
-  Menu,
-  User
+  Menu
 } from "lucide-react";
 import { removeToken } from "@/lib/auth";
 import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -24,34 +25,40 @@ const navigation = [
   { name: "Kariera", href: "/career", icon: Briefcase },
 ];
 
-export function Sidebar() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleLogout = () => {
-    removeToken();
-    router.push("/login");
-  };
-
-  const NavContent = () => (
+function SidebarNavContent({
+  pathname,
+  onClose,
+  onLogout,
+}: {
+  pathname: string;
+  onClose: () => void;
+  onLogout: () => void;
+}) {
+  return (
     <div className="flex flex-col h-full bg-base-100 border-r border-base-300 p-4">
       <div className="flex items-center justify-between mb-8 px-2">
         <h1 className="text-xl font-display text-primary tracking-tight">HustleOS</h1>
-        <button className="lg:hidden btn btn-ghost btn-sm btn-square" onClick={() => setIsOpen(false)}>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          className="lg:hidden"
+          onClick={onClose}
+        >
           <X className="w-6 h-6" />
-        </button>
+        </Button>
       </div>
 
       <nav className="flex-1 space-y-2">
         {navigation.map((item) => {
-          const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+          const isActive =
+            pathname === item.href ||
+            (item.href !== "/" && pathname.startsWith(item.href));
           return (
             <Link
               key={item.name}
               href={item.href}
-              onClick={() => setIsOpen(false)}
-              className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 font-display text-sm ${
+              onClick={onClose}
+              className={`flex cursor-pointer items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 font-display text-sm ${
                 isActive
                   ? "bg-primary text-primary-content shadow-[0_0_20px_rgba(123,46,255,0.3)] ring-1 ring-white/20"
                   : "text-base-content/60 hover:bg-white/5 hover:text-base-content"
@@ -65,40 +72,61 @@ export function Sidebar() {
       </nav>
 
       <div className="mt-auto pt-4 border-t border-base-300">
-        <button
-          onClick={handleLogout}
-          className="btn btn-ghost btn-block gap-4 font-display text-xs text-error hover:bg-error/10 rounded-2xl border border-white/5"
+        <Button
+          onClick={onLogout}
+          variant="ghost"
+          className="w-full justify-start gap-4 font-display text-xs text-error hover:bg-error/10 rounded-2xl border border-white/5"
         >
           <LogOut className="w-5 h-5 shrink-0" />
           Wyloguj się
-        </button>
+        </Button>
       </div>
     </div>
   );
+}
+
+export function Sidebar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleLogout = () => {
+    removeToken();
+    router.push("/login");
+  };
 
   return (
     <>
       {/* Mobile Toggle */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
-        <button
+        <Button
           onClick={() => setIsOpen(true)}
-          className="btn btn-primary btn-square shadow-lg"
+          size="icon"
+          className="shadow-lg"
         >
           <Menu className="w-6 h-6" />
-        </button>
+        </Button>
       </div>
 
       {/* Desktop Sidebar */}
       <aside className="hidden lg:block w-64 h-screen sticky top-0">
-        <NavContent />
+        <SidebarNavContent
+          pathname={pathname}
+          onClose={() => setIsOpen(false)}
+          onLogout={handleLogout}
+        />
       </aside>
 
       {/* Mobile Drawer */}
       {isOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="fixed inset-0 bg-base-neutral/60 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
+          <div className="fixed inset-0 cursor-pointer bg-base-neutral/60 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
           <div className="fixed inset-y-0 left-0 w-64 bg-base-100 shadow-2xl border-r border-base-300">
-            <NavContent />
+            <SidebarNavContent
+              pathname={pathname}
+              onClose={() => setIsOpen(false)}
+              onLogout={handleLogout}
+            />
           </div>
         </div>
       )}

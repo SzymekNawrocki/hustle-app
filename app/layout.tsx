@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Exo_2 } from "next/font/google";
+import { Exo_2, Geist } from "next/font/google";
 import "./globals.css";
 
 const exo2 = Exo_2({
@@ -13,6 +13,10 @@ export const metadata: Metadata = {
 };
 
 import { Providers } from "./providers";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
 
 export default function RootLayout({
   children,
@@ -20,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" data-theme="luxury" className={`${exo2.variable}`}>
+    <html lang="pl" data-theme="luxury" className={cn(exo2.variable, "font-sans", geist.variable)}>
       <body
         className="font-sans antialiased"
       >

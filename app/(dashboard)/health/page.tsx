@@ -5,7 +5,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api, getApiError } from "@/lib/api";
 import { MealLog } from "@/types/api";
 import { 
-  Loader2, 
   Utensils, 
   Sparkles, 
   Dna, 
@@ -17,6 +16,13 @@ import {
   CheckCircle2,
   Trash2
 } from "lucide-react";
+
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function HealthPage() {
   const [mealText, setMealText] = useState("");
@@ -69,8 +75,21 @@ export default function HealthPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <span className="loading loading-ring loading-lg text-primary"></span>
+      <div className="space-y-10 animate-in fade-in duration-700 font-sans">
+        <div className="space-y-3">
+          <Skeleton className="h-10 w-[220px]" />
+          <Skeleton className="h-4 w-[360px]" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+          <Skeleton className="h-32 rounded-2xl" />
+          <Skeleton className="h-32 rounded-2xl" />
+          <Skeleton className="h-32 rounded-2xl" />
+          <Skeleton className="h-32 rounded-2xl" />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <Skeleton className="h-[560px] rounded-2xl" />
+          <Skeleton className="lg:col-span-2 h-[560px] rounded-2xl" />
+        </div>
       </div>
     );
   }
@@ -80,7 +99,7 @@ export default function HealthPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <h1 className="text-3xl lg:text-5xl font-display text-base-content tracking-tight border-l-4 border-primary pl-4">Zdrowie</h1>
-          <p className="text-base-content/60 mt-2 font-display tracking-wide text-[9px]">Dbałość o formę zaczyna się od świadomego jedzenia.</p>
+          <p className="text-base-content/60 mt-2 font-display tracking-wide text-xs">Dbałość o formę zaczyna się od świadomego jedzenia.</p>
         </div>
       </div>
 
@@ -91,76 +110,84 @@ export default function HealthPage() {
           { label: "Węglowody", value: `${Math.round(totalNutrition.carbs)}g`, icon: Wheat, color: "text-blue-400", bg: "bg-blue-400/10", badge: "primary" },
           { label: "Tłuszcze", value: `${Math.round(totalNutrition.fat)}g`, icon: Dna, color: "text-purple-400", bg: "bg-purple-400/10", badge: "secondary" },
         ].map((stat) => (
-          <div key={stat.label} className="card bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden group">
-            <div className="card-body p-8 flex flex-row items-center gap-6">
+          <Card key={stat.label} className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden group">
+            <CardContent className="p-8 flex flex-row items-center gap-6">
               <div className={`p-5 ${stat.bg} ${stat.color} rounded-2xl group-hover:scale-110 transition-transform shadow-[0_0_20px_rgba(0,0,0,0.3)] border border-white/5`}>
                 <stat.icon className="w-10 h-10" />
               </div>
               <div>
-                <p className="text-[10px] font-display opacity-40 tracking-wider">Statystyka</p>
+                <p className="text-xs font-display opacity-40 tracking-wide">Statystyka</p>
                 <p className={`text-4xl font-display ${stat.color} tracking-tighter`}>{stat.value}</p>
-                <div className={`badge badge-${stat.badge} badge-xs mt-1 font-display tracking-tighter`}>Dzisiaj</div>
+                <Badge variant={stat.badge === "secondary" ? "secondary" : "default"} className="mt-1 font-display tracking-tighter">
+                  Dzisiaj
+                </Badge>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-left">
         {/* Meal Logger */}
         <div className="lg:col-span-1">
-          <div className="card bg-base-200/50 backdrop-blur-md border border-primary/20 shadow-[0_0_40px_rgba(123,46,255,0.1)] relative overflow-hidden group">
+          <Card className="bg-base-200/50 backdrop-blur-md border border-primary/20 shadow-[0_0_40px_rgba(123,46,255,0.1)] relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-            <div className="card-body p-8 space-y-8">
+            <CardContent className="p-8 space-y-8">
               <div className="flex flex-col gap-4">
                 <div className="p-3 bg-primary/20 rounded-2xl w-fit shadow-inner border border-white/5">
                   <Sparkles className="w-8 h-8 text-primary shadow-primary" />
                 </div>
                 <div>
-                  <h2 className="card-title text-2xl font-display text-base-content tracking-tight">AI Meal Logger</h2>
-                  <p className="text-base-content/60 font-display tracking-wide text-[9px] mt-1 pr-4 leading-relaxed">Poinformuj AI co zjadłeś, a my policzymy makroskładniki.</p>
+                  <h2 className="text-2xl font-display text-base-content tracking-tight">AI Meal Logger</h2>
+                  <p className="text-base-content/60 font-display tracking-wide text-xs mt-1 pr-4 leading-relaxed">Poinformuj AI co zjadłeś, a my policzymy makroskładniki.</p>
                 </div>
               </div>
 
               <div className="form-control space-y-6">
-                <textarea
+                <Textarea
                   value={mealText}
                   onChange={(e) => setMealText(e.target.value)}
                   placeholder="Np. 2 jajka sadzone na maśle, 2 kromki chleba razowego..."
-                  className="textarea textarea-bordered h-56 bg-base-100/50 border-white/5 focus:textarea-primary transition-all text-base leading-relaxed font-sans p-6 rounded-2xl resize-none"
+                  className="h-56 bg-base-100/50 border-white/5 transition-all text-base leading-relaxed font-sans p-6 rounded-2xl resize-none"
                 />
                 
                 {error && (
-                  <div className="alert alert-error rounded-xl border-none shadow-lg py-4">
+                  <Alert variant="destructive" className="rounded-xl border-none shadow-lg py-4">
                     <AlertCircle className="w-6 h-6" />
-                    <span className="font-display tracking-wider text-[10px] leading-tight">{error}</span>
-                  </div>
+                    <AlertDescription className="font-display tracking-wide text-xs leading-tight">
+                      {error}
+                    </AlertDescription>
+                  </Alert>
                 )}
 
-                <button
+                <Button
                   onClick={() => logMeal(mealText)}
                   disabled={isPending || !mealText.trim()}
-                  className="btn btn-primary btn-block btn-lg shadow-[0_0_20px_rgba(123,46,255,0.2)] gap-4 font-display text-lg h-12 transition-all hover:scale-[1.01]"
+                  className="w-full shadow-[0_0_20px_rgba(123,46,255,0.2)] gap-4 font-display text-lg h-12 transition-all hover:scale-[1.01]"
                 >
-                  {isPending ? <span className="loading loading-spinner"></span> : <Utensils className="w-6 h-6" />}
+                  {isPending ? (
+                    <span className="h-4 w-4 rounded-full border-2 border-primary-foreground/40 border-t-primary-foreground animate-spin" />
+                  ) : (
+                    <Utensils className="w-6 h-6" />
+                  )}
                   Dodaj posiłek
-                </button>
+                </Button>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Meal History */}
         <div className="lg:col-span-2">
-          <div className="card bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden h-full">
-            <div className="card-body p-0">
-              <div className="p-8 border-b border-white/5 flex items-center gap-4 bg-base-300/30">
+          <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden h-full">
+            <CardHeader className="p-8 border-b border-white/5 flex flex-row items-center gap-4 bg-base-300/30">
                 <div className="p-3 bg-base-300/50 rounded-2xl border border-white/5">
                   <Clock className="w-6 h-6 opacity-40" />
                 </div>
-                <h2 className="card-title text-xl font-display text-base-content tracking-tight">Historia posiłków</h2>
-              </div>
+                <CardTitle className="text-xl font-display text-base-content tracking-tight">Historia posiłków</CardTitle>
+            </CardHeader>
               
+            <CardContent className="p-0">
               <div className="divide-y divide-white/5 max-h-[660px] overflow-y-auto">
                 {meals?.length === 0 && (
                   <div className="py-32 text-center opacity-40 font-display font-bold text-xl uppercase tracking-widest italic">Brak zalogowanych posiłków.</div>
@@ -171,34 +198,44 @@ export default function HealthPage() {
                       <div className="space-y-4 flex-1">
                         <p className="text-base-content font-display text-xl leading-tight group-hover:text-primary transition-colors tracking-tight">{meal.description}</p>
                         <div className="flex flex-wrap gap-2">
-                          <span className="badge badge-primary font-display text-[9px] py-3 px-4 tracking-wide border-none shadow-lg">{meal.calories} kcal</span>
-                          <span className="badge badge-secondary font-display text-[9px] py-3 px-4 tracking-wide border-none shadow-lg">B: {meal.protein}g</span>
-                          <span className="badge badge-secondary badge-outline font-display text-[9px] py-3 px-4 tracking-wide border-white/10 shadow-lg">W: {meal.carbs}g</span>
-                          <span className="badge badge-primary badge-outline font-display text-[9px] py-3 px-4 tracking-wide border-white/10 shadow-lg">T: {meal.fat}g</span>
+                          <Badge className="font-display text-xs py-2.5 px-4 tracking-wide border-none shadow-lg">
+                            {meal.calories} kcal
+                          </Badge>
+                          <Badge variant="secondary" className="font-display text-xs py-2.5 px-4 tracking-wide border-none shadow-lg">
+                            B: {meal.protein}g
+                          </Badge>
+                          <Badge variant="outline" className="font-display text-xs py-2.5 px-4 tracking-wide border-white/10 shadow-lg">
+                            W: {meal.carbs}g
+                          </Badge>
+                          <Badge variant="outline" className="font-display text-xs py-2.5 px-4 tracking-wide border-white/10 shadow-lg">
+                            T: {meal.fat}g
+                          </Badge>
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-3">
-                        <span className="text-[9px] font-display opacity-30 group-hover:opacity-60 transition-opacity tracking-wider bg-base-300/50 px-2 py-1 rounded-lg border border-white/5">
+                        <span className="text-xs font-display opacity-40 group-hover:opacity-70 transition-opacity tracking-wide bg-base-300/50 px-2 py-1 rounded-lg border border-white/5">
                           {new Date(meal.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
-                        <button
+                        <Button
                           onClick={() => deleteMealMutation.mutate(meal.id)}
-                          className="btn btn-ghost btn-sm text-error/20 hover:text-error hover:bg-error/10 transition-all rounded-xl"
+                          variant="ghost"
+                          size="icon-sm"
+                          className="text-error/40 hover:text-error hover:bg-error/10 transition-all rounded-xl"
                           disabled={deleteMealMutation.isPending}
                         >
                           {deleteMealMutation.isPending ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span className="h-4 w-4 rounded-full border-2 border-current/30 border-t-current animate-spin" />
                           ) : (
                             <Trash2 className="w-5 h-5" />
                           )}
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

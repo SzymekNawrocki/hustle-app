@@ -54,13 +54,13 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-display text-white tracking-tight">Witaj w HustleOS</h1>
-        <p className="text-gray-400 mt-2 font-display text-[9px] tracking-wide">Oto podsumowanie Twoich postępów.</p>
+        <p className="text-gray-400 mt-2 font-display text-xs tracking-wide">Oto podsumowanie Twoich postępów.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
           <div key={stat.label} className="bg-[#111114] border border-white/5 p-6 rounded-2xl">
-            <p className="text-[10px] font-display text-gray-500 tracking-wider whitespace-nowrap">{stat.label}</p>
+            <p className="text-xs font-display text-gray-500 tracking-wide whitespace-nowrap">{stat.label}</p>
             <p className={`text-2xl font-display mt-2 ${stat.color} tracking-tighter`}>{stat.value}</p>
           </div>
         ))}
@@ -70,7 +70,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-8">
            <div>
               <h3 className="text-sm font-display text-gray-400 tracking-widest uppercase mb-1">Aktywność</h3>
-              <p className="text-[9px] text-gray-600 font-sans">Ostatnie 7 dni Twojego sukcesu</p>
+              <p className="text-xs text-gray-600 font-sans">Ostatnie 7 dni Twojego sukcesu</p>
            </div>
         </div>
         
@@ -146,9 +146,9 @@ export default function DashboardPage() {
                 <div key={offer.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/[0.08] transition-all">
                   <div>
                     <p className="text-xs text-white font-sans font-medium">{offer.title}</p>
-                    <p className="text-[10px] text-gray-500 font-display">{offer.company || "Nieznana firma"}</p>
+                    <p className="text-xs text-gray-500 font-display">{offer.company || "Nieznana firma"}</p>
                   </div>
-                  <div className={`text-[9px] px-2 py-1 rounded-full border border-white/10 uppercase font-display tracking-tighter ${
+                  <div className={`text-xs px-2.5 py-1.5 rounded-full border border-white/10 uppercase font-display tracking-tight ${
                     offer.status === 'umowa' ? 'text-emerald-500 bg-emerald-500/10' : 'text-gray-400'
                   }`}>
                     {offer.status}
@@ -177,7 +177,7 @@ export default function DashboardPage() {
               data.today_meals.map((meal) => (
                 <div key={meal.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
                   <p className="text-xs text-white font-sans">{meal.description}</p>
-                  <p className="text-[10px] text-gray-500 font-display">{meal.calories} kcal</p>
+                  <p className="text-xs text-gray-500 font-display">{meal.calories} kcal</p>
                 </div>
               ))
             ) : (
@@ -206,7 +206,7 @@ export default function DashboardPage() {
                 <div key={expense.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
                   <div>
                     <p className="text-xs text-white font-sans">{expense.description}</p>
-                    <p className="text-[9px] text-gray-500 uppercase font-display">{expense.category}</p>
+                    <p className="text-xs text-gray-500 uppercase font-display">{expense.category}</p>
                   </div>
                   <p className={`text-xs font-display ${expense.category === 'INCOME' ? 'text-emerald-500' : 'text-error'}`}>
                     {expense.category === 'INCOME' ? '+' : '-'}{expense.amount} zł
@@ -239,7 +239,7 @@ export default function DashboardPage() {
                 <p className="text-xs text-gray-500 mt-1 line-clamp-2">{data.latest_goal.description}</p>
               </div>
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-[10px] font-display uppercase tracking-widest text-gray-500">
+                <div className="flex items-center justify-between text-xs font-display uppercase tracking-wide text-gray-500">
                   <span>Postęp</span>
                   <span>{data.latest_goal.progress_percentage || 0}%</span>
                 </div>
@@ -250,7 +250,7 @@ export default function DashboardPage() {
                   />
                 </div>
               </div>
-              <div className="flex items-center gap-4 text-[9px] font-display text-gray-600 uppercase">
+              <div className="flex items-center gap-4 text-xs font-display text-gray-600 uppercase">
                  <div className="flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3" />
                     {data.latest_goal.milestones.length} Kroki

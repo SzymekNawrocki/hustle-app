@@ -5,6 +5,11 @@ import { Trash2, ExternalLink } from "lucide-react";
 import { deleteOffer, updateOfferStatus, updateOfferNotes } from "@/app/(dashboard)/career/actions";
 import type { JobOffer } from "@/types/api";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+
 const STATUSES = ["wysłano", "1 etap", "2 etap", "3 etap", "umowa"] as const;
 
 export default function OfferList({ offers }: { offers: JobOffer[] }) {
@@ -14,13 +19,13 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
   const [tempNotes, setTempNotes] = useState("");
 
   return (
-    <div className="card bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden font-sans">
-      <div className="card-body p-0">
-        <div className="p-8 border-b border-white/5 flex items-center justify-between bg-base-300/30">
-          <h2 className="card-title text-2xl font-display text-base-content tracking-tight">Oferty</h2>
-          <div className="badge badge-primary font-display px-4 py-3">{offers.length}</div>
-        </div>
+    <Card className="bg-base-200/50 backdrop-blur-md border border-white/5 shadow-2xl overflow-hidden font-sans">
+      <CardHeader className="p-8 border-b border-white/5 flex flex-row items-center justify-between bg-base-300/30">
+        <CardTitle className="text-2xl font-display text-base-content tracking-tight">Oferty</CardTitle>
+        <Badge className="font-display px-4 py-3">{offers.length}</Badge>
+      </CardHeader>
 
+      <CardContent className="p-0">
         <div className="divide-y divide-white/5">
           {offers.length === 0 && (
             <div className="p-16 text-center opacity-40 font-display text-xl tracking-wide">
@@ -36,11 +41,13 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                   {offer.company ? <span className="text-secondary opacity-60"> {` @ ${offer.company}`}</span> : null}
                 </div>
                 <div className="mt-4 flex flex-wrap items-center gap-4">
-                  <span className="badge badge-secondary font-display text-[10px] py-4 px-4 tracking-wider">{offer.status}</span>
+                  <Badge variant="secondary" className="font-display text-xs py-2.5 px-3.5 tracking-wide">
+                    {offer.status}
+                  </Badge>
                   <select
                     name="status"
                     defaultValue={offer.status}
-                    className="select select-bordered select-xs bg-base-300/50 border-white/5 font-display tracking-wide h-8"
+                    className="flex h-8 rounded-xl border border-white/5 bg-base-300/50 px-2 text-xs font-display tracking-wide shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
                     disabled={isPending && pendingOfferId === offer.id}
                     onChange={(e) => {
                       const nextStatus = e.target.value;
@@ -62,16 +69,18 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                       </option>
                     ))}
                   </select>
-                  <a
-                    href={offer.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn btn-ghost btn-xs gap-2 font-display tracking-wider opacity-60 hover:opacity-100 hover:text-primary transition-all"
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="xs"
+                    className="gap-2 font-display tracking-wider opacity-60 hover:opacity-100 hover:text-primary transition-all"
                   >
-                    <ExternalLink className="w-4 h-4" />
-                    Link
-                  </a>
-                  <button
+                    <a href={offer.url} target="_blank" rel="noreferrer">
+                      <ExternalLink className="w-4 h-4" />
+                      Link
+                    </a>
+                  </Button>
+                  <Button
                     onClick={() => {
                       if (editingNotesId === offer.id) {
                         setEditingNotesId(null);
@@ -80,28 +89,31 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                         setTempNotes(offer.notes || "");
                       }
                     }}
-                    className="btn btn-ghost btn-xs gap-2 font-display tracking-wider opacity-60 hover:opacity-100 hover:text-primary transition-all"
+                    variant="ghost"
+                    size="xs"
+                    className="gap-2 font-display tracking-wider opacity-60 hover:opacity-100 hover:text-primary transition-all"
                   >
                     Notatki
-                  </button>
+                  </Button>
                 </div>
 
                 {editingNotesId === offer.id ? (
                   <div className="mt-4 space-y-3 animate-in fade-in slide-in-from-top-2">
-                    <textarea
-                      className="textarea textarea-bordered w-full bg-base-100/30 border-white/5 focus:textarea-primary transition-all h-24 resize-none text-sm"
+                    <Textarea
+                      className="w-full bg-base-100/30 border-white/5 transition-all h-24 resize-none text-sm rounded-2xl"
                       value={tempNotes}
                       onChange={(e) => setTempNotes(e.target.value)}
                       placeholder="Wpisz swoje notatki..."
                     />
                     <div className="flex justify-end gap-2">
-                      <button
+                      <Button
                         onClick={() => setEditingNotesId(null)}
-                        className="btn btn-ghost btn-xs"
+                        variant="ghost"
+                        size="xs"
                       >
                         Anuluj
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         onClick={() => {
                           setPendingOfferId(offer.id);
                           startTransition(async () => {
@@ -114,10 +126,10 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                           });
                         }}
                         disabled={isPending && pendingOfferId === offer.id}
-                        className="btn btn-primary btn-xs"
+                        size="xs"
                       >
                         {isPending && pendingOfferId === offer.id ? "Zapisywanie..." : "Zapisz"}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ) : (
@@ -130,14 +142,19 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
               </div>
 
               <form action={deleteOffer.bind(null, offer.id)} className="flex items-center">
-                <button className="btn btn-ghost btn-md text-error/20 hover:text-error hover:bg-error/10 transition-all rounded-xl" type="submit">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-error/40 hover:text-error hover:bg-error/10 transition-all rounded-xl"
+                  type="submit"
+                >
                   <Trash2 className="w-6 h-6" />
-                </button>
+                </Button>
               </form>
             </div>
           ))}
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

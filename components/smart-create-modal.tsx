@@ -5,6 +5,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Loader2, Sparkles, X } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+
 interface SmartCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -41,13 +45,11 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-2xl animate-in fade-in duration-500 font-sans">
-      <div 
-        className="card w-full max-w-lg bg-base-200/50 backdrop-blur-xl border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden animate-in zoom-in duration-500 rounded-[2.5rem]"
+      <Card
+        className="w-full max-w-lg bg-base-200/50 backdrop-blur-xl border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden animate-in zoom-in duration-500 rounded-[2.5rem]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="h-2 bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] animate-gradient" />
-        
-        <div className="card-body p-10">
+        <CardContent className="p-10">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-primary/20 rounded-2xl shadow-inner border border-white/5">
@@ -55,15 +57,17 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
               </div>
               <div>
                 <h2 className="text-2xl font-display text-base-content tracking-tight">Smart Create</h2>
-                <p className="text-[10px] font-display opacity-40 mt-1 tracking-wider leading-relaxed">Opisz swój cel, a AI zaplanuje Twoją drogę do sukcesu.</p>
+                <p className="text-xs font-display opacity-50 mt-1 tracking-wide leading-relaxed">Opisz swój cel, a AI zaplanuje Twoją drogę do sukcesu.</p>
               </div>
             </div>
-            <button 
+            <Button
               onClick={onClose}
-              className="btn btn-ghost btn-md btn-square rounded-2xl opacity-40 hover:opacity-100 transition-all"
+              variant="ghost"
+              size="icon"
+              className="rounded-2xl opacity-40 hover:opacity-100 transition-all"
             >
               <X className="w-6 h-6" />
-            </button>
+            </Button>
           </div>
 
           <div className="space-y-8 text-left">
@@ -71,26 +75,26 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
               <label className="label">
                 <span className="label-text-alt font-display opacity-40 tracking-wider">Twój Cel</span>
               </label>
-              <textarea
+              <Textarea
                 value={idea}
                 onChange={(e) => setIdea(e.target.value)}
                 placeholder="Np. Chciałbym nauczyć się Next.js w miesiąc i zbudować portfolio"
-                className="textarea textarea-bordered h-44 bg-base-100/50 border-white/5 focus:textarea-primary transition-all resize-none text-base p-6 rounded-2xl leading-relaxed"
+                className="h-44 bg-base-100/50 border-white/5 transition-all resize-none text-base p-6 rounded-2xl leading-relaxed"
               />
             </div>
 
-            <p className="text-[9px] font-display opacity-30 text-center tracking-wide px-8 leading-relaxed">
+            <p className="text-xs font-display opacity-40 text-center tracking-wide px-8 leading-relaxed">
               AI przeanalizuje Twój pomysł i wygeneruje konkretny cel wraz z listą kroków milowych.
             </p>
 
-            <button
+            <Button
               onClick={() => mutate(idea)}
               disabled={isPending || !idea.trim()}
-              className="btn btn-primary btn-block btn-lg gap-4 font-display text-lg tracking-wide shadow-[0_0_20px_rgba(123,46,255,0.2)] transition-all hover:scale-[1.01] h-14"
+              className="w-full gap-4 font-display text-lg tracking-wide shadow-[0_0_20px_rgba(123,46,255,0.2)] transition-all hover:scale-[1.01] h-14"
             >
               {isPending ? (
                 <>
-                  <span className="loading loading-spinner"></span>
+                  <Loader2 className="w-5 h-5 animate-spin" />
                   AI generuje...
                 </>
               ) : (
@@ -99,10 +103,10 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
                   Generuj cel z AI
                 </>
               )}
-            </button>
+            </Button>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
