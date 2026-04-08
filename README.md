@@ -1,6 +1,6 @@
-# HustleOS
+# Hustle App
 
-HustleOS is a life-tracking web application that brings together key productivity areas in one place: **goals**, **finances**, **health**, and **career**. The project uses AI for convenient natural language data entry.
+Hustle App is a life-tracking web application that brings together key productivity areas in one place: **goals**, **finances**, **health**, and **career**. The project uses AI for convenient natural language data entry.
 
 ---
 
