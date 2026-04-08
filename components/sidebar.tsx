@@ -37,7 +37,7 @@ function SidebarNavContent({
   return (
     <div className="flex flex-col h-full bg-base-100 border-r border-base-300 p-4">
       <div className="flex items-center justify-between mb-8 px-2">
-        <h1 className="text-xl font-display text-primary tracking-tight">HustleOS</h1>
+        <h1 className="text-xl font-display text-primary tracking-tight">Hustle App</h1>
         <Button
           variant="ghost"
           size="icon-sm"

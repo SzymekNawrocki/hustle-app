@@ -39,7 +39,7 @@ export default function LandingPage() {
                 </h1>
                 
                 <p className="text-lg lg:text-xl text-base-content/60 max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200 font-sans">
-                  An integrated platform to manage your career, finances, and health with HustleOS.
+                  An integrated platform to manage your career, finances, and health with Hustle App.
                 </p>
               </div>
 
