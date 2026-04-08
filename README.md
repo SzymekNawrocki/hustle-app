@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+HustleOS
+HustleOS is a life-tracking web application that brings together key productivity areas in one place: goals, finances, health, and career. The project uses AI for convenient natural language data entry (e.g., quickly adding expenses or logging meals).
 
-## Getting Started
+🚀 Live Links
+Frontend App: https://hustle-app-theta.vercel.app/
 
-First, run the development server:
+Backend API Docs: https://backend-hustle-app.onrender.com/docs
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+✨ Key Features
+Authentication
+Registration and login via email/password (OAuth2 password flow).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Demo mode: login to a demonstration account with demo data reset upon each login.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Dashboard
+A consolidated "for today" view that aggregates:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+tasks/habits,
 
-## Learn More
+balance and recent expenses,
 
-To learn more about Next.js, take a look at the following resources:
+meals and macronutrients,
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+latest job offers.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Finances
+Review and delete transactions (expenses).
 
-## Deploy on Vercel
+Hustle Input: Add a transaction with a single sentence (AI extracts the amount, category, and description).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Health
+AI Meal Logger: Log a meal from a simple description (AI extracts calories and macros).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Review and delete meals.
+
+Career
+Track job offers, update statuses, add notes, and delete offers.
+
+🛠 Tech Stack
+Frontend: Next.js (App Router), React, TypeScript, TanStack React Query, Tailwind CSS, shadcn/ui
+
+Backend: FastAPI, async SQLAlchemy, Alembic, PostgreSQL
+
+AI: Groq (natural language parsing for finances and health)
+
+Deployment: Vercel (Frontend), Render (Backend)
+
+🔒 Security and Architecture
+Authorization is based on JWT in an HttpOnly cookie, making the token inaccessible from JavaScript (protection against XSS attacks).
+
+Unauthenticated users are strictly redirected from protected routes (dashboard, goals, finances, health, career).
+
+👤 Author
+Built by Devemite – https://devemite.vercel.app/
