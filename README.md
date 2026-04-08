@@ -1,5 +1,4 @@
-HustleOS
-HustleOS is a life-tracking web application that brings together key productivity areas in one place: goals, finances, health, and career. The project uses AI for convenient natural language data entry (e.g., quickly adding expenses or logging meals).
+Hustle App is a life-tracking web application that brings together key productivity areas in one place: goals, finances, health, and career. The project uses AI for convenient natural language data entry (e.g., quickly adding expenses or logging meals).
 
 🚀 Live Links
 Frontend App: https://hustle-app-theta.vercel.app/
