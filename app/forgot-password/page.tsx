@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
       // Mocking the request for now as the backend doesn't support email sending yet
       await new Promise(resolve => setTimeout(resolve, 1500));
       setIsSent(true);
-    } catch (err) {
+    } catch {
       setError("Something went wrong. Please try again later.");
     } finally {
       setIsLoading(false);

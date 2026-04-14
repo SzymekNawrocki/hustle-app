@@ -81,7 +81,7 @@ export default function AddOfferForm() {
             <select
               className="flex h-10 w-full rounded-2xl border border-border/60 bg-background/40 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
               value={status}
-              onChange={(e) => setStatus(e.target.value as any)}
+              onChange={(e) => setStatus(e.target.value as (typeof STATUSES)[number])}
             >
               {STATUSES.map((s) => (
                 <option key={s} value={s} className="bg-popover">

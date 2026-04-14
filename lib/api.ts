@@ -18,7 +18,7 @@ export const getApiError = (error: unknown): string => {
     }
 
     if (Array.isArray(detail)) {
-      return detail.map((d: any) => d.msg).join(", ");
+      return detail.map((d: { msg: string }) => d.msg).join(", ");
     }
 
     return axiosError.message || "An unexpected error occurred";

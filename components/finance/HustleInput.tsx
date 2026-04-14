@@ -38,7 +38,7 @@ export default function HustleInput({ type }: HustleInputProps) {
       queryClient.invalidateQueries({ queryKey: ["dashboard-today"] });
       setTimeout(() => setStatus("idle"), 3000);
     },
-    onError: (err: any) => {
+    onError: (err: { response?: { data?: { detail?: string } } }) => {
       setStatus("error");
       setMessage(err.response?.data?.detail || "Parsing error. Try a different phrasing.");
       setTimeout(() => setStatus("idle"), 5000);

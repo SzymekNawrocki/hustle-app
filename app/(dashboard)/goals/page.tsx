@@ -17,7 +17,6 @@ const LIMIT = 20;
 
 export default function GoalsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [expandedGoal, setExpandedGoal] = useState<number | null>(null);
   const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
 
@@ -86,7 +85,7 @@ export default function GoalsPage() {
           <div>
             <div className="font-medium">Error loading goals!</div>
             <div className="text-xs opacity-80">
-              {(error as any)?.response?.data?.detail || (error as any).message}
+              {(error as { response?: { data?: { detail?: string } }; message?: string })?.response?.data?.detail || (error as Error).message}
             </div>
           </div>
           <Button size="sm" onClick={() => refetch()}>

@@ -419,7 +419,7 @@ export default function FinancePage() {
 
               {editMutation.isError && (
                 <p className="text-xs text-destructive font-display tracking-wide">
-                  {(editMutation.error as any)?.response?.data?.detail ?? "Failed to save changes."}
+                  {(editMutation.error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ?? "Failed to save changes."}
                 </p>
               )}
 

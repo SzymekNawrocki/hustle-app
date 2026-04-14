@@ -1,19 +1,17 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import { createRequire } from "module";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const require = createRequire(import.meta.url);
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+const nextCwvConfig = require("eslint-config-next/core-web-vitals");
+const nextTsConfig = require("eslint-config-next/typescript");
 
+/** @type {import("eslint").Linter.Config[]} */
 const eslintConfig = [
   {
-    ignores: [".next/**", "out/**", "build/**", "next-env.d.ts"],
+    ignores: [".next/**", "out/**", "build/**", "next-env.d.ts", "node_modules/**"],
   },
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...nextCwvConfig,
+  ...nextTsConfig,
 ];
 
 export default eslintConfig;

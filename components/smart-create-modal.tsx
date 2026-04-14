@@ -32,7 +32,7 @@ export function SmartCreateModal({ isOpen, onClose }: SmartCreateModalProps) {
       onClose();
       setIdea("");
     },
-    onError: (error: any) => {
+    onError: (error: { response?: { data?: { detail?: string } }; message?: string }) => {
       console.error("SMART_CREATE: Error occurred:", error.response?.data || error.message);
       const detail = error.response?.data?.detail;
       const errorMsg = typeof detail === 'string' ? detail : JSON.stringify(detail);

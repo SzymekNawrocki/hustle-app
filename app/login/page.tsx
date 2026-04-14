@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/lib/schemas";
 import { z } from "zod";
 import { api, getApiError } from "@/lib/api";
-import { useRouter } from "next/navigation";
 import { LogIn, Mail, Lock, AlertCircle, ArrowRight, Stars } from "lucide-react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -18,7 +17,6 @@ import { Separator } from "@/components/ui/separator";
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
