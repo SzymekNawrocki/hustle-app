@@ -146,14 +146,14 @@ export default function DashboardPage() {
                strokeWidth={3}
                fillOpacity={1} 
                fill="url(#colorHealth)" 
-               name="Kalorie (kcal)"
+               name="Calories (kcal)"
             />
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Ostatnie Oferty Pracy */}
+        {/* Recent offers */}
         <div className="bg-[#111114] border border-white/5 rounded-3xl p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -170,7 +170,7 @@ export default function DashboardPage() {
                 <div key={offer.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/[0.08] transition-all">
                   <div>
                     <p className="text-xs text-white font-sans font-medium">{offer.title}</p>
-                    <p className="text-xs text-gray-500 font-display">{offer.company || "Nieznana firma"}</p>
+                    <p className="text-xs text-gray-500 font-display">{offer.company || "Unknown company"}</p>
                   </div>
                   <div className={`text-xs px-2.5 py-1.5 rounded-full border border-white/10 uppercase font-display tracking-tight ${
                     offer.status === 'umowa' ? 'text-emerald-500 bg-emerald-500/10' : 'text-gray-400'

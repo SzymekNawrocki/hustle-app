@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { createOffer } from "@/app/(dashboard)/career/actions";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -27,6 +28,7 @@ export default function AddOfferForm() {
   const [url, setUrl] = useState("");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +37,7 @@ export default function AddOfferForm() {
     startTransition(async () => {
       try {
         await createOffer({ title, company: company.trim() ? company.trim() : undefined, status, url, notes: notes.trim() ? notes.trim() : undefined });
+        queryClient.invalidateQueries({ queryKey: ["offers"] });
         setTitle("");
         setCompany("");
         setStatus("wysłano");

@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "@/lib/schemas";
 import { z } from "zod";
 import { api, getApiError } from "@/lib/api";
-import { setToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { UserPlus, Mail, Lock, User, AlertCircle, ArrowRight } from "lucide-react";
 
@@ -48,7 +47,7 @@ export default function RegisterPage() {
         },
       });
 
-      setToken(loginResponse.data.access_token);
+      void loginResponse;
       router.push("/dashboard");
     } catch (err) {
       setError(getApiError(err));

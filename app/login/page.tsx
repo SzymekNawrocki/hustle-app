@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/lib/schemas";
 import { z } from "zod";
 import { api, getApiError } from "@/lib/api";
-import { setToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { LogIn, Mail, Lock, AlertCircle, ArrowRight, Stars } from "lucide-react";
 
@@ -46,7 +45,7 @@ export default function LoginPage() {
         },
       });
 
-      setToken(response.data.access_token);
+      void response;
       router.push("/dashboard");
     } catch (err) {
       setError(getApiError(err));
@@ -60,7 +59,7 @@ export default function LoginPage() {
     setError(null);
     try {
       const response = await api.post("/auth/demo-login");
-      setToken(response.data.access_token);
+      void response;
       router.push("/dashboard");
     } catch (err) {
       setError(getApiError(err));

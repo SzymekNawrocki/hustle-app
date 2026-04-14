@@ -12,7 +12,7 @@ import {
   X, 
   Menu
 } from "lucide-react";
-import { removeToken } from "@/lib/auth";
+import { logout } from "@/lib/auth";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -90,9 +90,12 @@ export function Sidebar() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleLogout = () => {
-    removeToken();
-    router.push("/login");
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      router.push("/login");
+    }
   };
 
   return (

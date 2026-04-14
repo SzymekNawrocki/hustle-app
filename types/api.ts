@@ -1,3 +1,10 @@
+export interface Paginated<T> {
+  items: T[];
+  total: number;
+  page: number;
+  pages: number;
+}
+
 export enum GoalCategory {
   CAREER = "CAREER",
   FINANCE = "FINANCE",

@@ -2,13 +2,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { DashboardToday, Task, Habit } from "@/types/api";
+import { DashboardToday } from "@/types/api";
 import { 
-  CheckCircle2, 
-  Circle, 
-  ListTodo, 
-  Zap, 
-  Rocket, 
+  CheckCircle2,
+  Zap,
   Calendar, 
   Sparkles, 
   BarChart3 
@@ -67,8 +64,8 @@ export default function DashboardPage() {
   const habits = data?.habits || [];
 
   const items = [
-    ...tasks.map(task => ({ ...task, category: 'ZADANIE' })),
-    ...habits.map(habit => ({ ...habit, category: 'NAWYK' })),
+    ...tasks.map(task => ({ ...task, category: 'TASK' })),
+    ...habits.map(habit => ({ ...habit, category: 'HABIT' })),
   ];
 
   return (
@@ -100,7 +97,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent className="p-6 pt-0">
               <div className="space-y-4 font-sans">
-                {items.filter(i => i.category === 'ZADANIE').map((item) => (
+                {items.filter(i => i.category === 'TASK').map((item) => (
                   <div key={item.id} className="flex items-center gap-4 p-4 bg-background/40 rounded-2xl border border-border/60 hover:border-primary/50 hover:bg-accent/30 transition-all group">
                     <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary group-hover:text-primary-content transition-colors shadow-[0_0_15px_rgba(123,46,255,0.3)]">
                       <CheckCircle2 className="w-5 h-5" />
@@ -125,7 +122,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent className="p-6 pt-0">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-sans">
-                {items.filter(i => i.category === 'NAWYK').map((item) => (
+                {items.filter(i => i.category === 'HABIT').map((item) => (
                   <div key={item.id} className="p-4 bg-background/40 rounded-2xl border border-border/60">
                     <div className="flex items-center justify-between mb-3 font-display">
                       <span className="text-xs text-secondary tracking-wide">Daily</span>

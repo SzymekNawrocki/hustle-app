@@ -1,14 +1,19 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Trash2, ExternalLink } from "lucide-react";
 import { deleteOffer, updateOfferStatus, updateOfferNotes } from "@/app/(dashboard)/career/actions";
-import type { JobOffer } from "@/types/api";
+import { api } from "@/lib/api";
+import type { JobOffer, Paginated } from "@/types/api";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+
+const LIMIT = 20;
 
 const STATUSES = ["wysłano", "1 etap", "2 etap", "3 etap", "umowa"] as const;
 
@@ -20,17 +25,48 @@ const STATUS_LABELS: Record<(typeof STATUSES)[number], string> = {
   "umowa": "Offer",
 };
 
-export default function OfferList({ offers }: { offers: JobOffer[] }) {
+export default function OfferList() {
+  const [page, setPage] = useState(1);
   const [isPending, startTransition] = useTransition();
   const [pendingOfferId, setPendingOfferId] = useState<number | null>(null);
   const [editingNotesId, setEditingNotesId] = useState<number | null>(null);
   const [tempNotes, setTempNotes] = useState("");
+  const queryClient = useQueryClient();
+
+  const { data, isLoading } = useQuery<Paginated<JobOffer>>({
+    queryKey: ["offers", page],
+    queryFn: async () => {
+      const response = await api.get("/offers", { params: { page, limit: LIMIT } });
+      return response.data;
+    },
+  });
+
+  const offers = data?.items ?? [];
+
+  const invalidateOffers = () => {
+    queryClient.invalidateQueries({ queryKey: ["offers"] });
+  };
+
+  if (isLoading) {
+    return (
+      <Card className="bg-card/60 backdrop-blur-md border border-border/60 shadow-2xl overflow-hidden font-sans">
+        <CardHeader className="p-8 border-b border-border/60 bg-muted/30">
+          <Skeleton className="h-8 w-32" />
+        </CardHeader>
+        <CardContent className="p-8 space-y-4">
+          <Skeleton className="h-20 rounded-2xl" />
+          <Skeleton className="h-20 rounded-2xl" />
+          <Skeleton className="h-20 rounded-2xl" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="bg-card/60 backdrop-blur-md border border-border/60 shadow-2xl overflow-hidden font-sans">
       <CardHeader className="p-8 border-b border-border/60 flex flex-row items-center justify-between bg-muted/30">
         <CardTitle className="text-2xl font-display text-foreground tracking-tight">Offers</CardTitle>
-        <Badge className="font-display px-4 py-3">{offers.length}</Badge>
+        <Badge className="font-display px-4 py-3">{data?.total ?? 0}</Badge>
       </CardHeader>
 
       <CardContent className="p-0">
@@ -65,6 +101,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                       startTransition(async () => {
                         try {
                           await updateOfferStatus(offer.id, fd);
+                          invalidateOffers();
                         } finally {
                           setPendingOfferId(null);
                         }
@@ -114,11 +151,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                       placeholder="Write your notes..."
                     />
                     <div className="flex justify-end gap-2">
-                      <Button
-                        onClick={() => setEditingNotesId(null)}
-                        variant="ghost"
-                        size="xs"
-                      >
+                      <Button onClick={() => setEditingNotesId(null)} variant="ghost" size="xs">
                         Cancel
                       </Button>
                       <Button
@@ -127,6 +160,7 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                           startTransition(async () => {
                             try {
                               await updateOfferNotes(offer.id, tempNotes);
+                              invalidateOffers();
                               setEditingNotesId(null);
                             } finally {
                               setPendingOfferId(null);
@@ -149,7 +183,15 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
                 )}
               </div>
 
-              <form action={deleteOffer.bind(null, offer.id)} className="flex items-center">
+              <form
+                action={async () => {
+                  await deleteOffer(offer.id);
+                  // If we deleted the last item on this page, go back one page
+                  if (offers.length === 1 && page > 1) setPage((p) => p - 1);
+                  invalidateOffers();
+                }}
+                className="flex items-center"
+              >
                 <Button
                   variant="ghost"
                   size="icon"
@@ -162,6 +204,32 @@ export default function OfferList({ offers }: { offers: JobOffer[] }) {
             </div>
           ))}
         </div>
+
+        {data && data.pages > 1 && (
+          <div className="flex items-center justify-center gap-4 p-6 border-t border-border/60">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => p - 1)}
+              disabled={page <= 1}
+              className="font-display tracking-wide text-xs"
+            >
+              ← Prev
+            </Button>
+            <span className="text-xs font-display opacity-40 tracking-wide">
+              {page} / {data.pages} &nbsp;·&nbsp; {data.total} offers
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => p + 1)}
+              disabled={page >= data.pages}
+              className="font-display tracking-wide text-xs"
+            >
+              Next →
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

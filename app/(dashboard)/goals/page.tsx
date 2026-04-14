@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { Goal } from "@/types/api";
+import { Goal, Paginated } from "@/types/api";
 import { Plus, Target, Calendar, CheckCircle2, Circle, ChevronRight, Trash2 } from "lucide-react";
 import { SmartCreateModal } from "@/components/smart-create-modal";
 
@@ -13,25 +13,23 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
+const LIMIT = 20;
+
 export default function GoalsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [expandedGoal, setExpandedGoal] = useState<number | null>(null);
+  const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
 
-  const { data: goals, isLoading, error, refetch } = useQuery<Goal[]>({
-    queryKey: ["goals"],
+  const { data, isLoading, error, refetch } = useQuery<Paginated<Goal>>({
+    queryKey: ["goals", page],
     queryFn: async () => {
-      console.log("DEBUG: Fetching goals...");
-      try {
-        const response = await api.get("/goals/");
-        console.log("DEBUG: Goals data received:", response.data);
-        return response.data;
-      } catch (err: any) {
-        console.error("DEBUG: Failed to fetch goals:", err.response?.data || err.message);
-        throw err;
-      }
+      const response = await api.get("/goals/", { params: { page, limit: LIMIT } });
+      return response.data;
     },
   });
+
+  const goals = data?.items;
 
   const deleteGoalMutation = useMutation({
     mutationFn: async (goalId: number) => {
@@ -39,6 +37,8 @@ export default function GoalsPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["goals"] });
+      // If we deleted the last item on this page, go back one page
+      if (goals?.length === 1 && page > 1) setPage((p) => p - 1);
     },
     onError: (err) => {
       console.error("Failed to delete goal:", err);
@@ -258,9 +258,35 @@ export default function GoalsPage() {
         ))}
       </div>
 
-      <SmartCreateModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+      {data && data.pages > 1 && (
+        <div className="flex items-center justify-center gap-4 pt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((p) => p - 1)}
+            disabled={page <= 1}
+            className="font-display tracking-wide text-xs"
+          >
+            ← Prev
+          </Button>
+          <span className="text-xs font-display opacity-40 tracking-wide">
+            {page} / {data.pages} &nbsp;·&nbsp; {data.total} goals
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((p) => p + 1)}
+            disabled={page >= data.pages}
+            className="font-display tracking-wide text-xs"
+          >
+            Next →
+          </Button>
+        </div>
+      )}
+
+      <SmartCreateModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
       />
     </div>
   );

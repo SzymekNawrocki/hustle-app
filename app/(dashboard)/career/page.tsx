@@ -1,10 +1,7 @@
 import AddOfferForm from "@/components/career/AddOfferForm";
 import OfferList from "@/components/career/OfferList";
-import { getOffers } from "./actions";
 
-export default async function CareerPage() {
-  const offers = await getOffers();
-
+export default function CareerPage() {
   return (
     <div className="space-y-10 animate-in fade-in duration-700 font-sans">
       <div>
@@ -17,7 +14,7 @@ export default async function CareerPage() {
           <AddOfferForm />
         </div>
         <div className="lg:col-span-2">
-          <OfferList offers={offers} />
+          <OfferList />
         </div>
       </div>
     </div>

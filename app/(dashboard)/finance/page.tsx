@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { Expense, ExpenseCategory } from "@/types/api";
+import { Expense, ExpenseCategory, Paginated } from "@/types/api";
 import { 
   Trash2,
   Wallet,
@@ -40,16 +41,21 @@ const CATEGORY_COLORS: Record<string, string> = {
   INCOME: "#22c55e",
 };
 
+const LIMIT = 20;
+
 export default function FinancePage() {
+  const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
-  
-  const { data: expenses, isLoading } = useQuery<Expense[]>({
-    queryKey: ["expenses"],
+
+  const { data, isLoading } = useQuery<Paginated<Expense>>({
+    queryKey: ["expenses", page],
     queryFn: async () => {
-      const response = await api.get("/finance/expenses");
+      const response = await api.get("/finance/expenses", { params: { page, limit: LIMIT } });
       return response.data;
     },
   });
+
+  const expenses = data?.items;
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -212,6 +218,32 @@ export default function FinancePage() {
                 </Table>
             </CardContent>
           </Card>
+
+          {data && data.pages > 1 && (
+            <div className="flex items-center justify-center gap-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => p - 1)}
+                disabled={page <= 1}
+                className="font-display tracking-wide text-xs"
+              >
+                ← Prev
+              </Button>
+              <span className="text-xs font-display opacity-40 tracking-wide">
+                {page} / {data.pages} &nbsp;·&nbsp; {data.total} transactions
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => p + 1)}
+                disabled={page >= data.pages}
+                className="font-display tracking-wide text-xs"
+              >
+                Next →
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="space-y-8">
