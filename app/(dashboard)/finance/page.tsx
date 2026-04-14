@@ -4,8 +4,10 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Expense, ExpenseCategory, Paginated } from "@/types/api";
-import { 
+import {
   Trash2,
+  Pencil,
+  X,
   Wallet,
   ArrowUpCircle,
   ArrowDownCircle,
@@ -24,6 +26,7 @@ import HustleInput from "@/components/finance/HustleInput";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -42,9 +45,12 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 const LIMIT = 20;
+const CATEGORIES = ["OPLATY", "HUSTLE", "LIFESTYLE", "INCOME"] as const;
 
 export default function FinancePage() {
   const [page, setPage] = useState(1);
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
+  const [editForm, setEditForm] = useState({ amount: "", category: "", description: "", date: "" });
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery<Paginated<Expense>>({
@@ -66,6 +72,43 @@ export default function FinancePage() {
       queryClient.invalidateQueries({ queryKey: ["dashboard-today"] });
     },
   });
+
+  const editMutation = useMutation({
+    mutationFn: async ({ id, payload }: { id: number; payload: object }) => {
+      const response = await api.patch(`/finance/expenses/${id}`, payload);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["expenses"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-today"] });
+      setEditingExpense(null);
+    },
+  });
+
+  const openEdit = (exp: Expense) => {
+    setEditingExpense(exp);
+    setEditForm({
+      amount: exp.amount.toString(),
+      category: exp.category,
+      description: exp.description,
+      date: exp.timestamp.split("T")[0],
+    });
+  };
+
+  const submitEdit = () => {
+    if (!editingExpense) return;
+    const amount = parseFloat(editForm.amount);
+    if (isNaN(amount) || amount <= 0) return;
+    editMutation.mutate({
+      id: editingExpense.id,
+      payload: {
+        amount,
+        category: editForm.category,
+        description: editForm.description,
+        timestamp: `${editForm.date}T00:00:00`,
+      },
+    });
+  };
 
   if (isLoading) {
     return (
@@ -202,14 +245,24 @@ export default function FinancePage() {
                             {exp.category === ExpenseCategory.INCOME ? '+' : '-'}{exp.amount.toLocaleString()} PLN
                           </TableCell>
                           <TableCell className="py-6 pr-8 text-right">
-                            <Button
-                              onClick={() => deleteMutation.mutate(exp.id)}
-                              variant="ghost"
-                              size="icon-sm"
-                              className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-xl transition-all"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                onClick={() => openEdit(exp)}
+                                variant="ghost"
+                                size="icon-sm"
+                                className="opacity-40 hover:opacity-100 hover:text-primary hover:bg-primary/10 rounded-xl transition-all"
+                              >
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                onClick={() => deleteMutation.mutate(exp.id)}
+                                variant="ghost"
+                                size="icon-sm"
+                                className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-xl transition-all"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))
@@ -298,6 +351,98 @@ export default function FinancePage() {
           </Card>
         </div>
       </div>
+
+      {/* Edit transaction modal */}
+      {editingExpense && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          onClick={() => setEditingExpense(null)}
+        >
+          <Card
+            className="w-full max-w-md mx-4 bg-card border border-border/60 shadow-2xl rounded-3xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CardContent className="p-8 space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-display tracking-tight">Edit transaction</h2>
+                <Button variant="ghost" size="icon" onClick={() => setEditingExpense(null)}>
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+
+              <label className="block space-y-2">
+                <span className="font-display text-xs opacity-50 tracking-wide uppercase">Amount (PLN)</span>
+                <Input
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  value={editForm.amount}
+                  onChange={(e) => setEditForm((f) => ({ ...f, amount: e.target.value }))}
+                  className="bg-background/40 border-border/60 rounded-2xl h-12"
+                />
+              </label>
+
+              <label className="block space-y-2">
+                <span className="font-display text-xs opacity-50 tracking-wide uppercase">Category</span>
+                <select
+                  value={editForm.category}
+                  onChange={(e) => setEditForm((f) => ({ ...f, category: e.target.value }))}
+                  className="flex h-12 w-full rounded-2xl border border-border/60 bg-background/40 px-3 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat} className="bg-popover">
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block space-y-2">
+                <span className="font-display text-xs opacity-50 tracking-wide uppercase">Description</span>
+                <Input
+                  type="text"
+                  value={editForm.description}
+                  onChange={(e) => setEditForm((f) => ({ ...f, description: e.target.value }))}
+                  className="bg-background/40 border-border/60 rounded-2xl h-12"
+                />
+              </label>
+
+              <label className="block space-y-2">
+                <span className="font-display text-xs opacity-50 tracking-wide uppercase">Date</span>
+                <Input
+                  type="date"
+                  value={editForm.date}
+                  onChange={(e) => setEditForm((f) => ({ ...f, date: e.target.value }))}
+                  className="bg-background/40 border-border/60 rounded-2xl h-12"
+                />
+              </label>
+
+              {editMutation.isError && (
+                <p className="text-xs text-destructive font-display tracking-wide">
+                  {(editMutation.error as any)?.response?.data?.detail ?? "Failed to save changes."}
+                </p>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <Button
+                  variant="outline"
+                  className="flex-1 font-display tracking-wide"
+                  onClick={() => setEditingExpense(null)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="flex-1 font-display tracking-wide shadow-[0_0_20px_rgba(123,46,255,0.3)]"
+                  onClick={submitEdit}
+                  disabled={editMutation.isPending || !editForm.amount || !editForm.description || !editForm.date}
+                >
+                  {editMutation.isPending ? "Saving..." : "Save changes"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
