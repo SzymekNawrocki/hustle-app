@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -65,7 +65,7 @@ export default function GoalsPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-10 animate-in fade-in duration-700 font-sans">
+      <div className="space-y-10 font-sans">
         <div className="space-y-3">
           <Skeleton className="h-10 w-[260px]" />
           <Skeleton className="h-4 w-[320px]" />
@@ -98,7 +98,7 @@ export default function GoalsPage() {
 
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700 font-sans">
+    <div className="space-y-10 font-sans">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <h1 className="text-3xl lg:text-5xl font-display text-foreground tracking-tight border-l-4 border-primary pl-4">Your goals</h1>
@@ -107,7 +107,7 @@ export default function GoalsPage() {
         <div className="flex gap-3">
           <Button
             onClick={() => setIsModalOpen(true)}
-            className="shadow-[0_0_20px_rgba(123,46,255,0.2)] gap-3 font-display text-lg px-8 transition-all hover:scale-[1.02]"
+            className="shadow-[0_0_20px_rgba(123,46,255,0.2)] gap-3 font-display text-lg px-8"
           >
             <Plus className="w-5 h-5" />
             New goal
@@ -153,7 +153,7 @@ export default function GoalsPage() {
                         onClick={() => deleteGoalMutation.mutate(goal.id)}
                         variant="ghost"
                         size="icon"
-                        className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 transition-all rounded-xl"
+                        className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-xl"
                         disabled={deleteGoalMutation.isPending}
                       >
                         {deleteGoalMutation.isPending ? (
@@ -202,7 +202,7 @@ export default function GoalsPage() {
                            <button 
                             key={m.id} 
                             onClick={() => toggleMilestone(m.id)}
-                            className="flex items-center gap-4 p-5 bg-background/40 backdrop-blur-sm rounded-2xl border border-border/60 w-full hover:bg-primary/5 hover:border-primary/30 transition-all text-left shadow-lg group/ms"
+                            className="flex items-center gap-4 p-5 bg-background/40 backdrop-blur-sm rounded-2xl border border-border/60 w-full text-left shadow-lg group/ms"
                            >
                              {m.is_completed ? (
                                <CheckCircle2 className="w-6 h-6 text-secondary" />
@@ -227,12 +227,12 @@ export default function GoalsPage() {
                            <button 
                             key={t.id} 
                             onClick={() => toggleTask(t.id)}
-                            className="flex items-center gap-4 p-5 bg-muted/20 rounded-2xl border border-border/60 w-full hover:bg-secondary/5 hover:border-secondary/30 transition-all text-left group/task shadow-lg"
+                            className="flex items-center gap-4 p-5 bg-muted/20 rounded-2xl border border-border/60 w-full hover:bg-secondary/5 hover:border-secondary/30 text-left group/task shadow-lg"
                            >
                              {t.is_completed ? (
                                <CheckCircle2 className="w-6 h-6 text-secondary" />
                              ) : (
-                               <div className="p-0.5 rounded-full border-2 border-primary/20 group-hover/task:border-primary transition-colors">
+                               <div className="p-0.5 rounded-full border-2 border-primary/20 group-hover/task:border-primary">
                                  <Circle className="w-4 h-4 text-transparent" />
                                </div>
                              )}
@@ -243,7 +243,7 @@ export default function GoalsPage() {
                          ))}
                          <Button
                            variant="outline"
-                           className="w-full border-2 border-dashed border-white/5 mt-4 opacity-40 hover:opacity-100 hover:text-primary hover:border-primary/40 font-display tracking-wide text-xs transition-all rounded-2xl"
+                           className="w-full border-2 border-dashed border-white/5 mt-4 opacity-40 hover:text-primary font-display tracking-wide text-xs rounded-2xl"
                          >
                            + Add task
                          </Button>

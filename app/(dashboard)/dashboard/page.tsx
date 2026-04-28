@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
@@ -167,7 +167,7 @@ export default function DashboardPage() {
           <div className="space-y-4">
             {data?.recent_offers?.length ? (
               data.recent_offers.map((offer) => (
-                <div key={offer.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/[0.08] transition-all">
+                <div key={offer.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/[0.08]">
                   <div>
                     <p className="text-xs text-white font-sans font-medium">{offer.title}</p>
                     <p className="text-xs text-gray-500 font-display">{offer.company || "Unknown company"}</p>
@@ -245,7 +245,7 @@ export default function DashboardPage() {
 
         {/* Latest goal */}
         <div className="bg-[#111114] border border-white/5 rounded-3xl p-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:scale-110 transition-transform duration-700">
+          <div className="absolute top-0 right-0 p-6 opacity-5 group-">
              <Target className="w-24 h-24" />
           </div>
           <div className="flex items-center justify-between mb-6">
@@ -269,7 +269,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden border border-white/5">
                   <div 
-                    className="bg-primary h-full transition-all duration-1000" 
+                    className="bg-primary h-full" 
                     style={{ width: `${data.latest_goal.progress_percentage || 0}%` }}
                   />
                 </div>

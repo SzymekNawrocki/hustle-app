@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -75,7 +75,7 @@ export default function HealthPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-10 animate-in fade-in duration-700 font-sans">
+      <div className="space-y-10 font-sans">
         <div className="space-y-3">
           <Skeleton className="h-10 w-[220px]" />
           <Skeleton className="h-4 w-[360px]" />
@@ -95,7 +95,7 @@ export default function HealthPage() {
   }
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700 font-sans">
+    <div className="space-y-10 font-sans">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <h1 className="text-3xl lg:text-5xl font-display text-foreground tracking-tight border-l-4 border-primary pl-4">Health</h1>
@@ -112,7 +112,7 @@ export default function HealthPage() {
         ].map((stat) => (
           <Card key={stat.label} className="bg-card/60 backdrop-blur-md border border-border/60 shadow-2xl overflow-hidden group">
             <CardContent className="p-8 flex flex-row items-center gap-6">
-              <div className={`p-5 ${stat.bg} ${stat.color} rounded-2xl group-hover:scale-110 transition-transform shadow-[0_0_20px_rgba(0,0,0,0.3)] border border-border/60`}>
+              <div className={`p-5 ${stat.bg} ${stat.color} rounded-2xl shadow-[0_0_20px_rgba(0,0,0,0.3)] border border-border/60`}>
                 <stat.icon className="w-10 h-10" />
               </div>
               <div>
@@ -148,7 +148,7 @@ export default function HealthPage() {
                   value={mealText}
                   onChange={(e) => setMealText(e.target.value)}
                   placeholder="e.g. 2 fried eggs with butter, 2 slices of whole-grain bread..."
-                  className="h-56 bg-background/40 border-border/60 transition-all text-base leading-relaxed font-sans p-6 rounded-2xl resize-none"
+                  className="h-56 bg-background/40 border-border/60 text-base leading-relaxed font-sans p-6 rounded-2xl resize-none"
                 />
                 
                 {error && (
@@ -163,7 +163,7 @@ export default function HealthPage() {
                 <Button
                   onClick={() => logMeal(mealText)}
                   disabled={isPending || !mealText.trim()}
-                  className="w-full shadow-[0_0_20px_rgba(123,46,255,0.2)] gap-4 font-display text-lg h-12 transition-all hover:scale-[1.01]"
+                  className="w-full shadow-[0_0_20px_rgba(123,46,255,0.2)] gap-4 font-display text-lg h-12"
                 >
                   {isPending ? (
                     <span className="h-4 w-4 rounded-full border-2 border-primary-foreground/40 border-t-primary-foreground animate-spin" />
@@ -193,10 +193,10 @@ export default function HealthPage() {
                   <div className="py-32 text-center opacity-40 font-display font-bold text-xl uppercase tracking-widest italic">No meals logged yet.</div>
                 )}
                 {meals?.map((meal) => (
-                  <div key={meal.id} className="p-8 hover:bg-primary/5 transition-all group border-b border-white/5">
+                  <div key={meal.id} className="p-8 group border-b border-white/5">
                     <div className="flex items-start justify-between gap-6">
                       <div className="space-y-4 flex-1">
-                        <p className="text-foreground font-display text-xl leading-tight group-hover:text-primary transition-colors tracking-tight">{meal.description}</p>
+                        <p className="text-foreground font-display text-xl leading-tight tracking-tight">{meal.description}</p>
                         <div className="flex flex-wrap gap-2">
                           <Badge className="font-display text-xs py-2.5 px-4 tracking-wide border-none shadow-lg">
                             {meal.calories} kcal
@@ -213,14 +213,14 @@ export default function HealthPage() {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-3">
-                        <span className="text-xs font-display opacity-60 group-hover:opacity-90 transition-opacity tracking-wide bg-muted/30 px-2 py-1 rounded-lg border border-border/60">
+                        <span className="text-xs font-display opacity-60 tracking-wide bg-muted/30 px-2 py-1 rounded-lg border border-border/60">
                           {new Date(meal.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                         <Button
                           onClick={() => deleteMealMutation.mutate(meal.id)}
                           variant="ghost"
                           size="icon-sm"
-                          className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 transition-all rounded-xl"
+                          className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-xl"
                           disabled={deleteMealMutation.isPending}
                         >
                           {deleteMealMutation.isPending ? (

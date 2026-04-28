@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Mail, Lock as LockIcon, AlertCircle, ArrowLeft, CheckCircle2 } from "lucide-react";
@@ -35,7 +35,7 @@ export default function ForgotPasswordPage() {
       <div className="fixed inset-0 bg-[#0D0D0D] -z-20" />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 blur-[150px] rounded-full -z-10 animate-pulse" />
       
-      <div className="w-full max-w-md relative animate-in fade-in zoom-in duration-500">
+      <div className="w-full max-w-md relative">
         <Card className="bg-card/60 backdrop-blur-xl border border-border/60 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.6)]">
           <CardContent className="p-8 lg:p-10 space-y-8">
             <div className="text-center relative space-y-4">
@@ -43,7 +43,7 @@ export default function ForgotPasswordPage() {
                 variant="ghost"
                 size="icon-sm"
                 asChild
-                className="absolute left-0 top-0 text-muted-foreground hover:text-primary transition-colors"
+                className="absolute left-0 top-0 text-muted-foreground hover:text-primary"
               >
                 <a href="/login" university-href="/login" aria-label="Back">
                   <ArrowLeft className="w-5 h-5" />
@@ -77,7 +77,7 @@ export default function ForgotPasswordPage() {
                     <span className="label-text-alt font-display opacity-40 tracking-wider">Email</span>
                   </label>
                   <div className="relative group">
-                    <div className="absolute inset-y-0 left-4 flex items-center text-primary/40 group-focus-within:text-primary transition-colors">
+                    <div className="absolute inset-y-0 left-4 flex items-center text-primary/40">
                       <Mail className="w-5 h-5" />
                     </div>
                     <Input
@@ -86,7 +86,7 @@ export default function ForgotPasswordPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
-                      className="w-full bg-background/40 border-border/60 pl-12 transition-all py-6 h-12 rounded-2xl"
+                      className="w-full bg-background/40 border-border/60 pl-12 py-6 h-12 rounded-2xl"
                     />
                   </div>
                 </div>
@@ -94,7 +94,7 @@ export default function ForgotPasswordPage() {
                 <Button
                   disabled={isLoading}
                   type="submit"
-                  className="w-full gap-3 font-display text-lg tracking-wide h-12 mt-4 shadow-[0_0_20px_rgba(123,46,255,0.2)] transition-all hover:scale-[1.01]"
+                  className="w-full gap-3 font-display text-lg tracking-wide h-12 mt-4 shadow-[0_0_20px_rgba(123,46,255,0.2)]"
                 >
                   {isLoading ? (
                     <span className="h-4 w-4 rounded-full border-2 border-primary-foreground/40 border-t-primary-foreground animate-spin" />
@@ -104,7 +104,7 @@ export default function ForgotPasswordPage() {
                 </Button>
               </form>
             ) : (
-              <div className="text-center space-y-6 py-4 animate-in fade-in duration-500">
+              <div className="text-center space-y-6 py-4">
                 <div className="flex justify-center">
                   <div className="p-5 rounded-full bg-success/10 text-success border border-success/20 shadow-inner">
                     <CheckCircle2 className="w-12 h-12" />
@@ -121,7 +121,7 @@ export default function ForgotPasswordPage() {
                   <Button
                     variant="ghost"
                     asChild
-                    className="font-display text-xs hover:text-primary transition-colors tracking-wide"
+                    className="font-display text-xs hover:text-primary tracking-wide"
                   >
                     <a href="/login" university-href="/login">Back to sign in</a>
                   </Button>
@@ -132,7 +132,7 @@ export default function ForgotPasswordPage() {
             {!isSent && (
               <p className="mt-8 text-center text-sm opacity-60">
                 Remember your password?{" "}
-                <a href="/login" university-href="/login" className="text-primary font-display text-xs hover:opacity-70 transition-opacity tracking-wide">
+                <a href="/login" university-href="/login" className="text-primary font-display text-xs tracking-wide">
                   Sign in
                 </a>
               </p>

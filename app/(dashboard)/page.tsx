@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
@@ -28,7 +28,7 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-10 animate-in fade-in duration-700">
+      <div className="space-y-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div className="space-y-3">
             <Skeleton className="h-10 w-[220px]" />
@@ -69,7 +69,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700">
+    <div className="space-y-10">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl lg:text-4xl font-display text-foreground tracking-tight mb-2">Dashboard</h1>
@@ -98,8 +98,8 @@ export default function DashboardPage() {
             <CardContent className="p-6 pt-0">
               <div className="space-y-4 font-sans">
                 {items.filter(i => i.category === 'TASK').map((item) => (
-                  <div key={item.id} className="flex items-center gap-4 p-4 bg-background/40 rounded-2xl border border-border/60 hover:border-primary/50 hover:bg-accent/30 transition-all group">
-                    <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary group-hover:text-primary-content transition-colors shadow-[0_0_15px_rgba(123,46,255,0.3)]">
+                  <div key={item.id} className="flex items-center gap-4 p-4 bg-background/40 rounded-2xl border border-border/60 group">
+                    <div className="p-2 bg-primary/10 rounded-lg-content shadow-[0_0_15px_rgba(123,46,255,0.3)]">
                       <CheckCircle2 className="w-5 h-5" />
                     </div>
                     <div className="flex-1">
@@ -141,7 +141,7 @@ export default function DashboardPage() {
 
         <div className="space-y-8">
           <Card className="bg-primary text-primary-content shadow-[0_0_50px_rgba(123,46,255,0.2)] relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform duration-700">
+            <div className="absolute top-0 right-0 p-6 opacity-10 group-">
               <BarChart3 className="w-32 h-32" />
             </div>
             <CardContent className="p-8 relative">

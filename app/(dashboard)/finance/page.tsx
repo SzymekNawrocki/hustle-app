@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -112,7 +112,7 @@ export default function FinancePage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-10 animate-in fade-in duration-700 font-sans pb-20">
+      <div className="space-y-10 font-sans pb-20">
         <div className="space-y-3">
           <Skeleton className="h-10 w-[260px]" />
           <Skeleton className="h-4 w-[320px]" />
@@ -146,7 +146,7 @@ export default function FinancePage() {
   })).filter(d => d.value > 0);
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700 font-sans pb-20">
+    <div className="space-y-10 font-sans pb-20">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl lg:text-5xl font-display text-foreground tracking-tight border-l-4 border-primary pl-4 uppercase">Finance Flow</h1>
@@ -155,9 +155,9 @@ export default function FinancePage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="bg-card/60 backdrop-blur-md border border-border/60 rounded-3xl shadow-2xl relative overflow-hidden group hover:border-primary/30 transition-all">
+          <Card className="bg-card/60 backdrop-blur-md border border-border/60 rounded-3xl shadow-2xl relative overflow-hidden group">
             <CardContent className="p-8">
-              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform duration-500">
+              <div className="absolute top-0 right-0 p-4 opacity-5 group-">
                 <Wallet className="w-24 h-24" />
               </div>
               <div className="font-display text-xs opacity-60 tracking-wide uppercase">Total balance</div>
@@ -168,9 +168,9 @@ export default function FinancePage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card/60 backdrop-blur-md border border-border/60 rounded-3xl shadow-2xl relative overflow-hidden group hover:border-emerald-500/30 transition-all">
+          <Card className="bg-card/60 backdrop-blur-md border border-border/60 rounded-3xl shadow-2xl relative overflow-hidden group hover:border-emerald-500/30">
             <CardContent className="p-8">
-              <div className="absolute top-0 right-0 p-4 opacity-5 text-emerald-400 group-hover:scale-110 transition-transform duration-500">
+              <div className="absolute top-0 right-0 p-4 opacity-5 text-emerald-400 group-">
                 <ArrowUpCircle className="w-24 h-24" />
               </div>
               <div className="font-display text-xs opacity-60 tracking-wide uppercase">Total income</div>
@@ -179,9 +179,9 @@ export default function FinancePage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card/60 backdrop-blur-md border border-border/60 rounded-3xl shadow-2xl relative overflow-hidden group hover:border-destructive/30 transition-all">
+          <Card className="bg-card/60 backdrop-blur-md border border-border/60 rounded-3xl shadow-2xl relative overflow-hidden group hover:border-destructive/30">
             <CardContent className="p-8">
-              <div className="absolute top-0 right-0 p-4 opacity-5 text-destructive group-hover:scale-110 transition-transform duration-500">
+              <div className="absolute top-0 right-0 p-4 opacity-5 text-destructive group-">
                 <ArrowDownCircle className="w-24 h-24" />
               </div>
               <div className="font-display text-xs opacity-60 tracking-wide uppercase">Total expenses</div>
@@ -224,9 +224,9 @@ export default function FinancePage() {
                       </TableRow>
                     ) : (
                       expenses?.map((exp) => (
-                        <TableRow key={exp.id} className="hover:bg-accent/20 transition-colors border-border/60 group">
+                        <TableRow key={exp.id} className="hover:bg-accent/20 border-border/60 group">
                           <TableCell className="py-6 pl-8 align-top whitespace-normal">
-                            <div className="font-display text-sm text-foreground group-hover:text-primary transition-colors">
+                            <div className="font-display text-sm text-foreground">
                               {exp.description}
                             </div>
                             <div className="text-xs opacity-40 uppercase tracking-wider mt-1">
@@ -250,7 +250,7 @@ export default function FinancePage() {
                                 onClick={() => openEdit(exp)}
                                 variant="ghost"
                                 size="icon-sm"
-                                className="opacity-40 hover:opacity-100 hover:text-primary hover:bg-primary/10 rounded-xl transition-all"
+                                className="opacity-40 hover:text-primary rounded-xl"
                               >
                                 <Pencil className="w-4 h-4" />
                               </Button>
@@ -258,7 +258,7 @@ export default function FinancePage() {
                                 onClick={() => deleteMutation.mutate(exp.id)}
                                 variant="ghost"
                                 size="icon-sm"
-                                className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-xl transition-all"
+                                className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-xl"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </Button>
@@ -319,7 +319,7 @@ export default function FinancePage() {
                     stroke="none"
                   >
                     {chartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={CATEGORY_COLORS[entry.name]} className="hover:opacity-80 transition-opacity cursor-pointer outline-none" />
+                      <Cell key={`cell-${index}`} fill={CATEGORY_COLORS[entry.name]} className=" cursor-pointer outline-none" />
                     ))}
                   </Pie>
                   <Tooltip
@@ -336,10 +336,10 @@ export default function FinancePage() {
             </div>
             <div className="mt-8 space-y-3">
               {chartData.map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-4 bg-accent/20 rounded-2xl border border-border/60 hover:bg-accent/30 transition-all group">
+                <div key={i} className="flex items-center justify-between p-4 bg-accent/20 rounded-2xl border border-border/60 group">
                   <div className="flex items-center gap-3">
                      <div className="w-2.5 h-2.5 rounded-full shadow-[0_0_10px_rgba(0,0,0,0.5)]" style={{backgroundColor: CATEGORY_COLORS[item.name]}} />
-                     <span className="text-xs font-display opacity-60 tracking-wide uppercase group-hover:opacity-100 transition-opacity">{item.name}</span>
+                     <span className="text-xs font-display opacity-60 tracking-wide uppercase group-">{item.name}</span>
                   </div>
                   <span className="text-xs font-display text-muted-foreground">{item.value.toLocaleString()} PLN</span>
                 </div>
@@ -387,7 +387,7 @@ export default function FinancePage() {
                 <select
                   value={editForm.category}
                   onChange={(e) => setEditForm((f) => ({ ...f, category: e.target.value }))}
-                  className="flex h-12 w-full rounded-2xl border border-border/60 bg-background/40 px-3 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="flex h-12 w-full rounded-2xl border border-border/60 bg-background/40 px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   {CATEGORIES.map((cat) => (
                     <option key={cat} value={cat} className="bg-popover">

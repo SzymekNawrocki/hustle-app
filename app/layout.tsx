@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Exo_2, Geist } from "next/font/google";
 import "./globals.css";
 
@@ -42,7 +42,7 @@ export default function RootLayout({
                   href="https://devemite.vercel.app/"
                   target="_blank"
                   rel="noreferrer"
-                  className="underline underline-offset-4 hover:text-foreground transition-colors"
+                  className="underline underline-offset-4 hover:text-foreground"
                 >
                   Devemite
                 </a>

@@ -1,4 +1,4 @@
-import { Sidebar } from "@/components/sidebar";
+﻿import { Sidebar } from "@/components/sidebar";
 import { DemoBanner } from "@/components/demo-banner";
 
 export default function DashboardLayout({

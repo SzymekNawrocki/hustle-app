@@ -1,9 +1,9 @@
-import AddOfferForm from "@/components/career/AddOfferForm";
+﻿import AddOfferForm from "@/components/career/AddOfferForm";
 import OfferList from "@/components/career/OfferList";
 
 export default function CareerPage() {
   return (
-    <div className="space-y-10 animate-in fade-in duration-700 font-sans">
+    <div className="space-y-10 font-sans">
       <div>
         <h1 className="text-3xl lg:text-5xl font-display text-foreground tracking-tight border-l-4 border-primary pl-4">Career</h1>
         <p className="text-muted-foreground mt-2 font-display tracking-wide text-xs">Track your applications and recruitment status.</p>
