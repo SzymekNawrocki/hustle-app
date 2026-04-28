@@ -99,7 +99,7 @@ export default function DashboardPage() {
         </div>
         
         <ResponsiveContainer width="100%" height="80%">
-          <AreaChart data={historyData?.days}>
+          <AreaChart data={historyData?.days ?? []}>
             <defs>
               <linearGradient id="colorFinance" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#7B2EFF" stopOpacity={0.3}/>

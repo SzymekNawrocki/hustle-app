@@ -32,7 +32,8 @@ export default function HealthPage() {
     queryKey: ["meals"],
     queryFn: async () => {
       const response = await api.get("/health/meals");
-      return response.data;
+      // API returns PaginatedResponse — extract items array
+      return response.data.items ?? response.data;
     },
   });
 
