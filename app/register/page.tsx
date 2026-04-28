@@ -69,7 +69,7 @@ export default function RegisterPage() {
                 <div className="p-3 bg-primary rounded-2xl shadow-[0_0_30px_rgba(123,46,255,0.5)]">
                   <UserPlus className="w-8 h-8 text-primary-content" />
                 </div>
-                <h1 className="text-4xl font-display text-primary tracking-tight">HustleOS</h1>
+                <h1 className="text-4xl font-display text-primary tracking-tight">Hustle App</h1>
               </div>
               <div>
                 <h2 className="text-xl font-display text-foreground tracking-tight">Create an account</h2>

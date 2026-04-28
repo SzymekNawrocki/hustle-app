@@ -8,7 +8,7 @@ const exo2 = Exo_2({
 });
 
 export const metadata: Metadata = {
-  title: "HustleOS",
+  title: "Hustle App",
   description: "Build your success system",
 };
 

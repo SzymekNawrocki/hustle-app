@@ -1,4 +1,4 @@
-# HustleOS
+﻿# Hustle App
 
 A full-stack life-tracking app that brings goals, finances, health, and career into one place — with AI-powered natural language input so adding data takes seconds, not minutes.
 
