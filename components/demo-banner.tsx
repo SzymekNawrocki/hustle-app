@@ -1,28 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { useState } from "react";
 import { Info, X } from "lucide-react";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 export function DemoBanner() {
-  const [isDemo, setIsDemo] = useState(false);
+  const { data: user } = useCurrentUser();
   const [isVisible, setIsVisible] = useState(true);
 
-  useEffect(() => {
-    const checkDemo = async () => {
-      try {
-        const res = await api.get("/auth/me");
-        if (res.data.is_demo) {
-          setIsDemo(true);
-        }
-      } catch (err) {
-        console.error("Failed to check demo status", err);
-      }
-    };
-    checkDemo();
-  }, []);
-
-  if (!isDemo || !isVisible) return null;
+  if (!user?.is_demo || !isVisible) return null;
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 animate-in slide-in-from-top duration-500">
@@ -32,7 +18,7 @@ export function DemoBanner() {
             <Info className="w-4 h-4" />
             <span>You are in demo mode. Data is automatically reset on each guest login.</span>
           </div>
-          <button 
+          <button
             onClick={() => setIsVisible(false)}
             className="cursor-pointer p-1 hover:bg-primary/20 rounded-lg transition-colors"
           >

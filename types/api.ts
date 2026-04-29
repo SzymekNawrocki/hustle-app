@@ -76,6 +76,7 @@ export interface User {
   email: string;
   full_name: string | null;
   is_active: boolean;
+  is_demo: boolean;
 }
 
 export interface Token {
