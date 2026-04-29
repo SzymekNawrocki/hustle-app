@@ -20,6 +20,7 @@ export function DemoBanner() {
           </div>
           <button
             onClick={() => setIsVisible(false)}
+            aria-label="Dismiss demo banner"
             className="cursor-pointer p-1 hover:bg-primary/20 rounded-lg transition-colors"
           >
             <X className="w-4 h-4 text-primary" />

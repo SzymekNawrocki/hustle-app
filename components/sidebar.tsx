@@ -41,6 +41,7 @@ function SidebarNavContent({
         <Button
           variant="ghost"
           size="icon-sm"
+          aria-label="Close navigation menu"
           className="lg:hidden"
           onClick={onClose}
         >
@@ -105,6 +106,7 @@ export function Sidebar() {
         <Button
           onClick={() => setIsOpen(true)}
           size="icon"
+          aria-label="Open navigation menu"
           className="shadow-lg"
         >
           <Menu className="w-6 h-6" />

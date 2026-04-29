@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import type { Expense, ExpenseCategory } from "@/types/api";
 import { usePaginatedQuery } from "@/hooks/use-paginated-query";
 import { useCRUD } from "@/hooks/use-crud";
@@ -14,14 +15,12 @@ import {
   Activity,
   PieChart as PieChartIcon
 } from "lucide-react";
-import { 
-  PieChart, 
-  Pie, 
-  Cell, 
-  ResponsiveContainer, 
-  Tooltip
-} from "recharts";
 import HustleInput from "@/components/finance/HustleInput";
+
+const FinanceChart = dynamic(() => import("@/components/charts/FinanceChart"), {
+  ssr: false,
+  loading: () => <div className="h-[300px] w-full animate-pulse bg-white/5 rounded-2xl" />,
+});
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -287,29 +286,7 @@ export default function FinancePage() {
               <PieChartIcon className="w-5 h-5 opacity-20" />
             </CardTitle>
             <div className="h-[300px] w-full relative">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={chartData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={80}
-                    outerRadius={100}
-                    paddingAngle={8}
-                    dataKey="value"
-                    stroke="none"
-                  >
-                    {chartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={CATEGORY_COLORS[entry.name]} className=" cursor-pointer outline-none" />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px', fontSize: '10px', fontFamily: 'inherit'}}
-                    itemStyle={{color: '#fff', textTransform: 'uppercase'}}
-                    cursor={{fill: 'transparent'}}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              <FinanceChart data={chartData} />
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                   <span className="text-xs font-display opacity-40 tracking-widest uppercase">Breakdown</span>
                   <span className="text-2xl font-display text-primary uppercase">Flow</span>

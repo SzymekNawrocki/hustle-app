@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import { Exo_2, Geist } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 
 const exo2 = Exo_2({
@@ -18,18 +19,16 @@ import { cn } from "@/lib/utils";
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const nonce = (await headers()).get("x-nonce") ?? "";
   const year = new Date().getFullYear();
 
   return (
-    <html lang="en" className={cn(exo2.variable, "font-sans", geist.variable)}>
-      <head>
-        <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_URL} />
-      </head>
+    <html lang="en" nonce={nonce} className={cn(exo2.variable, "font-sans", geist.variable)}>
       <body
         className="font-sans antialiased min-h-dvh flex flex-col"
       >

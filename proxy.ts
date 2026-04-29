@@ -23,16 +23,13 @@ export default function proxy(request: NextRequest) {
 
   // CSP nonce (base64-encoded UUID)
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-  const apiOrigin = process.env.NEXT_PUBLIC_API_URL
-    ? new URL(process.env.NEXT_PUBLIC_API_URL).origin
-    : "";
   const csp = [
     `default-src 'self'`,
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
-    `style-src 'self' 'unsafe-inline'`,
+    `style-src 'self' 'nonce-${nonce}'`,
     `img-src 'self' data: blob:`,
     `font-src 'self' https://fonts.gstatic.com`,
-    `connect-src 'self' ${apiOrigin} https://*.ingest.sentry.io`,
+    `connect-src 'self' https://*.ingest.sentry.io`,
     `frame-ancestors 'none'`,
   ].join("; ");
 

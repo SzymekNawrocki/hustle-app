@@ -52,7 +52,7 @@ export default function OfferList() {
       <CardContent className="p-0">
         <div className="divide-y divide-white/5">
           {offers.length === 0 && (
-            <div className="p-16 text-center opacity-40 font-display text-xl tracking-wide">
+            <div className="p-16 text-center text-muted-foreground font-display text-xl tracking-wide">
               No offers yet. Add your first one.
             </div>
           )}
