@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { Expense, ExpenseCategory } from "@/types/api";
+import type { Expense, ExpenseCategory } from "@/types/api";
 import { usePaginatedQuery } from "@/hooks/use-paginated-query";
 import { useCRUD } from "@/hooks/use-crud";
 import {
@@ -68,7 +68,7 @@ export default function FinancePage() {
       amount: exp.amount.toString(),
       category: exp.category,
       description: exp.description,
-      date: exp.timestamp.split("T")[0],
+      date: (exp.timestamp ?? "").split("T")[0],
     });
   };
 
@@ -116,8 +116,8 @@ export default function FinancePage() {
     );
   }
 
-  const totalIncome = expenses?.filter(e => e.category === ExpenseCategory.INCOME).reduce((acc, e) => acc + e.amount, 0) || 0;
-  const totalExpenses = expenses?.filter(e => e.category !== ExpenseCategory.INCOME).reduce((acc, e) => acc + e.amount, 0) || 0;
+  const totalIncome = expenses?.filter(e => e.category === "INCOME").reduce((acc, e) => acc + e.amount, 0) || 0;
+  const totalExpenses = expenses?.filter(e => e.category !== "INCOME").reduce((acc, e) => acc + e.amount, 0) || 0;
   const balance = totalIncome - totalExpenses;
 
   const chartData = Object.keys(CATEGORY_COLORS).map(cat => ({
@@ -210,7 +210,7 @@ export default function FinancePage() {
                               {exp.description}
                             </div>
                             <div className="text-xs opacity-40 uppercase tracking-wider mt-1">
-                              {new Date(exp.timestamp).toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                              {new Date(exp.timestamp ?? "").toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                             </div>
                           </TableCell>
                           <TableCell className="py-6">
@@ -221,8 +221,8 @@ export default function FinancePage() {
                               {exp.category}
                             </Badge>
                           </TableCell>
-                          <TableCell className={`py-6 font-display text-lg tracking-tight ${exp.category === ExpenseCategory.INCOME ? 'text-emerald-400' : 'text-foreground'}`}>
-                            {exp.category === ExpenseCategory.INCOME ? '+' : '-'}{exp.amount.toLocaleString()} PLN
+                          <TableCell className={`py-6 font-display text-lg tracking-tight ${exp.category === "INCOME" ? 'text-emerald-400' : 'text-foreground'}`}>
+                            {exp.category === "INCOME" ? '+' : '-'}{exp.amount.toLocaleString()} PLN
                           </TableCell>
                           <TableCell className="py-6 pr-8 text-right">
                             <div className="flex items-center justify-end gap-1">
