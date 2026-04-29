@@ -27,6 +27,9 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={cn(exo2.variable, "font-sans", geist.variable)}>
+      <head>
+        <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_URL} />
+      </head>
       <body
         className="font-sans antialiased min-h-dvh flex flex-col"
       >

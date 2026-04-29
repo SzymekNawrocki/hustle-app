@@ -37,15 +37,17 @@ export default function LoginPage() {
       formData.append("username", data.username);
       formData.append("password", data.password);
 
-      console.log("Attempting login for:", data.username);
       const response = await api.post("/auth/login", formData, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       });
 
-      console.log("Login successful, redirecting to dashboard...");
-      void response;
+      await fetch("/api/auth/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ access_token: response.data.access_token }),
+      });
       window.location.href = "/dashboard";
     } catch (err) {
       setError(getApiError(err));
@@ -58,10 +60,12 @@ export default function LoginPage() {
     setIsLoading(true);
     setError(null);
     try {
-      console.log("Attempting demo login...");
       const response = await api.post("/auth/demo-login");
-      console.log("Demo login successful, redirecting...");
-      void response;
+      await fetch("/api/auth/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ access_token: response.data.access_token }),
+      });
       window.location.href = "/dashboard";
     } catch (err) {
       setError(getApiError(err));
