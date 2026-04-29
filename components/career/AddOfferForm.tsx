@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { createOffer } from "@/app/(dashboard)/career/actions";
+import { useState } from "react";
+import { useJobOffers } from "@/hooks/use-job-offers";
+import type { OfferStatus } from "@/types/api";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -10,9 +10,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-const STATUSES = ["wysłano", "1 etap", "2 etap", "3 etap", "umowa"] as const;
+const STATUSES: OfferStatus[] = ["wysłano", "1 etap", "2 etap", "3 etap", "umowa"];
 
-const STATUS_LABELS: Record<(typeof STATUSES)[number], string> = {
+const STATUS_LABELS: Record<OfferStatus, string> = {
   "wysłano": "Sent",
   "1 etap": "Stage 1",
   "2 etap": "Stage 2",
@@ -21,32 +21,38 @@ const STATUS_LABELS: Record<(typeof STATUSES)[number], string> = {
 };
 
 export default function AddOfferForm() {
-  const [isPending, startTransition] = useTransition();
+  const { create } = useJobOffers();
   const [title, setTitle] = useState("");
   const [company, setCompany] = useState("");
-  const [status, setStatus] = useState<(typeof STATUSES)[number]>("wysłano");
+  const [status, setStatus] = useState<OfferStatus>("wysłano");
   const [url, setUrl] = useState("");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const queryClient = useQueryClient();
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
-    startTransition(async () => {
-      try {
-        await createOffer({ title, company: company.trim() ? company.trim() : undefined, status, url, notes: notes.trim() ? notes.trim() : undefined });
-        queryClient.invalidateQueries({ queryKey: ["offers"] });
-        setTitle("");
-        setCompany("");
-        setStatus("wysłano");
-        setUrl("");
-        setNotes("");
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to add offer");
+    create.mutate(
+      {
+        title,
+        company: company.trim() || undefined,
+        status,
+        url,
+        notes: notes.trim() || undefined,
+      },
+      {
+        onSuccess: () => {
+          setTitle("");
+          setCompany("");
+          setStatus("wysłano");
+          setUrl("");
+          setNotes("");
+        },
+        onError: (err) => {
+          setError(err instanceof Error ? err.message : "Failed to add offer");
+        },
       }
-    });
+    );
   };
 
   return (
@@ -81,7 +87,7 @@ export default function AddOfferForm() {
             <select
               className="flex h-10 w-full rounded-2xl border border-border/60 bg-background/40 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
               value={status}
-              onChange={(e) => setStatus(e.target.value as (typeof STATUSES)[number])}
+              onChange={(e) => setStatus(e.target.value as OfferStatus)}
             >
               {STATUSES.map((s) => (
                 <option key={s} value={s} className="bg-popover">
@@ -122,10 +128,10 @@ export default function AddOfferForm() {
 
           <Button
             className="font-display text-lg tracking-wide shadow-[0_0_20px_rgba(123,46,255,0.4)] transition-all hover:scale-[1.02] mt-4 h-12"
-            disabled={isPending}
+            disabled={create.isPending}
             type="submit"
           >
-            {isPending ? "Adding..." : "Add"}
+            {create.isPending ? "Adding..." : "Add"}
           </Button>
         </CardContent>
       </Card>

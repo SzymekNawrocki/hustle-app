@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { Trash2, ExternalLink } from "lucide-react";
-import { deleteOffer, updateOfferStatus, updateOfferNotes } from "@/app/(dashboard)/career/actions";
-import { api } from "@/lib/api";
-import type { JobOffer, Paginated } from "@/types/api";
+import { useJobOffers } from "@/hooks/use-job-offers";
+import type { OfferStatus } from "@/types/api";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,11 +11,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 
-const LIMIT = 20;
+const STATUSES: OfferStatus[] = ["wysłano", "1 etap", "2 etap", "3 etap", "umowa"];
 
-const STATUSES = ["wysłano", "1 etap", "2 etap", "3 etap", "umowa"] as const;
-
-const STATUS_LABELS: Record<(typeof STATUSES)[number], string> = {
+const STATUS_LABELS: Record<OfferStatus, string> = {
   "wysłano": "Sent",
   "1 etap": "Stage 1",
   "2 etap": "Stage 2",
@@ -26,26 +22,10 @@ const STATUS_LABELS: Record<(typeof STATUSES)[number], string> = {
 };
 
 export default function OfferList() {
-  const [page, setPage] = useState(1);
-  const [isPending, startTransition] = useTransition();
-  const [pendingOfferId, setPendingOfferId] = useState<number | null>(null);
+  const { data, isLoading, offers, page, setPage, nextPage, prevPage, hasNextPage, hasPrevPage, remove, update } =
+    useJobOffers();
   const [editingNotesId, setEditingNotesId] = useState<number | null>(null);
   const [tempNotes, setTempNotes] = useState("");
-  const queryClient = useQueryClient();
-
-  const { data, isLoading } = useQuery<Paginated<JobOffer>>({
-    queryKey: ["offers", page],
-    queryFn: async () => {
-      const response = await api.get("/offers", { params: { page, limit: LIMIT } });
-      return response.data;
-    },
-  });
-
-  const offers = data?.items ?? [];
-
-  const invalidateOffers = () => {
-    queryClient.invalidateQueries({ queryKey: ["offers"] });
-  };
 
   if (isLoading) {
     return (
@@ -86,26 +66,15 @@ export default function OfferList() {
                 </div>
                 <div className="mt-4 flex flex-wrap items-center gap-4">
                   <Badge variant="secondary" className="font-display text-xs py-2.5 px-3.5 tracking-wide">
-                    {STATUS_LABELS[offer.status as (typeof STATUSES)[number]] ?? offer.status}
+                    {STATUS_LABELS[offer.status as OfferStatus] ?? offer.status}
                   </Badge>
                   <select
                     name="status"
                     defaultValue={offer.status}
                     className="flex h-8 rounded-xl border border-border/60 bg-muted/30 px-2 text-xs font-display tracking-wide shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
-                    disabled={isPending && pendingOfferId === offer.id}
+                    disabled={update.isPending}
                     onChange={(e) => {
-                      const nextStatus = e.target.value;
-                      const fd = new FormData();
-                      fd.set("status", nextStatus);
-                      setPendingOfferId(offer.id);
-                      startTransition(async () => {
-                        try {
-                          await updateOfferStatus(offer.id, fd);
-                          invalidateOffers();
-                        } finally {
-                          setPendingOfferId(null);
-                        }
-                      });
+                      update.mutate({ id: offer.id, payload: { status: e.target.value as OfferStatus } });
                     }}
                   >
                     {STATUSES.map((s) => (
@@ -156,21 +125,15 @@ export default function OfferList() {
                       </Button>
                       <Button
                         onClick={() => {
-                          setPendingOfferId(offer.id);
-                          startTransition(async () => {
-                            try {
-                              await updateOfferNotes(offer.id, tempNotes);
-                              invalidateOffers();
-                              setEditingNotesId(null);
-                            } finally {
-                              setPendingOfferId(null);
-                            }
-                          });
+                          update.mutate(
+                            { id: offer.id, payload: { notes: tempNotes } },
+                            { onSuccess: () => setEditingNotesId(null) }
+                          );
                         }}
-                        disabled={isPending && pendingOfferId === offer.id}
+                        disabled={update.isPending}
                         size="xs"
                       >
-                        {isPending && pendingOfferId === offer.id ? "Saving..." : "Save"}
+                        {update.isPending ? "Saving..." : "Save"}
                       </Button>
                     </div>
                   </div>
@@ -183,24 +146,25 @@ export default function OfferList() {
                 )}
               </div>
 
-              <form
-                action={async () => {
-                  await deleteOffer(offer.id);
-                  // If we deleted the last item on this page, go back one page
-                  if (offers.length === 1 && page > 1) setPage((p) => p - 1);
-                  invalidateOffers();
-                }}
-                className="flex items-center"
+              <Button
+                onClick={() =>
+                  remove.mutate(offer.id, {
+                    onSuccess: () => {
+                      if (offers.length === 1 && page > 1) setPage((p) => p - 1);
+                    },
+                  })
+                }
+                variant="ghost"
+                size="icon"
+                className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 transition-all rounded-xl"
+                disabled={remove.isPending}
               >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 transition-all rounded-xl"
-                  type="submit"
-                >
+                {remove.isPending ? (
+                  <span className="h-4 w-4 rounded-full border-2 border-current/30 border-t-current animate-spin" />
+                ) : (
                   <Trash2 className="w-6 h-6" />
-                </Button>
-              </form>
+                )}
+              </Button>
             </div>
           ))}
         </div>
@@ -210,8 +174,8 @@ export default function OfferList() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setPage((p) => p - 1)}
-              disabled={page <= 1}
+              onClick={prevPage}
+              disabled={!hasPrevPage}
               className="font-display tracking-wide text-xs"
             >
               ← Prev
@@ -222,8 +186,8 @@ export default function OfferList() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setPage((p) => p + 1)}
-              disabled={page >= data.pages}
+              onClick={nextPage}
+              disabled={!hasNextPage}
               className="font-display tracking-wide text-xs"
             >
               Next →
