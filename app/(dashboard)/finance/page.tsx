@@ -1,9 +1,9 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/api";
-import { Expense, ExpenseCategory, Paginated } from "@/types/api";
+import { Expense, ExpenseCategory } from "@/types/api";
+import { usePaginatedQuery } from "@/hooks/use-paginated-query";
+import { useCRUD } from "@/hooks/use-crud";
 import {
   Trash2,
   Pencil,
@@ -48,42 +48,19 @@ const LIMIT = 20;
 const CATEGORIES = ["OPLATY", "HUSTLE", "LIFESTYLE", "INCOME"] as const;
 
 export default function FinancePage() {
-  const [page, setPage] = useState(1);
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [editForm, setEditForm] = useState({ amount: "", category: "", description: "", date: "" });
-  const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery<Paginated<Expense>>({
-    queryKey: ["expenses", page],
-    queryFn: async () => {
-      const response = await api.get("/finance/expenses", { params: { page, limit: LIMIT } });
-      return response.data;
-    },
-  });
+  const { data, isLoading, page, nextPage, prevPage, hasNextPage, hasPrevPage } =
+    usePaginatedQuery<Expense>("expenses", "/finance/expenses", LIMIT);
 
   const expenses = data?.items;
 
-  const deleteMutation = useMutation({
-    mutationFn: async (id: number) => {
-      await api.delete(`/finance/expenses/${id}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["expenses"] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard-today"] });
-    },
-  });
-
-  const editMutation = useMutation({
-    mutationFn: async ({ id, payload }: { id: number; payload: object }) => {
-      const response = await api.patch(`/finance/expenses/${id}`, payload);
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["expenses"] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard-today"] });
-      setEditingExpense(null);
-    },
-  });
+  const { remove: deleteMutation, update: editMutation } = useCRUD<Expense>(
+    "/finance/expenses",
+    "expenses",
+    { extraInvalidations: [["dashboard-today"]] }
+  );
 
   const openEdit = (exp: Expense) => {
     setEditingExpense(exp);
@@ -99,15 +76,18 @@ export default function FinancePage() {
     if (!editingExpense) return;
     const amount = parseFloat(editForm.amount);
     if (isNaN(amount) || amount <= 0) return;
-    editMutation.mutate({
-      id: editingExpense.id,
-      payload: {
-        amount,
-        category: editForm.category,
-        description: editForm.description,
-        timestamp: `${editForm.date}T00:00:00`,
+    editMutation.mutate(
+      {
+        id: editingExpense.id,
+        payload: {
+          amount,
+          category: editForm.category as ExpenseCategory,
+          description: editForm.description,
+          timestamp: `${editForm.date}T00:00:00`,
+        },
       },
-    });
+      { onSuccess: () => setEditingExpense(null) }
+    );
   };
 
   if (isLoading) {
@@ -259,6 +239,7 @@ export default function FinancePage() {
                                 variant="ghost"
                                 size="icon-sm"
                                 className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-xl"
+                                disabled={deleteMutation.isPending}
                               >
                                 <Trash2 className="w-4 h-4" />
                               </Button>
@@ -277,8 +258,8 @@ export default function FinancePage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setPage((p) => p - 1)}
-                disabled={page <= 1}
+                onClick={prevPage}
+                disabled={!hasPrevPage}
                 className="font-display tracking-wide text-xs"
               >
                 ← Prev
@@ -289,8 +270,8 @@ export default function FinancePage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setPage((p) => p + 1)}
-                disabled={page >= data.pages}
+                onClick={nextPage}
+                disabled={!hasNextPage}
                 className="font-display tracking-wide text-xs"
               >
                 Next →

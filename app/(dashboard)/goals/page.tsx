@@ -1,9 +1,11 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { Goal, Paginated } from "@/types/api";
+import { Goal } from "@/types/api";
+import { usePaginatedQuery } from "@/hooks/use-paginated-query";
+import { useCRUD } from "@/hooks/use-crud";
 import { Plus, Target, Calendar, CheckCircle2, Circle, ChevronRight, Trash2 } from "lucide-react";
 import { SmartCreateModal } from "@/components/smart-create-modal";
 
@@ -17,32 +19,14 @@ const LIMIT = 20;
 
 export default function GoalsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error, refetch } = useQuery<Paginated<Goal>>({
-    queryKey: ["goals", page],
-    queryFn: async () => {
-      const response = await api.get("/goals/", { params: { page, limit: LIMIT } });
-      return response.data;
-    },
-  });
+  const { data, isLoading, error, refetch, page, nextPage, prevPage, setPage, hasNextPage, hasPrevPage } =
+    usePaginatedQuery<Goal>("goals", "/goals/", LIMIT);
 
   const goals = data?.items;
 
-  const deleteGoalMutation = useMutation({
-    mutationFn: async (goalId: number) => {
-      await api.delete(`/goals/${goalId}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["goals"] });
-      // If we deleted the last item on this page, go back one page
-      if (goals?.length === 1 && page > 1) setPage((p) => p - 1);
-    },
-    onError: (err) => {
-      console.error("Failed to delete goal:", err);
-    },
-  });
+  const { remove: deleteGoalMutation } = useCRUD<Goal>("/goals", "goals");
 
 
   const toggleTask = async (taskId: number) => {
@@ -150,7 +134,13 @@ export default function GoalsPage() {
                         {goal.status === "COMPLETED" ? "Completed" : "In progress"}
                       </Badge>
                       <Button
-                        onClick={() => deleteGoalMutation.mutate(goal.id)}
+                        onClick={() =>
+                          deleteGoalMutation.mutate(goal.id, {
+                            onSuccess: () => {
+                              if (goals?.length === 1 && page > 1) setPage((p) => p - 1);
+                            },
+                          })
+                        }
                         variant="ghost"
                         size="icon"
                         className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-xl"
@@ -262,8 +252,8 @@ export default function GoalsPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setPage((p) => p - 1)}
-            disabled={page <= 1}
+            onClick={prevPage}
+            disabled={!hasPrevPage}
             className="font-display tracking-wide text-xs"
           >
             ← Prev
@@ -274,8 +264,8 @@ export default function GoalsPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setPage((p) => p + 1)}
-            disabled={page >= data.pages}
+            onClick={nextPage}
+            disabled={!hasNextPage}
             className="font-display tracking-wide text-xs"
           >
             Next →

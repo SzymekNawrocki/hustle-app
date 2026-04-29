@@ -1,9 +1,10 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, getApiError } from "@/lib/api";
 import { MealLog } from "@/types/api";
+import { useCRUD } from "@/hooks/use-crud";
 import { 
   Utensils, 
   Sparkles, 
@@ -37,18 +38,11 @@ export default function HealthPage() {
     },
   });
 
-  const deleteMealMutation = useMutation({
-    mutationFn: async (mealId: number) => {
-      await api.delete(`/health/meals/${mealId}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["meals"] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard-today"] });
-    },
-    onError: (err) => {
-      console.error("Failed to delete meal:", err);
-    },
-  });
+  const { remove: deleteMealMutation } = useCRUD<MealLog>(
+    "/health/meals",
+    "meals",
+    { extraInvalidations: [["dashboard-today"]] }
+  );
 
   const { mutate: logMeal, isPending } = useMutation({
     mutationFn: async (text: string) => {
@@ -66,7 +60,7 @@ export default function HealthPage() {
     }
   });
 
-  const totalNutrition = meals?.reduce((acc, meal) => ({
+  const totalNutrition = meals?.reduce((acc: { calories: number; protein: number; carbs: number; fat: number }, meal: MealLog) => ({
     calories: acc.calories + (meal.calories || 0),
     protein: acc.protein + (meal.protein || 0),
     carbs: acc.carbs + (meal.carbs || 0),
@@ -192,7 +186,7 @@ export default function HealthPage() {
                 {meals?.length === 0 && (
                   <div className="py-32 text-center opacity-40 font-display font-bold text-xl uppercase tracking-widest italic">No meals logged yet.</div>
                 )}
-                {meals?.map((meal) => (
+                {meals?.map((meal: MealLog) => (
                   <div key={meal.id} className="p-8 group border-b border-white/5">
                     <div className="flex items-start justify-between gap-6">
                       <div className="space-y-4 flex-1">
