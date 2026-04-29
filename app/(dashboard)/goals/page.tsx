@@ -1,11 +1,10 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/api";
 import { Goal } from "@/types/api";
 import { usePaginatedQuery } from "@/hooks/use-paginated-query";
 import { useCRUD } from "@/hooks/use-crud";
+import { useGoals } from "@/hooks/use-goals";
 import { Plus, Target, Calendar, CheckCircle2, Circle, ChevronRight, Trash2 } from "lucide-react";
 import { SmartCreateModal } from "@/components/smart-create-modal";
 
@@ -19,7 +18,6 @@ const LIMIT = 20;
 
 export default function GoalsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const queryClient = useQueryClient();
 
   const { data, isLoading, error, refetch, page, nextPage, prevPage, setPage, hasNextPage, hasPrevPage } =
     usePaginatedQuery<Goal>("goals", "/goals/", LIMIT);
@@ -27,25 +25,7 @@ export default function GoalsPage() {
   const goals = data?.items;
 
   const { remove: deleteGoalMutation } = useCRUD<Goal>("/goals", "goals");
-
-
-  const toggleTask = async (taskId: number) => {
-     try {
-       await api.post(`/goals/tasks/${taskId}/toggle`);
-       refetch();
-     } catch (err) {
-       console.error("Failed to toggle task:", err);
-     }
-  };
-
-  const toggleMilestone = async (milestoneId: number) => {
-    try {
-      await api.post(`/goals/milestones/${milestoneId}/toggle`);
-      refetch();
-    } catch (err) {
-      console.error("Failed to toggle milestone:", err);
-    }
-  };
+  const { toggleTask, toggleMilestone } = useGoals();
 
   if (isLoading) {
     return (
@@ -189,9 +169,9 @@ export default function GoalsPage() {
                        </h3>
                        <div className="space-y-4">
                          {goal.milestones?.map((m) => (
-                           <button 
-                            key={m.id} 
-                            onClick={() => toggleMilestone(m.id)}
+                           <button
+                            key={m.id}
+                            onClick={() => toggleMilestone.mutate(m.id)}
                             className="flex items-center gap-4 p-5 bg-background/40 backdrop-blur-sm rounded-2xl border border-border/60 w-full text-left shadow-lg group/ms"
                            >
                              {m.is_completed ? (
@@ -214,9 +194,9 @@ export default function GoalsPage() {
                        </h3>
                        <div className="space-y-4">
                          {goal.tasks?.map((t) => (
-                           <button 
-                            key={t.id} 
-                            onClick={() => toggleTask(t.id)}
+                           <button
+                            key={t.id}
+                            onClick={() => toggleTask.mutate(t.id)}
                             className="flex items-center gap-4 p-5 bg-muted/20 rounded-2xl border border-border/60 w-full hover:bg-secondary/5 hover:border-secondary/30 text-left group/task shadow-lg"
                            >
                              {t.is_completed ? (

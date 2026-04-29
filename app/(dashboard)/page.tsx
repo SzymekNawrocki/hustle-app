@@ -1,8 +1,6 @@
 ﻿"use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api";
-import { DashboardToday } from "@/types/api";
+import { useDashboard } from "@/hooks/use-dashboard";
 import { 
   CheckCircle2,
   Zap,
@@ -18,13 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardPage() {
-  const { data, isLoading } = useQuery<DashboardToday>({
-    queryKey: ["dashboard-today"],
-    queryFn: async () => {
-      const response = await api.get("/goals/dashboard/today");
-      return response.data;
-    },
-  });
+  const { data, isLoading } = useDashboard();
 
   if (isLoading) {
     return (

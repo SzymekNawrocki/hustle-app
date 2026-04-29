@@ -1,16 +1,16 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api, getApiError } from "@/lib/api";
+import { getApiError } from "@/lib/api";
 import { MealLog } from "@/types/api";
-import { useCRUD } from "@/hooks/use-crud";
-import { 
-  Utensils, 
-  Sparkles, 
-  Dna, 
-  Beef, 
-  Wheat, 
+import { useHealth } from "@/hooks/use-health";
+import { useDashboard } from "@/hooks/use-dashboard";
+import {
+  Utensils,
+  Sparkles,
+  Dna,
+  Beef,
+  Wheat,
   Flame,
   AlertCircle,
   Clock,
@@ -24,50 +24,27 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 
+const LIMIT = 20;
+
 export default function HealthPage() {
   const [mealText, setMealText] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const queryClient = useQueryClient();
 
-  const { data: meals, isLoading } = useQuery<MealLog[]>({
-    queryKey: ["meals"],
-    queryFn: async () => {
-      const response = await api.get("/health/meals");
-      // API returns PaginatedResponse — extract items array
-      return response.data.items ?? response.data;
-    },
-  });
+  const { meals, deleteMeal, logMeal } = useHealth();
+  const { data: dashboard } = useDashboard();
 
-  const { remove: deleteMealMutation } = useCRUD<MealLog>(
-    "/health/meals",
-    "meals",
-    { extraInvalidations: [["dashboard-today"]] }
+  const todayMeals = dashboard?.today_meals ?? [];
+  const totalNutrition = todayMeals.reduce(
+    (acc, meal: MealLog) => ({
+      calories: acc.calories + (meal.calories || 0),
+      protein: acc.protein + (meal.protein || 0),
+      carbs: acc.carbs + (meal.carbs || 0),
+      fat: acc.fat + (meal.fat || 0),
+    }),
+    { calories: 0, protein: 0, carbs: 0, fat: 0 }
   );
 
-  const { mutate: logMeal, isPending } = useMutation({
-    mutationFn: async (text: string) => {
-      const response = await api.post("/health/log-meal-ai", { text });
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["meals"] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard-today"] });
-      setMealText("");
-      setError(null);
-    },
-    onError: (err) => {
-      setError(getApiError(err));
-    }
-  });
-
-  const totalNutrition = meals?.reduce((acc: { calories: number; protein: number; carbs: number; fat: number }, meal: MealLog) => ({
-    calories: acc.calories + (meal.calories || 0),
-    protein: acc.protein + (meal.protein || 0),
-    carbs: acc.carbs + (meal.carbs || 0),
-    fat: acc.fat + (meal.fat || 0),
-  }), { calories: 0, protein: 0, carbs: 0, fat: 0 }) || { calories: 0, protein: 0, carbs: 0, fat: 0 };
-
-  if (isLoading) {
+  if (meals.isLoading) {
     return (
       <div className="space-y-10 font-sans">
         <div className="space-y-3">
@@ -110,10 +87,10 @@ export default function HealthPage() {
                 <stat.icon className="w-10 h-10" />
               </div>
               <div>
-                <p className="text-xs font-display text-muted-foreground tracking-wide">Stat</p>
+                <p className="text-xs font-display text-muted-foreground tracking-wide">Today</p>
                 <p className={`text-4xl font-display ${stat.color} tracking-tighter`}>{stat.value}</p>
                 <Badge variant={stat.badge === "secondary" ? "secondary" : "default"} className="mt-1 font-display tracking-tighter">
-                  Today
+                  {stat.label}
                 </Badge>
               </div>
             </CardContent>
@@ -133,7 +110,7 @@ export default function HealthPage() {
                 </div>
                 <div>
                   <h2 className="text-2xl font-display text-foreground tracking-tight">AI Meal Logger</h2>
-                  <p className="text-muted-foreground font-display tracking-wide text-xs mt-1 pr-4 leading-relaxed">Tell AI what you ate and we’ll calculate your macros.</p>
+                  <p className="text-muted-foreground font-display tracking-wide text-xs mt-1 pr-4 leading-relaxed">Tell AI what you ate and we'll calculate your macros.</p>
                 </div>
               </div>
 
@@ -144,7 +121,7 @@ export default function HealthPage() {
                   placeholder="e.g. 2 fried eggs with butter, 2 slices of whole-grain bread..."
                   className="h-56 bg-background/40 border-border/60 text-base leading-relaxed font-sans p-6 rounded-2xl resize-none"
                 />
-                
+
                 {error && (
                   <Alert variant="destructive" className="rounded-xl border-none shadow-lg py-4">
                     <AlertCircle className="w-6 h-6" />
@@ -155,11 +132,16 @@ export default function HealthPage() {
                 )}
 
                 <Button
-                  onClick={() => logMeal(mealText)}
-                  disabled={isPending || !mealText.trim()}
+                  onClick={() =>
+                    logMeal.mutate(mealText, {
+                      onSuccess: () => { setMealText(""); setError(null); },
+                      onError: (err) => setError(getApiError(err)),
+                    })
+                  }
+                  disabled={logMeal.isPending || !mealText.trim()}
                   className="w-full shadow-[0_0_20px_rgba(123,46,255,0.2)] gap-4 font-display text-lg h-12"
                 >
-                  {isPending ? (
+                  {logMeal.isPending ? (
                     <span className="h-4 w-4 rounded-full border-2 border-primary-foreground/40 border-t-primary-foreground animate-spin" />
                   ) : (
                     <Utensils className="w-6 h-6" />
@@ -180,13 +162,13 @@ export default function HealthPage() {
                 </div>
                 <CardTitle className="text-xl font-display text-foreground tracking-tight">Meal history</CardTitle>
             </CardHeader>
-              
+
             <CardContent className="p-0">
               <div className="divide-y divide-white/5 max-h-[660px] overflow-y-auto">
-                {meals?.length === 0 && (
+                {meals.data?.items.length === 0 && (
                   <div className="py-32 text-center opacity-40 font-display font-bold text-xl uppercase tracking-widest italic">No meals logged yet.</div>
                 )}
-                {meals?.map((meal: MealLog) => (
+                {meals.data?.items.map((meal: MealLog) => (
                   <div key={meal.id} className="p-8 group border-b border-white/5">
                     <div className="flex items-start justify-between gap-6">
                       <div className="space-y-4 flex-1">
@@ -211,13 +193,13 @@ export default function HealthPage() {
                           {new Date(meal.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                         <Button
-                          onClick={() => deleteMealMutation.mutate(meal.id)}
+                          onClick={() => deleteMeal.mutate(meal.id)}
                           variant="ghost"
                           size="icon-sm"
                           className="text-destructive/60 hover:text-destructive hover:bg-destructive/10 rounded-xl"
-                          disabled={deleteMealMutation.isPending}
+                          disabled={deleteMeal.isPending}
                         >
-                          {deleteMealMutation.isPending ? (
+                          {deleteMeal.isPending ? (
                             <span className="h-4 w-4 rounded-full border-2 border-current/30 border-t-current animate-spin" />
                           ) : (
                             <Trash2 className="w-5 h-5" />
@@ -228,6 +210,32 @@ export default function HealthPage() {
                   </div>
                 ))}
               </div>
+
+              {meals.data && meals.data.pages > 1 && (
+                <div className="flex items-center justify-center gap-4 p-6 border-t border-border/60">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={meals.prevPage}
+                    disabled={!meals.hasPrevPage}
+                    className="font-display tracking-wide text-xs"
+                  >
+                    ← Prev
+                  </Button>
+                  <span className="text-xs font-display opacity-40 tracking-wide">
+                    {meals.page} / {meals.data.pages} &nbsp;·&nbsp; {meals.data.total} meals
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={meals.nextPage}
+                    disabled={!meals.hasNextPage}
+                    className="font-display tracking-wide text-xs"
+                  >
+                    Next →
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
