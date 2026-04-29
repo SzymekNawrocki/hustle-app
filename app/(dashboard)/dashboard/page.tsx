@@ -95,7 +95,9 @@ export default function DashboardPage() {
            </div>
         </div>
         
-        <ActivityChart data={historyData?.days ?? []} />
+        <div className="h-[320px] w-full">
+          <ActivityChart data={historyData?.days ?? []} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
