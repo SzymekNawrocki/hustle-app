@@ -26,7 +26,7 @@ export default function proxy(request: NextRequest) {
   const csp = [
     `default-src 'self'`,
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
-    `style-src 'self' 'nonce-${nonce}' 'unsafe-inline'`,
+    `style-src 'self' 'unsafe-inline'`,
     `img-src 'self' data: blob:`,
     `font-src 'self' https://fonts.gstatic.com`,
     `connect-src 'self' https://backend-hustle-app.onrender.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io`,
