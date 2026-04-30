@@ -29,7 +29,7 @@ export default function proxy(request: NextRequest) {
     `style-src 'self' 'nonce-${nonce}'`,
     `img-src 'self' data: blob:`,
     `font-src 'self' https://fonts.gstatic.com`,
-    `connect-src 'self' https://*.ingest.sentry.io https://*.ingest.de.sentry.io`,
+    `connect-src 'self' https://backend-hustle-app.onrender.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io`,
     `frame-ancestors 'none'`,
   ].join("; ");
 
