@@ -12,13 +12,15 @@ export const api = axios.create({
 // Auth endpoints (login, me, refresh) handle 401 themselves.
 api.interceptors.response.use(
   (response) => response,
-  (error: AxiosError) => {
+  async (error: AxiosError) => {
     const url = error.config?.url ?? "";
     if (
       error.response?.status === 401 &&
       !url.startsWith("/auth/") &&
       typeof window !== "undefined"
     ) {
+      // Clear the frontend cookie so proxy.ts doesn't redirect /login → /dashboard
+      await fetch("/api/auth/session", { method: "DELETE" }).catch(() => {});
       window.location.href = "/login";
     }
     return Promise.reject(error);
