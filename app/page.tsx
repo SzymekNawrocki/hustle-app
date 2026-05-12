@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Target,
-  TrendingUp,
   Heart,
   Briefcase,
   Zap,
@@ -69,13 +67,6 @@ const TICKER = [
   "TRACK TODAY. WIN TOMORROW.",
   "POWERED BY LLAMA 3.3 70B. FUELED BY AMBITION.",
   "LESS CHAOS. MORE PROGRESS.",
-];
-
-const PREVIEWS = [
-  { file: "goals-preview.png", tag: "GOAL COMMAND CENTER", accent: "primary", icon: Target },
-  { file: "finance-preview.png", tag: "FINANCE OPERATIONS", accent: "secondary", icon: TrendingUp },
-  { file: "health-preview.png", tag: "HEALTH INTELLIGENCE", accent: "primary", icon: Heart },
-  { file: "career-preview.png", tag: "CAREER TRACKER", accent: "secondary", icon: Briefcase },
 ];
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -185,7 +176,6 @@ export default function LandingPage() {
             <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
               <a href="#features" className="hover:text-foreground transition-colors">Features</a>
               <a href="#ai"       className="hover:text-foreground transition-colors">AI Engine</a>
-              <a href="#preview"  className="hover:text-foreground transition-colors">Preview</a>
             </div>
 
             <div className="hidden md:flex items-center gap-3">
@@ -210,7 +200,7 @@ export default function LandingPage() {
           {/* mobile drawer */}
           {navOpen && (
             <div className="md:hidden border-t border-border/40 bg-background/95 px-6 py-6 space-y-4">
-              {["#features", "#ai", "#preview"].map(href => (
+              {["#features", "#ai"].map(href => (
                 <a
                   key={href}
                   href={href}
@@ -422,25 +412,6 @@ export default function LandingPage() {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── SCREENSHOTS ─────────────────────────────────────────────────── */}
-        <section id="preview" className="py-24">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="grid md:grid-cols-2 gap-5">
-              {PREVIEWS.map(({ file, tag, accent, icon: Icon }) => {
-                const isPri = accent === "primary";
-                return (
-                  <div
-                    key={file}
-                    className="relative rounded-2xl border border-border/30 overflow-hidden aspect-video group feat-card"
-                  >
-                    <Image src={`/${file}`} alt={tag} fill className="object-cover object-top" />
-                  </div>
-                );
-              })}
             </div>
           </div>
         </section>
