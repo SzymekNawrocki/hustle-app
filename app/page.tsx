@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,43 +20,6 @@ import {
   Menu,
   X,
 } from "lucide-react";
-
-// ─── Counter animation hook ──────────────────────────────────────────────────
-
-function useCounter(target: number, duration = 1800) {
-  const [count, setCount] = useState(0);
-  const startedRef = useRef(false);
-  const elRef = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const el = elRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !startedRef.current) {
-          startedRef.current = true;
-          const steps = 60;
-          const inc = target / steps;
-          let cur = 0;
-          const id = setInterval(() => {
-            cur += inc;
-            if (cur >= target) {
-              setCount(target);
-              clearInterval(id);
-            } else {
-              setCount(Math.floor(cur));
-            }
-          }, duration / steps);
-        }
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [target, duration]);
-
-  return { count, elRef };
-}
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -117,9 +81,6 @@ const PREVIEWS = [
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function LandingPage() {
-  const { count: c1, elRef: r1 } = useCounter(2400);
-  const { count: c2, elRef: r2 } = useCounter(18700);
-  const { count: c3, elRef: r3 } = useCounter(99);
   const [navOpen, setNavOpen] = useState(false);
 
   return (
@@ -276,7 +237,7 @@ export default function LandingPage() {
           </div>
 
           <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
-            <div className="fade-up du-1 mb-8 flex justify-center">
+            <div className="fade-up du-1 mb-8 mt-12 flex justify-center">
               <Badge className="inline-flex items-center gap-2 bg-primary/10 text-primary border-primary/30 px-4 py-1.5">
                 <Brain className="w-3.5 h-3.5" />
                 <span className="font-mono text-xs tracking-widest">POWERED BY GROQ AI · LLAMA 3.3 70B</span>
@@ -321,26 +282,6 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Dashboard preview placeholder */}
-          <div
-            className="fade-up relative z-10 mt-20 w-full max-w-5xl mx-auto px-4"
-            style={{ animationDelay: "0.85s", animationFillMode: "both" }}
-          >
-            <div className="rounded-2xl border border-border/40 bg-card/50 backdrop-blur-sm overflow-hidden aspect-[16/9]">
-              {/* macOS-style titlebar */}
-              <div className="h-9 bg-card/90 border-b border-border/40 flex items-center px-4 gap-2 flex-shrink-0">
-                <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-                <div className="w-3 h-3 rounded-full bg-green-500/50" />
-                <span className="ml-4 text-xs font-mono text-muted-foreground/60">hustle-app — dashboard</span>
-              </div>
-              <div className="flex-1 lp-grid flex flex-col items-center justify-center gap-3 text-muted-foreground">
-                <Target className="w-10 h-10 opacity-15 text-primary" />
-                <p className="font-mono text-sm opacity-50">dashboard-preview.png</p>
-                <p className="font-mono text-xs opacity-30">→ /public/dashboard-preview.png</p>
-              </div>
-            </div>
-          </div>
         </section>
 
         {/* ── TICKER ──────────────────────────────────────────────────────── */}
@@ -359,26 +300,6 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
-
-        {/* ── STATS ───────────────────────────────────────────────────────── */}
-        <section className="py-20 border-b border-border/20">
-          <div className="max-w-5xl mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border/20">
-              {[
-                { ref: r1, count: c1, suffix: "+", label: "HUSTLERS ACTIVE", accent: "p" },
-                { ref: r2, count: c2, suffix: "+", label: "GOALS TRACKED",   accent: "s" },
-                { ref: r3, count: c3, suffix: "%", label: "AI ACCURACY RATE", accent: "p" },
-              ].map(({ ref, count, suffix, label, accent }) => (
-                <div key={label} className="p-10 text-center">
-                  <div className={`font-display text-6xl mb-2 ${accent === "p" ? "text-primary glow-p" : "text-secondary glow-s"}`}>
-                    <span ref={ref}>{count.toLocaleString()}</span>{suffix}
-                  </div>
-                  <p className="text-muted-foreground font-mono text-xs tracking-widest">{label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* ── FEATURES ────────────────────────────────────────────────────── */}
         <section id="features" className="py-24">
@@ -508,37 +429,15 @@ export default function LandingPage() {
         {/* ── SCREENSHOTS ─────────────────────────────────────────────────── */}
         <section id="preview" className="py-24">
           <div className="max-w-7xl mx-auto px-4">
-            <div className="text-center mb-16">
-              <p className="font-mono text-xs text-primary tracking-widest mb-5">// THE INTERFACE</p>
-              <h2 className="font-display text-5xl md:text-7xl leading-[0.9]">
-                Built for the<br />
-                <span className="text-primary glow-p">relentless.</span>
-              </h2>
-              <p className="text-muted-foreground mt-6 max-w-xl mx-auto">
-                Dark by default. Fast by design. Clean enough to think, detailed enough to decide.
-              </p>
-            </div>
-
             <div className="grid md:grid-cols-2 gap-5">
               {PREVIEWS.map(({ file, tag, accent, icon: Icon }) => {
                 const isPri = accent === "primary";
                 return (
                   <div
                     key={file}
-                    className="relative rounded-2xl border border-border/30 bg-card/40 overflow-hidden aspect-video group feat-card"
+                    className="relative rounded-2xl border border-border/30 overflow-hidden aspect-video group feat-card"
                   >
-                    <div className="absolute inset-0 lp-grid opacity-20" />
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                      <Icon className={`w-12 h-12 opacity-15 ${isPri ? "text-primary" : "text-secondary"}`} />
-                      <p className="font-mono text-xs tracking-widest opacity-35">{file}</p>
-                      <p className="font-mono text-xs opacity-20">→ /public/{file}</p>
-                    </div>
-                    <div className="absolute top-0 inset-x-0 h-8 bg-card/80 border-b border-border/30 flex items-center px-3 gap-2">
-                      <div className="w-2 h-2 rounded-full bg-red-500/35" />
-                      <div className="w-2 h-2 rounded-full bg-yellow-500/35" />
-                      <div className="w-2 h-2 rounded-full bg-green-500/35" />
-                      <span className={`ml-3 font-mono text-xs ${isPri ? "text-primary/55" : "text-secondary/55"}`}>{tag}</span>
-                    </div>
+                    <Image src={`/${file}`} alt={tag} fill className="object-cover object-top" />
                   </div>
                 );
               })}
