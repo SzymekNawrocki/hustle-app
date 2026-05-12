@@ -39,6 +39,91 @@
   }
 }
 
+/* ─── Landing page keyframes ─────────────────────────────────────────────── */
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+@keyframes grid-drift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 60px 60px; }
+}
+
+/* ─── Landing page utilities ─────────────────────────────────────────────── */
+@layer utilities {
+  .lp-grid {
+    background-image:
+      linear-gradient(oklch(0.72 0.23 305 / 5%) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.72 0.23 305 / 5%) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .lp-scan {
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      oklch(0 0 0 / 4%) 3px,
+      oklch(0 0 0 / 4%) 4px
+    );
+    pointer-events: none;
+  }
+
+  .fade-up { animation: fade-up 0.75s ease both; }
+  .du-1    { animation-delay: 0.05s; }
+  .du-2    { animation-delay: 0.20s; }
+  .du-3    { animation-delay: 0.38s; }
+  .du-4    { animation-delay: 0.55s; }
+  .du-5    { animation-delay: 0.72s; }
+
+  .glow-p      { text-shadow: 0 0 28px oklch(0.72 0.23 305 / 55%), 0 0 60px oklch(0.72 0.23 305 / 25%); }
+  .glow-s      { text-shadow: 0 0 28px oklch(0.83 0.18 195 / 55%), 0 0 60px oklch(0.83 0.18 195 / 25%); }
+  .glow-icon-p { filter: drop-shadow(0 0 10px oklch(0.72 0.23 305 / 75%)); }
+  .glow-icon-s { filter: drop-shadow(0 0 10px oklch(0.83 0.18 195 / 75%)); }
+
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker-scroll 50s linear infinite;
+  }
+  .ticker-track:hover { animation-play-state: paused; }
+
+  .feat-card {
+    transition: transform 0.3s ease;
+    position: relative;
+  }
+  .feat-card:hover { transform: translateY(-5px); }
+  .feat-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s;
+    background: radial-gradient(ellipse at 50% 0%, oklch(0.72 0.23 305 / 8%) 0%, transparent 70%);
+  }
+  .feat-card.s::after {
+    background: radial-gradient(ellipse at 50% 0%, oklch(0.83 0.18 195 / 8%) 0%, transparent 70%);
+  }
+  .feat-card:hover::after { opacity: 1; }
+
+  .cursor-blink { animation: cursor-blink 1s step-end infinite; }
+
+  .terminal-line { opacity: 0; transform: translateY(8px); }
+  .terminal-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+}
+
 :root {
   font-family: var(--font-sans);
   font-feature-settings: "kern", "liga", "clig", "calt";
