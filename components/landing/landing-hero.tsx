@@ -53,7 +53,7 @@ export function LandingHero() {
           </Button>
         </div>
 
-        <p className="fade-up du-5 mt-6 text-xs font-mono text-muted-foreground/50 tracking-widest">
+        <p className="fade-up du-5 mt-6 text-xs font-mono text-muted-foreground/50 tracking-widest py-7">
           NO CREDIT CARD · FREE DEMO · ZERO FRICTION
         </p>
       </div>
