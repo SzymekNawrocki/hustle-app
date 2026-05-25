@@ -19,7 +19,7 @@ Create goals with milestones and tasks. **AI Smart-Create** — describe an idea
 ![Goals](public/goals-preview.png)
 
 ### Finances
-Track income and expenses across four categories (`OPLATY`, `HUSTLE`, `LIFESTYLE`, `INCOME`). **Hustle Input** — type a sentence like _"50 PLN coffee and lunch"_ and AI extracts the amount, category, and description. CSV export included.
+Track income and expenses across four categories (`EXPENSES`, `HUSTLE`, `LIFESTYLE`, `INCOME`). **Hustle Input** — type a sentence like _"50 PLN coffee and lunch"_ and AI extracts the amount, category, and description. CSV export included.
 
 ![Finances](public/finance-preview.png)
 

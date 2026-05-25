@@ -37,14 +37,14 @@ import {
 } from "@/components/ui/table";
 
 const CATEGORY_COLORS: Record<string, string> = {
-  OPLATY: "#ff4d4d",
+  EXPENSES: "#ff4d4d",
   HUSTLE: "#7B2EFF",
   LIFESTYLE: "#00D4FF",
   INCOME: "#22c55e",
 };
 
 const LIMIT = 20;
-const CATEGORIES = ["OPLATY", "HUSTLE", "LIFESTYLE", "INCOME"] as const;
+const CATEGORIES = ["EXPENSES", "HUSTLE", "LIFESTYLE", "INCOME"] as const;
 
 export default function FinancePage() {
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);

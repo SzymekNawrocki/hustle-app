@@ -530,7 +530,7 @@ export interface components {
          * ExpenseCategory
          * @enum {string}
          */
-        ExpenseCategory: "OPLATY" | "HUSTLE" | "LIFESTYLE" | "INCOME";
+        ExpenseCategory: "EXPENSES" | "HUSTLE" | "LIFESTYLE" | "INCOME";
         /** ExpenseResponse */
         ExpenseResponse: {
             /** Amount */

@@ -3,7 +3,7 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 const CATEGORY_COLORS: Record<string, string> = {
-  OPLATY: "#ff4d4d",
+  EXPENSES: "#ff4d4d",
   HUSTLE: "#7B2EFF",
   LIFESTYLE: "#00D4FF",
   INCOME: "#22c55e",
