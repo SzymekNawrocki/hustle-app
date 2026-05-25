@@ -6,10 +6,6 @@ A full-stack **life-tracking productivity platform** that unifies goals, finance
 
 ---
 
-![Landing page](public/hustle-app.png)
-
----
-
 ## Features
 
 ### Dashboard
