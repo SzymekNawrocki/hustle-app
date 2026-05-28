@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_PREFIXES = ["/dashboard", "/goals", "/career", "/finance", "/health"];
+const PROTECTED_PREFIXES = ["/dashboard", "/goals", "/career", "/finance", "/health", "/settings"];
 const FRONTEND_COOKIE = "frontend_token";
 
 export default function proxy(request: NextRequest) {

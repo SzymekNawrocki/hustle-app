@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { 
-  LayoutDashboard, 
-  Target, 
-  Briefcase, 
-  Wallet, 
-  HeartPulse, 
-  LogOut, 
-  X, 
+import {
+  LayoutDashboard,
+  Target,
+  Briefcase,
+  Wallet,
+  HeartPulse,
+  Settings,
+  LogOut,
+  X,
   Menu
 } from "lucide-react";
 import { logout } from "@/lib/auth";
@@ -23,6 +24,7 @@ const navigation = [
   { name: "Finance", href: "/finance", icon: Wallet },
   { name: "Health", href: "/health", icon: HeartPulse },
   { name: "Career", href: "/career", icon: Briefcase },
+  { name: "Settings", href: "/settings", icon: Settings },
 ];
 
 function SidebarNavContent({

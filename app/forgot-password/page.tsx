@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { Mail, Lock as LockIcon, AlertCircle, ArrowLeft, CheckCircle2 } from "lucide-react";
@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { api, getApiError } from "@/lib/api";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -20,11 +21,10 @@ export default function ForgotPasswordPage() {
     setError(null);
 
     try {
-      // Mocking the request for now as the backend doesn't support email sending yet
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await api.post("/auth/forgot-password", { email });
       setIsSent(true);
-    } catch {
-      setError("Something went wrong. Please try again later.");
+    } catch (err) {
+      setError(getApiError(err));
     } finally {
       setIsLoading(false);
     }
@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4 selection:bg-primary selection:text-primary-foreground font-sans">
       <div className="fixed inset-0 bg-[#0D0D0D] -z-20" />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 blur-[150px] rounded-full -z-10 animate-pulse" />
-      
+
       <div className="w-full max-w-md relative">
         <Card className="bg-card/60 backdrop-blur-xl border border-border/60 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.6)]">
           <CardContent className="p-8 lg:p-10 space-y-8">
@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
                 asChild
                 className="absolute left-0 top-0 text-muted-foreground hover:text-primary"
               >
-                <a href="/login" university-href="/login" aria-label="Back">
+                <a href="/login" aria-label="Back">
                   <ArrowLeft className="w-5 h-5" />
                 </a>
               </Button>
@@ -123,7 +123,7 @@ export default function ForgotPasswordPage() {
                     asChild
                     className="font-display text-xs hover:text-primary tracking-wide"
                   >
-                    <a href="/login" university-href="/login">Back to sign in</a>
+                    <a href="/login">Back to sign in</a>
                   </Button>
                 </div>
               </div>
@@ -132,7 +132,7 @@ export default function ForgotPasswordPage() {
             {!isSent && (
               <p className="mt-8 text-center text-sm opacity-60">
                 Remember your password?{" "}
-                <a href="/login" university-href="/login" className="text-primary font-display text-xs tracking-wide">
+                <a href="/login" className="text-primary font-display text-xs tracking-wide">
                   Sign in
                 </a>
               </p>
