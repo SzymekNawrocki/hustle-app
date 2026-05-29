@@ -87,6 +87,9 @@ export default async function RootLayout({
               <a href="/legal/terms" className="hover:text-foreground underline underline-offset-4">
                 Terms
               </a>
+              <a href="/support" className="hover:text-foreground underline underline-offset-4">
+                Support ♥
+              </a>
             </div>
           </footer>
         </Providers>

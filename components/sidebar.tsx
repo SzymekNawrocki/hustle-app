@@ -9,6 +9,7 @@ import {
   Wallet,
   HeartPulse,
   Settings,
+  Heart,
   LogOut,
   X,
   Menu
@@ -25,6 +26,7 @@ const navigation = [
   { name: "Health", href: "/health", icon: HeartPulse },
   { name: "Career", href: "/career", icon: Briefcase },
   { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Support", href: "/support", icon: Heart },
 ];
 
 function SidebarNavContent({
