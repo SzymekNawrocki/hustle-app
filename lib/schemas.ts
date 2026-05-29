@@ -51,3 +51,21 @@ export const changePasswordSchema = z
 export const deleteAccountSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
+
+export const offerSchema = z.object({
+  title:   z.string().min(1, "Position is required"),
+  company: z.string().optional(),
+  url:     z.string().url("Must be a valid URL"),
+  notes:   z.string().optional(),
+  status:  z.enum(["wysłano", "1 etap", "2 etap", "3 etap", "umowa"]),
+});
+
+export const expenseEditSchema = z.object({
+  amount:      z.number().positive("Must be positive"),
+  category:    z.enum(["EXPENSES", "HUSTLE", "LIFESTYLE", "INCOME"]),
+  description: z.string().min(1, "Description is required"),
+  date:        z.string().min(1, "Date is required"),
+});
+
+export type OfferFormValues       = z.infer<typeof offerSchema>;
+export type ExpenseEditFormValues  = z.infer<typeof expenseEditSchema>;

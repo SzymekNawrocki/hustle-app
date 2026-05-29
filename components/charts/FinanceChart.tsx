@@ -1,13 +1,7 @@
 "use client";
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-
-const CATEGORY_COLORS: Record<string, string> = {
-  EXPENSES: "#ff4d4d",
-  HUSTLE: "#7B2EFF",
-  LIFESTYLE: "#00D4FF",
-  INCOME: "#22c55e",
-};
+import { EXPENSE_CATEGORY_COLORS } from "@/lib/domain-constants";
 
 interface ChartItem {
   name: string;
@@ -31,7 +25,7 @@ export default function FinanceChart({ data }: { data: ChartItem[] }) {
           {data.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
-              fill={CATEGORY_COLORS[entry.name]}
+              fill={EXPENSE_CATEGORY_COLORS[entry.name as keyof typeof EXPENSE_CATEGORY_COLORS] ?? "#888"}
               className="cursor-pointer outline-none"
             />
           ))}

@@ -5,6 +5,7 @@ import { getApiError } from "@/lib/api";
 import { MealLog } from "@/types/api";
 import { useHealth } from "@/hooks/use-health";
 import { useDashboard } from "@/hooks/use-dashboard";
+import { PageControls } from "@/components/ui/page-controls";
 import {
   Utensils,
   Sparkles,
@@ -212,29 +213,16 @@ export default function HealthPage() {
               </div>
 
               {meals.data && meals.data.pages > 1 && (
-                <div className="flex items-center justify-center gap-4 p-6 border-t border-border/60">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={meals.prevPage}
-                    disabled={!meals.hasPrevPage}
-                    className="font-display tracking-wide text-xs"
-                  >
-                    ← Prev
-                  </Button>
-                  <span className="text-xs font-display opacity-40 tracking-wide">
-                    {meals.page} / {meals.data.pages} &nbsp;·&nbsp; {meals.data.total} meals
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={meals.nextPage}
-                    disabled={!meals.hasNextPage}
-                    className="font-display tracking-wide text-xs"
-                  >
-                    Next →
-                  </Button>
-                </div>
+                <PageControls
+                  page={meals.page}
+                  totalPages={meals.data.pages}
+                  total={meals.data.total}
+                  unit="meals"
+                  hasNextPage={meals.hasNextPage}
+                  hasPrevPage={meals.hasPrevPage}
+                  onNext={meals.nextPage}
+                  onPrev={meals.prevPage}
+                />
               )}
             </CardContent>
           </Card>

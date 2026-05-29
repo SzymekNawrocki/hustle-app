@@ -13,7 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function DashboardPage() {
-  const data = await fetchWithAuth<DashboardToday>("/goals/dashboard/today");
+  const result = await fetchWithAuth<DashboardToday>("/goals/dashboard/today");
+  const data = result.ok ? result.data : null;
 
   const tasks = data?.tasks ?? [];
   const habits = data?.habits ?? [];

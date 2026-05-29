@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "generate:types": "openapi-typescript openapi.json -o types/generated.ts"
+    "generate:types": "openapi-typescript openapi.json -o types/generated.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -41,7 +44,14 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@testing-library/jest-dom": "^6.6.3",
+    "vitest": "^3.2.4",
+    "jsdom": "^26.1.0",
+    "@playwright/test": "^1.50.0"
   },
   "browserslist": [
     "last 2 Chrome versions",

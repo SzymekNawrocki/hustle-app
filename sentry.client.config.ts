@@ -7,16 +7,24 @@ Sentry.init({
   enableLogs: true,
   sendDefaultPii: false,
 
+  denyUrls: [
+    // Browser extensions
+    /extensions\//i,
+    /^chrome:\/\//i,
+    /^chrome-extension:\/\//i,
+    /^moz-extension:\/\//i,
+  ],
+
   beforeSend(event) {
+    // Strip PII from request context
     if (event.request) {
       delete event.request.cookies;
       if (event.request.headers) {
         delete event.request.headers["Authorization"];
-        delete event.request.headers["authorization"];
         delete event.request.headers["Cookie"];
-        delete event.request.headers["cookie"];
       }
     }
+    // Strip PII from user context
     if (event.user) {
       delete event.user.email;
       delete event.user.username;

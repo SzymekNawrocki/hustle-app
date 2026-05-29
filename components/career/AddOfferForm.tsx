@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useJobOffers } from "@/hooks/use-job-offers";
-import type { OfferStatus } from "@/types/api";
+import { offerSchema, type OfferFormValues } from "@/lib/schemas";
+import { JOB_STATUSES, JOB_STATUS_LABELS } from "@/lib/domain-constants";
+import { FormField } from "@/components/ui/form-field";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -10,50 +13,31 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-const STATUSES: OfferStatus[] = ["wysłano", "1 etap", "2 etap", "3 etap", "umowa"];
-
-const STATUS_LABELS: Record<OfferStatus, string> = {
-  "wysłano": "Sent",
-  "1 etap": "Stage 1",
-  "2 etap": "Stage 2",
-  "3 etap": "Stage 3",
-  "umowa": "Offer",
-};
-
 export default function AddOfferForm() {
   const { create } = useJobOffers();
-  const [title, setTitle] = useState("");
-  const [company, setCompany] = useState("");
-  const [status, setStatus] = useState<OfferStatus>("wysłano");
-  const [url, setUrl] = useState("");
-  const [notes, setNotes] = useState("");
-  const [error, setError] = useState<string | null>(null);
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitSuccessful },
+  } = useForm<OfferFormValues>({
+    resolver: zodResolver(offerSchema),
+    defaultValues: { status: "wysłano" as const },
+  });
+
+  const onSubmit = handleSubmit((values) => {
     create.mutate(
       {
-        title,
-        company: company.trim() || undefined,
-        status,
-        url,
-        notes: notes.trim() || undefined,
+        title:   values.title,
+        company: values.company?.trim() || undefined,
+        status:  values.status,
+        url:     values.url,
+        notes:   values.notes?.trim() || undefined,
       },
-      {
-        onSuccess: () => {
-          setTitle("");
-          setCompany("");
-          setStatus("wysłano");
-          setUrl("");
-          setNotes("");
-        },
-        onError: (err) => {
-          setError(err instanceof Error ? err.message : "Failed to add offer");
-        },
-      }
+      { onSuccess: () => reset() }
     );
-  };
+  });
 
   return (
     <form onSubmit={onSubmit} className="font-sans">
@@ -61,67 +45,55 @@ export default function AddOfferForm() {
         <CardContent className="p-8 gap-6 flex flex-col">
           <h2 className="text-2xl font-display text-foreground tracking-tight">Add offer</h2>
 
-          <label className="space-y-2">
-            <span className="block font-display opacity-50 tracking-wide text-xs">Position</span>
+          <FormField label="Position" error={errors.title?.message}>
             <Input
               className="bg-background/40 border-border/60 transition-all py-6 h-12 rounded-2xl"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Frontend Developer"
-              required
+              {...register("title")}
             />
-          </label>
+          </FormField>
 
-          <label className="space-y-2">
-            <span className="block font-display opacity-50 tracking-wide text-xs">Company</span>
+          <FormField label="Company" error={errors.company?.message}>
             <Input
               className="bg-background/40 border-border/60 transition-all py-6 h-12 rounded-2xl"
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
               placeholder="e.g. Acme"
+              {...register("company")}
             />
-          </label>
+          </FormField>
 
-          <label className="space-y-2">
-            <span className="block font-display opacity-50 tracking-wide text-xs">Status</span>
+          <FormField label="Status" error={errors.status?.message}>
             <select
               className="flex h-10 w-full rounded-2xl border border-border/60 bg-background/40 px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
-              value={status}
-              onChange={(e) => setStatus(e.target.value as OfferStatus)}
+              {...register("status")}
             >
-              {STATUSES.map((s) => (
+              {JOB_STATUSES.map((s) => (
                 <option key={s} value={s} className="bg-popover">
-                  {STATUS_LABELS[s]}
+                  {JOB_STATUS_LABELS[s]}
                 </option>
               ))}
             </select>
-          </label>
+          </FormField>
 
-          <label className="space-y-2">
-            <span className="block font-display opacity-50 tracking-wide text-xs">Link</span>
+          <FormField label="Link" error={errors.url?.message}>
             <Input
               className="bg-background/40 border-border/60 transition-all py-6 h-12 rounded-2xl"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
               placeholder="https://..."
-              required
+              {...register("url")}
             />
-          </label>
+          </FormField>
 
-          <label className="space-y-2">
-            <span className="block font-display opacity-50 tracking-wide text-xs">Notes</span>
+          <FormField label="Notes" error={errors.notes?.message}>
             <Textarea
               className="bg-background/40 border-border/60 transition-all h-24 resize-none rounded-2xl"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
               placeholder="Additional details about the offer..."
+              {...register("notes")}
             />
-          </label>
+          </FormField>
 
-          {error && (
+          {create.isError && (
             <Alert variant="destructive" className="rounded-xl border-none text-xs font-display py-3 tracking-wide">
               <AlertDescription className="text-xs font-display tracking-wide">
-                {error}
+                {create.error instanceof Error ? create.error.message : "Failed to add offer"}
               </AlertDescription>
             </Alert>
           )}

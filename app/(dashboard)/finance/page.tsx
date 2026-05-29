@@ -1,14 +1,21 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
 import type { Expense, ExpenseCategory } from "@/types/api";
 import { usePaginatedQuery } from "@/hooks/use-paginated-query";
 import { useCRUD } from "@/hooks/use-crud";
+import { KEYS } from "@/lib/query-options";
+import { expenseEditSchema, type ExpenseEditFormValues } from "@/lib/schemas";
+import { EXPENSE_CATEGORIES, EXPENSE_CATEGORY_COLORS } from "@/lib/domain-constants";
+import { EditModal } from "@/components/ui/edit-modal";
+import { PageControls } from "@/components/ui/page-controls";
+import { FormField } from "@/components/ui/form-field";
 import {
   Trash2,
   Pencil,
-  X,
   Wallet,
   ArrowUpCircle,
   ArrowDownCircle,
@@ -36,58 +43,56 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const CATEGORY_COLORS: Record<string, string> = {
-  EXPENSES: "#ff4d4d",
-  HUSTLE: "#7B2EFF",
-  LIFESTYLE: "#00D4FF",
-  INCOME: "#22c55e",
-};
-
 const LIMIT = 20;
-const CATEGORIES = ["EXPENSES", "HUSTLE", "LIFESTYLE", "INCOME"] as const;
 
 export default function FinancePage() {
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
-  const [editForm, setEditForm] = useState({ amount: "", category: "", description: "", date: "" });
 
   const { data, isLoading, page, nextPage, prevPage, hasNextPage, hasPrevPage } =
-    usePaginatedQuery<Expense>("expenses", "/finance/expenses", LIMIT);
+    usePaginatedQuery<Expense>(KEYS.expenses, "/finance/expenses", LIMIT);
 
   const expenses = data?.items;
 
   const { remove: deleteMutation, update: editMutation } = useCRUD<Expense>(
     "/finance/expenses",
-    "expenses",
-    { extraInvalidations: [["dashboard-today"]] }
+    KEYS.expenses,
+    { extraInvalidations: [KEYS.dashboard] }
   );
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ExpenseEditFormValues>({
+    resolver: zodResolver(expenseEditSchema),
+  });
 
   const openEdit = (exp: Expense) => {
     setEditingExpense(exp);
-    setEditForm({
-      amount: exp.amount.toString(),
-      category: exp.category,
+    reset({
+      amount:      exp.amount,
+      category:    exp.category as ExpenseEditFormValues["category"],
       description: exp.description,
-      date: (exp.timestamp ?? "").split("T")[0],
+      date:        (exp.timestamp ?? "").split("T")[0],
     });
   };
 
-  const submitEdit = () => {
+  const submitEdit = handleSubmit((values) => {
     if (!editingExpense) return;
-    const amount = parseFloat(editForm.amount);
-    if (isNaN(amount) || amount <= 0) return;
     editMutation.mutate(
       {
         id: editingExpense.id,
         payload: {
-          amount,
-          category: editForm.category as ExpenseCategory,
-          description: editForm.description,
-          timestamp: `${editForm.date}T00:00:00`,
+          amount:      values.amount,
+          category:    values.category as ExpenseCategory,
+          description: values.description,
+          timestamp:   `${values.date}T00:00:00`,
         },
       },
       { onSuccess: () => setEditingExpense(null) }
     );
-  };
+  });
 
   if (isLoading) {
     return (
@@ -119,7 +124,7 @@ export default function FinancePage() {
   const totalExpenses = expenses?.filter(e => e.category !== "INCOME").reduce((acc, e) => acc + e.amount, 0) || 0;
   const balance = totalIncome - totalExpenses;
 
-  const chartData = Object.keys(CATEGORY_COLORS).map(cat => ({
+  const chartData = EXPENSE_CATEGORIES.map(cat => ({
     name: cat,
     value: expenses?.filter(e => e.category === cat).reduce((acc, e) => acc + e.amount, 0) || 0
   })).filter(d => d.value > 0);
@@ -215,7 +220,7 @@ export default function FinancePage() {
                           <TableCell className="py-6">
                             <Badge
                               className="font-display text-xs tracking-wide border-none text-white px-3 py-2.5"
-                              style={{ backgroundColor: CATEGORY_COLORS[exp.category] }}
+                              style={{ backgroundColor: EXPENSE_CATEGORY_COLORS[exp.category as keyof typeof EXPENSE_CATEGORY_COLORS] }}
                             >
                               {exp.category}
                             </Badge>
@@ -253,29 +258,16 @@ export default function FinancePage() {
           </Card>
 
           {data && data.pages > 1 && (
-            <div className="flex items-center justify-center gap-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={prevPage}
-                disabled={!hasPrevPage}
-                className="font-display tracking-wide text-xs"
-              >
-                ← Prev
-              </Button>
-              <span className="text-xs font-display opacity-40 tracking-wide">
-                {page} / {data.pages} &nbsp;·&nbsp; {data.total} transactions
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={nextPage}
-                disabled={!hasNextPage}
-                className="font-display tracking-wide text-xs"
-              >
-                Next →
-              </Button>
-            </div>
+            <PageControls
+              page={page}
+              totalPages={data.pages}
+              total={data.total}
+              unit="transactions"
+              hasNextPage={hasNextPage}
+              hasPrevPage={hasPrevPage}
+              onNext={nextPage}
+              onPrev={prevPage}
+            />
           )}
         </div>
 
@@ -296,7 +288,7 @@ export default function FinancePage() {
               {chartData.map((item, i) => (
                 <div key={i} className="flex items-center justify-between p-4 bg-accent/20 rounded-2xl border border-border/60 group">
                   <div className="flex items-center gap-3">
-                     <div className="w-2.5 h-2.5 rounded-full shadow-[0_0_10px_rgba(0,0,0,0.5)]" style={{backgroundColor: CATEGORY_COLORS[item.name]}} />
+                     <div className="w-2.5 h-2.5 rounded-full shadow-[0_0_10px_rgba(0,0,0,0.5)]" style={{backgroundColor: EXPENSE_CATEGORY_COLORS[item.name as keyof typeof EXPENSE_CATEGORY_COLORS]}} />
                      <span className="text-xs font-display opacity-60 tracking-wide uppercase group-">{item.name}</span>
                   </div>
                   <span className="text-xs font-display text-muted-foreground">{item.value.toLocaleString()} PLN</span>
@@ -310,97 +302,56 @@ export default function FinancePage() {
         </div>
       </div>
 
-      {/* Edit transaction modal */}
-      {editingExpense && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
-          onClick={() => setEditingExpense(null)}
-        >
-          <Card
-            className="w-full max-w-md mx-4 bg-card border border-border/60 shadow-2xl rounded-3xl"
-            onClick={(e) => e.stopPropagation()}
+      <EditModal
+        open={!!editingExpense}
+        onClose={() => setEditingExpense(null)}
+        onSave={submitEdit}
+        title="Edit transaction"
+        isPending={editMutation.isPending}
+        isError={editMutation.isError}
+        errorMessage={
+          (editMutation.error as { response?: { data?: { detail?: string } } })?.response?.data?.detail
+        }
+      >
+        <FormField label="Amount (PLN)" error={errors.amount?.message}>
+          <Input
+            type="number"
+            min="0.01"
+            step="0.01"
+            {...register("amount", { valueAsNumber: true })}
+            className="bg-background/40 border-border/60 rounded-2xl h-12"
+          />
+        </FormField>
+
+        <FormField label="Category" error={errors.category?.message}>
+          <select
+            {...register("category")}
+            className="flex h-12 w-full rounded-2xl border border-border/60 bg-background/40 px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <CardContent className="p-8 space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-display tracking-tight">Edit transaction</h2>
-                <Button variant="ghost" size="icon" onClick={() => setEditingExpense(null)}>
-                  <X className="w-5 h-5" />
-                </Button>
-              </div>
+            {EXPENSE_CATEGORIES.map((cat) => (
+              <option key={cat} value={cat} className="bg-popover">
+                {cat}
+              </option>
+            ))}
+          </select>
+        </FormField>
 
-              <label className="block space-y-2">
-                <span className="font-display text-xs opacity-50 tracking-wide uppercase">Amount (PLN)</span>
-                <Input
-                  type="number"
-                  min="0.01"
-                  step="0.01"
-                  value={editForm.amount}
-                  onChange={(e) => setEditForm((f) => ({ ...f, amount: e.target.value }))}
-                  className="bg-background/40 border-border/60 rounded-2xl h-12"
-                />
-              </label>
+        <FormField label="Description" error={errors.description?.message}>
+          <Input
+            type="text"
+            {...register("description")}
+            className="bg-background/40 border-border/60 rounded-2xl h-12"
+          />
+        </FormField>
 
-              <label className="block space-y-2">
-                <span className="font-display text-xs opacity-50 tracking-wide uppercase">Category</span>
-                <select
-                  value={editForm.category}
-                  onChange={(e) => setEditForm((f) => ({ ...f, category: e.target.value }))}
-                  className="flex h-12 w-full rounded-2xl border border-border/60 bg-background/40 px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat} className="bg-popover">
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="block space-y-2">
-                <span className="font-display text-xs opacity-50 tracking-wide uppercase">Description</span>
-                <Input
-                  type="text"
-                  value={editForm.description}
-                  onChange={(e) => setEditForm((f) => ({ ...f, description: e.target.value }))}
-                  className="bg-background/40 border-border/60 rounded-2xl h-12"
-                />
-              </label>
-
-              <label className="block space-y-2">
-                <span className="font-display text-xs opacity-50 tracking-wide uppercase">Date</span>
-                <Input
-                  type="date"
-                  value={editForm.date}
-                  onChange={(e) => setEditForm((f) => ({ ...f, date: e.target.value }))}
-                  className="bg-background/40 border-border/60 rounded-2xl h-12"
-                />
-              </label>
-
-              {editMutation.isError && (
-                <p className="text-xs text-destructive font-display tracking-wide">
-                  {(editMutation.error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ?? "Failed to save changes."}
-                </p>
-              )}
-
-              <div className="flex gap-3 pt-2">
-                <Button
-                  variant="outline"
-                  className="flex-1 font-display tracking-wide"
-                  onClick={() => setEditingExpense(null)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  className="flex-1 font-display tracking-wide shadow-[0_0_20px_rgba(123,46,255,0.3)]"
-                  onClick={submitEdit}
-                  disabled={editMutation.isPending || !editForm.amount || !editForm.description || !editForm.date}
-                >
-                  {editMutation.isPending ? "Saving..." : "Save changes"}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+        <FormField label="Date" error={errors.date?.message}>
+          <Input
+            type="date"
+            {...register("date")}
+            className="bg-background/40 border-border/60 rounded-2xl h-12"
+          />
+        </FormField>
+      </EditModal>
     </div>
   );
 }

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Trash2, ExternalLink } from "lucide-react";
 import { useJobOffers } from "@/hooks/use-job-offers";
+import { JOB_STATUSES, JOB_STATUS_LABELS } from "@/lib/domain-constants";
+import { PageControls } from "@/components/ui/page-controls";
 import type { OfferStatus } from "@/types/api";
 
 import { Badge } from "@/components/ui/badge";
@@ -10,16 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-
-const STATUSES: OfferStatus[] = ["wysłano", "1 etap", "2 etap", "3 etap", "umowa"];
-
-const STATUS_LABELS: Record<OfferStatus, string> = {
-  "wysłano": "Sent",
-  "1 etap": "Stage 1",
-  "2 etap": "Stage 2",
-  "3 etap": "Stage 3",
-  "umowa": "Offer",
-};
 
 export default function OfferList() {
   const { data, isLoading, offers, page, setPage, nextPage, prevPage, hasNextPage, hasPrevPage, remove, update } =
@@ -66,7 +58,7 @@ export default function OfferList() {
                 </div>
                 <div className="mt-4 flex flex-wrap items-center gap-4">
                   <Badge variant="secondary" className="font-display text-xs py-2.5 px-3.5 tracking-wide">
-                    {STATUS_LABELS[offer.status as OfferStatus] ?? offer.status}
+                    {JOB_STATUS_LABELS[offer.status as OfferStatus] ?? offer.status}
                   </Badge>
                   <select
                     name="status"
@@ -77,9 +69,9 @@ export default function OfferList() {
                       update.mutate({ id: offer.id, payload: { status: e.target.value as OfferStatus } });
                     }}
                   >
-                    {STATUSES.map((s) => (
+                    {JOB_STATUSES.map((s) => (
                       <option key={s} value={s} className="bg-popover">
-                        {STATUS_LABELS[s]}
+                        {JOB_STATUS_LABELS[s]}
                       </option>
                     ))}
                   </select>
@@ -170,29 +162,16 @@ export default function OfferList() {
         </div>
 
         {data && data.pages > 1 && (
-          <div className="flex items-center justify-center gap-4 p-6 border-t border-border/60">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={prevPage}
-              disabled={!hasPrevPage}
-              className="font-display tracking-wide text-xs"
-            >
-              ← Prev
-            </Button>
-            <span className="text-xs font-display opacity-40 tracking-wide">
-              {page} / {data.pages} &nbsp;·&nbsp; {data.total} offers
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={nextPage}
-              disabled={!hasNextPage}
-              className="font-display tracking-wide text-xs"
-            >
-              Next →
-            </Button>
-          </div>
+          <PageControls
+            page={page}
+            totalPages={data.pages}
+            total={data.total}
+            unit="offers"
+            hasNextPage={hasNextPage}
+            hasPrevPage={hasPrevPage}
+            onNext={nextPage}
+            onPrev={prevPage}
+          />
         )}
       </CardContent>
     </Card>

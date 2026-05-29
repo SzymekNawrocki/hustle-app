@@ -4,25 +4,20 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 
 interface UseCRUDOptions {
-  /** Additional query keys to invalidate on any mutation success. */
-  extraInvalidations?: string[][];
+  extraInvalidations?: readonly (readonly unknown[])[];
 }
 
-/**
- * Provides create / update / remove mutations for a REST endpoint.
- * All three automatically invalidate `queryKey` (and any extraInvalidations)
- * on success — component-specific side effects can be added per-call via the
- * second argument of `mutate(payload, { onSuccess: ... })`.
- */
 export function useCRUD<T>(
   endpoint: string,
-  queryKey: string,
+  queryKey: string | readonly unknown[],
   options?: UseCRUDOptions
 ) {
   const queryClient = useQueryClient();
 
+  const baseKey: readonly unknown[] = typeof queryKey === "string" ? [queryKey] : queryKey;
+
   const invalidateAll = () => {
-    queryClient.invalidateQueries({ queryKey: [queryKey] });
+    queryClient.invalidateQueries({ queryKey: baseKey });
     options?.extraInvalidations?.forEach((key) =>
       queryClient.invalidateQueries({ queryKey: key })
     );

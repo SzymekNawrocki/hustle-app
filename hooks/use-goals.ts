@@ -3,13 +3,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import type { Milestone, Task } from "@/types/api";
+import { KEYS } from "@/lib/query-options";
 
 export function useGoals() {
   const queryClient = useQueryClient();
 
   const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: ["goals"] });
-    queryClient.invalidateQueries({ queryKey: ["dashboard-today"] });
+    queryClient.invalidateQueries({ queryKey: KEYS.goals });
+    queryClient.invalidateQueries({ queryKey: KEYS.dashboard });
   };
 
   const toggleTask = useMutation({
